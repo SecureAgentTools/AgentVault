@@ -1352,24 +1352,28 @@
 <h1 id="developer-guide-registry-api-agentvault_registry">Developer Guide: Registry API (<code>agentvault_registry</code>)<a class="headerlink" href="#developer-guide-registry-api-agentvault_registry" title="Permanent link">&para;</a></h1>
 <p>The AgentVault Registry provides a central RESTful API service for discovering and managing Agent Cards. Developers interact with it to publish their agents, while clients (like the <code>agentvault_cli</code> or other applications) use it to find agents.</p>
 <h2 id="api-base-path">API Base Path<a class="headerlink" href="#api-base-path" title="Permanent link">&para;</a></h2>
-<p>All registry API endpoints are prefixed with <code>/api/v1</code>. The full URL depends on where the registry is deployed (e.g., <code>http://localhost:8000/api/v1</code> for local development).</p>
+<p>All registry API endpoints are prefixed with <code>/api/v1</code>. The full URL depends on where the registry is deployed (e.g., <code>http://localhost:8000/api/v1</code> for local development, or the production URL).</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Endpoints related to managing agent cards (creating, updating, deleting) require developer authentication. This is handled via an API key specific to the developer, provided in the <code>X-Api-Key</code> HTTP header.</p>
-<p>Public endpoints (listing/searching agents, getting details by ID, validating cards) do not require authentication, although some filtering options (like <code>owned_only=true</code> on the list endpoint) <em>do</em> require authentication to identify the owner.</p>
-<h2 id="common-error-responses">Common Error Responses<a class="headerlink" href="#common-error-responses" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong><code>401 Unauthorized</code>:</strong> Invalid or missing <code>X-Api-Key</code> header provided for a protected endpoint, or when required for a specific filter like <code>owned_only=true</code>.</li>
-<li><strong><code>403 Forbidden</code>:</strong> A valid <code>X-Api-Key</code> was provided, but the authenticated developer does not have permission for the requested action (e.g., attempting to modify or delete another developer's Agent Card).</li>
-<li><strong><code>404 Not Found</code>:</strong> The requested resource (e.g., an Agent Card with a specific UUID) does not exist.</li>
-<li><strong><code>422 Unprocessable Entity</code>:</strong> The request body (e.g., for <code>POST</code> or <code>PUT</code>) failed validation. This commonly occurs if the submitted <code>card_data</code> does not conform to the Agent Card schema or if other required fields in the request schema are missing/invalid. The response <code>detail</code> field usually contains specific information about the validation errors.</li>
-<li><strong><code>500 Internal Server Error</code>:</strong> An unexpected error occurred on the server (e.g., database connection issue, unhandled exception in the API logic).</li>
+<li><strong>Developer Authentication:</strong> Endpoints related to managing agent cards (creating, updating, deleting) require developer authentication. This is handled via an API key specific to the developer, provided in the <code>X-Api-Key</code> HTTP header. Keys are obtained from registry administrators (process TBD).</li>
+<li><strong>Public Access:</strong> Endpoints for discovering agents (listing/searching, getting details by ID, validating cards) generally do not require authentication.</li>
+<li><strong>Exception:</strong> The <code>GET /agent-cards/</code> endpoint requires authentication <em>only</em> if the <code>owned_only=true</code> query parameter is used.</li>
+</ul>
+<h2 id="common-error-responses">Common Error Responses<a class="headerlink" href="#common-error-responses" title="Permanent link">&para;</a></h2>
+<p>The API uses standard HTTP status codes. Common errors include:</p>
+<ul>
+<li><strong><code>401 Unauthorized</code>:</strong> Returned if a required <code>X-Api-Key</code> header is missing or invalid for a protected endpoint, or if the key is invalid when using <code>owned_only=true</code>.</li>
+<li><strong><code>403 Forbidden</code>:</strong> Returned if a valid <code>X-Api-Key</code> was provided, but the authenticated developer does not have permission for the requested action (e.g., attempting to modify or delete another developer's Agent Card).</li>
+<li><strong><code>404 Not Found</code>:</strong> Returned if the requested resource (e.g., an Agent Card with a specific UUID) does not exist.</li>
+<li><strong><code>422 Unprocessable Entity</code>:</strong> Returned if the request body (e.g., for <code>POST</code> or <code>PUT</code>) fails validation. This commonly occurs if the submitted <code>card_data</code> does not conform to the Agent Card schema defined in the <code>agentvault</code> library, or if other required fields in the request schema are missing/invalid. The response <code>detail</code> field usually contains specific information about the validation errors from Pydantic.</li>
+<li><strong><code>500 Internal Server Error</code>:</strong> Returned for unexpected errors on the server (e.g., database connection issue, unhandled exception in the API logic). Check server logs for details.</li>
 </ul>
 <h2 id="api-endpoints">API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">&para;</a></h2>
 <h3 id="agent-cards-agent-cards">Agent Cards (<code>/agent-cards</code>)<a class="headerlink" href="#agent-cards-agent-cards" title="Permanent link">&para;</a></h3>
 <h4 id="post"><code>POST /</code><a class="headerlink" href="#post" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Summary:</strong> Submit a new Agent Card</li>
-<li><strong>Description:</strong> Submits a new Agent Card associated with the authenticated developer. The provided <code>card_data</code> is validated against the canonical Agent Card schema.</li>
+<li><strong>Summary:</strong> Submit a new Agent Card.</li>
+<li><strong>Description:</strong> Submits a new Agent Card associated with the authenticated developer. The provided <code>card_data</code> is validated against the canonical <code>agentvault.models.AgentCard</code> schema. The <code>name</code> and <code>description</code> fields are automatically extracted from <code>card_data</code> for indexing.</li>
 <li><strong>Authentication:</strong> Required (<code>X-Api-Key</code>).</li>
 <li><strong>Request Body:</strong> <code>schemas.AgentCardCreate</code>
     <div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
@@ -1387,11 +1391,11 @@
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
 </span></code></pre></div></li>
-<li><strong>Success Response (201 Created):</strong> <code>schemas.AgentCardRead</code> - Returns the full details of the newly created card record, including its generated UUID (<code>id</code>), timestamps, and the <code>developer_is_verified</code> status.
+<li><strong>Success Response (201 Created):</strong> <code>schemas.AgentCardRead</code> - Returns the full details of the newly created card record, including its generated UUID (<code>id</code>), timestamps, and the <code>developer_is_verified</code> status inherited from the owner.
     <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b2c3d4-e5f6-7890-1234-567890abcdef&quot;</span><span class="p">,</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;developer_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;developer_is_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;developer_is_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Example value</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... submitted card_data ... */</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Awesome Agent&quot;</span><span class="p">,</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This agent does amazing things.&quot;</span><span class="p">,</span>
@@ -1400,21 +1404,21 @@
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-04-15T12:00:00Z&quot;</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
 </span></code></pre></div></li>
-<li><strong>Errors:</strong> 401, 403, 422 (e.g., invalid <code>card_data</code>, duplicate <code>humanReadableId</code> if enforced), 500.</li>
+<li><strong>Errors:</strong> 401, 403, 422 (e.g., invalid <code>card_data</code>, missing required fields like <code>name</code>), 500.</li>
 </ul>
 <h4 id="get"><code>GET /</code><a class="headerlink" href="#get" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Summary:</strong> List Agent Cards</li>
-<li><strong>Description:</strong> Retrieves a paginated list of Agent Cards, with options for filtering. By default, only active cards are returned.</li>
-<li><strong>Authentication:</strong> Optional. Required only if <code>owned_only=true</code>.</li>
+<li><strong>Summary:</strong> List Agent Cards.</li>
+<li><strong>Description:</strong> Retrieves a paginated list of Agent Cards, with options for filtering. By default, only active cards (<code>is_active=true</code>) are returned.</li>
+<li><strong>Authentication:</strong> Optional. Required <em>only</em> if <code>owned_only=true</code>.</li>
 <li><strong>Query Parameters:</strong><ul>
-<li><code>skip</code> (int, default: 0): Offset for pagination (e.g., <code>?skip=20</code>).</li>
-<li><code>limit</code> (int, default: 100, max: 250): Max items per page (e.g., <code>?limit=50</code>).</li>
-<li><code>active_only</code> (bool, default: true): Set to <code>false</code> to include inactive cards (e.g., <code>?active_only=false</code>).</li>
-<li><code>search</code> (str, optional): Case-insensitive search term applied to <code>name</code> and <code>description</code> (e.g., <code>?search=weather</code>).</li>
-<li><code>tags</code> (list[str], optional): Filter by tags. Provide the parameter multiple times for AND logic (e.g., <code>?tags=weather&amp;tags=forecast</code>). Requires agents to have <em>all</em> specified tags in <code>card_data.tags</code>.</li>
-<li><code>has_tee</code> (bool, optional): Filter by TEE support declaration (e.g., <code>?has_tee=true</code>).</li>
-<li><code>tee_type</code> (str, optional): Filter by specific TEE type string (e.g., <code>?tee_type=Intel SGX</code>).</li>
+<li><code>skip</code> (int, default: 0, min: 0): Offset for pagination.</li>
+<li><code>limit</code> (int, default: 100, min: 1, max: 250): Max items per page.</li>
+<li><code>active_only</code> (bool, default: true): Set to <code>false</code> to include inactive cards.</li>
+<li><code>search</code> (str, optional, max_length: 100): Case-insensitive search term applied to indexed <code>name</code> and <code>description</code> fields.</li>
+<li><code>tags</code> (list[str], optional): Filter by tags present in <code>card_data.tags</code>. Provide the parameter multiple times for AND logic (e.g., <code>?tags=weather&amp;tags=forecast</code>). Requires agents to have <em>all</em> specified tags. Uses JSONB containment.</li>
+<li><code>has_tee</code> (bool, optional): Filter by TEE support declaration (<code>card_data.capabilities.teeDetails</code> existence).</li>
+<li><code>tee_type</code> (str, optional, max_length: 50): Filter by specific TEE type string (<code>card_data.capabilities.teeDetails.type</code>). Case-insensitive match.</li>
 <li><code>owned_only</code> (bool, default: false): If <code>true</code>, requires <code>X-Api-Key</code> header and returns only cards owned by the authenticated developer.</li>
 </ul>
 </li>
@@ -1441,20 +1445,20 @@
 </ul>
 <h4 id="get-card_id"><code>GET /{card_id}</code><a class="headerlink" href="#get-card_id" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Summary:</strong> Get Agent Card by ID</li>
-<li><strong>Description:</strong> Retrieves the full details of a specific Agent Card by its UUID.</li>
+<li><strong>Summary:</strong> Get Agent Card by ID.</li>
+<li><strong>Description:</strong> Retrieves the full details of a specific Agent Card by its UUID. Includes the <code>developer_is_verified</code> status.</li>
 <li><strong>Authentication:</strong> Public.</li>
 <li><strong>Path Parameter:</strong><ul>
 <li><code>card_id</code> (UUID): The unique ID of the agent card (e.g., <code>a1b2c3d4-e5f6-7890-1234-567890abcdef</code>).</li>
 </ul>
 </li>
-<li><strong>Success Response (200 OK):</strong> <code>schemas.AgentCardRead</code> (Similar structure to the <code>POST /</code> success response). Includes <code>card_data</code> and <code>developer_is_verified</code>.</li>
+<li><strong>Success Response (200 OK):</strong> <code>schemas.AgentCardRead</code> (Similar structure to the <code>POST /</code> success response).</li>
 <li><strong>Errors:</strong> 404 (if ID not found), 500.</li>
 </ul>
 <h4 id="put-card_id"><code>PUT /{card_id}</code><a class="headerlink" href="#put-card_id" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Summary:</strong> Update an Agent Card</li>
-<li><strong>Description:</strong> Updates an existing Agent Card. Only the authenticated owner of the card can perform this action. Fields not included in the request body are left unchanged. If <code>card_data</code> is provided, it <em>replaces</em> the existing card data entirely after validation.</li>
+<li><strong>Summary:</strong> Update an Agent Card.</li>
+<li><strong>Description:</strong> Updates an existing Agent Card. Only the authenticated owner of the card can perform this action. Fields not included in the request body (<code>card_data</code>, <code>is_active</code>) are left unchanged. If <code>card_data</code> is provided, it is validated against the schema, and the <code>name</code>/<code>description</code> fields in the database are updated accordingly.</li>
 <li><strong>Authentication:</strong> Required (<code>X-Api-Key</code>, must match card owner).</li>
 <li><strong>Path Parameter:</strong><ul>
 <li><code>card_id</code> (UUID): The ID of the agent card to update.</li>
@@ -1462,18 +1466,28 @@
 </li>
 <li><strong>Request Body:</strong> <code>schemas.AgentCardUpdate</code>
     <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... complete new card data ... */</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;is_active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="c1">// Optional: Deactivate the card</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="c1">// Example: Update only card_data</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... complete new card data ... */</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
 </span></code></pre></div>
-    <em>Note:</em> You only need to include the fields you want to change (<code>card_data</code> or <code>is_active</code>).</li>
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="c1">// Example: Update only active status</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;is_active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+</span></code></pre></div>
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="c1">// Example: Update both</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... complete new card data ... */</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;is_active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+</span></code></pre></div></li>
 <li><strong>Success Response (200 OK):</strong> <code>schemas.AgentCardRead</code> - Returns the full details of the updated card record.</li>
 <li><strong>Errors:</strong> 401, 403 (if not owner), 404, 422 (if <code>card_data</code> is provided and invalid), 500.</li>
 </ul>
 <h4 id="delete-card_id"><code>DELETE /{card_id}</code><a class="headerlink" href="#delete-card_id" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Summary:</strong> Deactivate an Agent Card</li>
-<li><strong>Description:</strong> Marks an Agent Card as inactive (<code>is_active = false</code>). This is a soft delete; the record remains but is typically excluded from public listings. Only the owner can deactivate.</li>
+<li><strong>Summary:</strong> Deactivate an Agent Card (Soft Delete).</li>
+<li><strong>Description:</strong> Marks an Agent Card as inactive (<code>is_active = false</code>). This is a soft delete; the record remains but is typically excluded from public listings via the <code>active_only=true</code> default filter. Only the owner can deactivate.</li>
 <li><strong>Authentication:</strong> Required (<code>X-Api-Key</code>, must match card owner).</li>
 <li><strong>Path Parameter:</strong><ul>
 <li><code>card_id</code> (UUID): The ID of the agent card to deactivate.</li>
@@ -1485,32 +1499,32 @@
 <h3 id="utilities-utils">Utilities (<code>/utils</code>)<a class="headerlink" href="#utilities-utils" title="Permanent link">&para;</a></h3>
 <h4 id="post-validate-card"><code>POST /validate-card</code><a class="headerlink" href="#post-validate-card" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Summary:</strong> Validate Agent Card Data</li>
-<li><strong>Description:</strong> Validates provided JSON data against the official AgentVault Agent Card schema without registering or storing it. Useful for developers checking their <code>agent-card.json</code> before submission.</li>
+<li><strong>Summary:</strong> Validate Agent Card Data.</li>
+<li><strong>Description:</strong> Validates provided JSON data against the official <code>agentvault.models.AgentCard</code> schema without registering or storing it. Useful for developers checking their <code>agent-card.json</code> before submission.</li>
 <li><strong>Authentication:</strong> Public.</li>
 <li><strong>Request Body:</strong> <code>schemas.AgentCardValidationRequest</code>
-    <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;schemaVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agent to Validate&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1">// ... other card fields ...</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">&quot;schemaVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agent to Validate&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="c1">// ... other card fields ...</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
 </span></code></pre></div></li>
 <li><strong>Success Response (200 OK):</strong> <code>schemas.AgentCardValidationResponse</code><ul>
 <li><em>If Valid:</em>
-    <div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;is_valid&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;validated_card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... validated/normalized card data ... */</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;is_valid&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;validated_card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... validated/normalized card data ... */</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
 </span></code></pre></div></li>
 <li><em>If Invalid:</em>
-    <div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;is_valid&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Validation Error: Field required [type=missing, loc=(&#39;humanReadableId&#39;,), ...]&quot;</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;validated_card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;is_valid&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Validation Error: Field required [type=missing, loc=(&#39;humanReadableId&#39;,), ...]&quot;</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;validated_card_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">}</span>
 </span></code></pre></div></li>
 </ul>
 </li>

@@ -901,27 +901,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-basea2aagent" class="md-nav__link">
+  <a href="#1-basea2aagent-agentpy" class="md-nav__link">
     <span class="md-ellipsis">
-      1. BaseA2AAgent
+      1. BaseA2AAgent (agent.py)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-task-state-management-agentvault_server_sdkstate" class="md-nav__link">
+  <a href="#2-task-state-management-statepy" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Task State Management (agentvault_server_sdk.state)
+      2. Task State Management (state.py)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-fastapi-integration-create_a2a_router" class="md-nav__link">
+  <a href="#3-fastapi-integration-fastapi_integrationpy" class="md-nav__link">
     <span class="md-ellipsis">
-      3. FastAPI Integration (create_a2a_router)
+      3. FastAPI Integration (fastapi_integration.py)
     </span>
   </a>
   
@@ -937,9 +937,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-packaging-tool-agentvault-sdk-package" class="md-nav__link">
+  <a href="#5-packaging-tool-agentvault-sdk-package-packagerclipy" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Packaging Tool (agentvault-sdk package)
+      5. Packaging Tool (agentvault-sdk package) (packager/cli.py)
     </span>
   </a>
   
@@ -1371,41 +1371,42 @@
 <p>The <code>agentvault-server-sdk</code> provides tools and abstractions to simplify the development of A2A-compliant agent servers in Python, particularly when using the FastAPI web framework. It helps you focus on your agent's core logic while the SDK handles much of the A2A protocol boilerplate.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Install the SDK from PyPI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>agentvault-server-sdk
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>agentvault-server-sdk
 </span></code></pre></div>
-<p>See the main <a href="../../installation/">Installation Guide</a> for more details, including setting up a development environment.</p>
+<em>(Note: This automatically installs the <code>agentvault</code> client library as a dependency).</em></p>
+<p>See the main <a href="../../installation/">Installation Guide</a> for more details, including setting up a development environment to run from source.</p>
 <h2 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
-<p>The SDK revolves around implementing an agent logic class and integrating it with a web framework (currently FastAPI).</p>
-<h3 id="1-basea2aagent">1. <code>BaseA2AAgent</code><a class="headerlink" href="#1-basea2aagent" title="Permanent link">&para;</a></h3>
+<p>The SDK revolves around implementing an agent logic class (inheriting from <code>BaseA2AAgent</code>) and integrating it with a web framework (currently FastAPI).</p>
+<h3 id="1-basea2aagent-agentpy">1. <code>BaseA2AAgent</code> (<code>agent.py</code>)<a class="headerlink" href="#1-basea2aagent-agentpy" title="Permanent link">&para;</a></h3>
 <p>This is the abstract base class your agent logic should inherit from.</p>
 <ul>
-<li><strong>Purpose:</strong> Defines the standard interface the A2A protocol expects.</li>
-<li><strong>Required Methods:</strong> You <em>must</em> implement these <code>async</code> methods in your subclass:<ul>
-<li><code>handle_task_send(task_id: Optional[str], message: Message) -&gt; str</code>: Processes incoming messages, manages task creation/updates, returns the task ID.</li>
-<li><code>handle_task_get(task_id: str) -&gt; Task</code>: Retrieves the full state (<code>Task</code> model) of a specific task.</li>
-<li><code>handle_task_cancel(task_id: str) -&gt; bool</code>: Attempts to cancel a task, returning <code>True</code> if the request is accepted.</li>
-<li><code>handle_subscribe_request(task_id: str) -&gt; AsyncGenerator[A2AEvent, None]</code>: Returns an async generator yielding <code>A2AEvent</code> objects (status updates, messages, artifacts) for SSE streaming.</li>
+<li><strong>Purpose:</strong> Defines the standard interface the A2A protocol expects an agent server to fulfill.</li>
+<li><strong>Required Methods:</strong> If you are <em>not</em> using the <code>@a2a_method</code> decorator for all standard methods, you <em>must</em> implement these <code>async</code> methods in your subclass:<ul>
+<li><code>handle_task_send(task_id: Optional[str], message: Message) -&gt; str</code>: Processes incoming messages (<code>tasks/send</code> JSON-RPC method). Should handle task creation or updates and return the task ID.</li>
+<li><code>handle_task_get(task_id: str) -&gt; Task</code>: Retrieves the full state (<code>Task</code> model) of a specific task (<code>tasks/get</code> JSON-RPC method).</li>
+<li><code>handle_task_cancel(task_id: str) -&gt; bool</code>: Attempts to cancel a task (<code>tasks/cancel</code> JSON-RPC method), returning <code>True</code> if the request is accepted.</li>
+<li><code>handle_subscribe_request(task_id: str) -&gt; AsyncGenerator[A2AEvent, None]</code>: Returns an async generator yielding <code>A2AEvent</code> objects for SSE streaming (<code>tasks/sendSubscribe</code> JSON-RPC method). The SDK router consumes this generator.</li>
 </ul>
 </li>
-<li><strong>Alternative (<code>@a2a_method</code>):</strong> For agents handling only specific or custom methods, you can use the <code>@a2a_method</code> decorator instead of implementing all <code>handle_...</code> methods.</li>
+<li><strong>Alternative (<code>@a2a_method</code>):</strong> For agents handling only specific or custom methods, or if you prefer a decorator-based approach, you can use the <code>@a2a_method</code> decorator on individual methods instead of implementing all <code>handle_...</code> methods (see below).</li>
 </ul>
-<h3 id="2-task-state-management-agentvault_server_sdkstate">2. Task State Management (<code>agentvault_server_sdk.state</code>)<a class="headerlink" href="#2-task-state-management-agentvault_server_sdkstate" title="Permanent link">&para;</a></h3>
-<p>Handling asynchronous tasks requires managing their state (Submitted, Working, Completed, etc.) and potentially associated data (messages, artifacts).</p>
+<h3 id="2-task-state-management-statepy">2. Task State Management (<code>state.py</code>)<a class="headerlink" href="#2-task-state-management-statepy" title="Permanent link">&para;</a></h3>
+<p>Handling asynchronous tasks requires managing their state (Submitted, Working, Completed, etc.) and potentially associated data (messages, artifacts). The SDK provides tools for this.</p>
 <ul>
-<li><strong><code>TaskContext</code>:</strong> A basic dataclass holding <code>task_id</code>, <code>current_state</code>, timestamps. Subclass this to store agent-specific task data.</li>
-<li><strong><code>BaseTaskStore</code>:</strong> An abstract class defining the interface for storing and retrieving <code>TaskContext</code> objects (<code>create_task</code>, <code>get_task</code>, <code>update_task_state</code>, <code>delete_task</code>). It also defines interfaces for managing SSE listeners and notifying them.</li>
-<li><strong><code>InMemoryTaskStore</code>:</strong> A simple, non-persistent dictionary-based implementation of <code>BaseTaskStore</code>. Suitable for development or single-instance agents where persistence isn't required. <strong>Production agents typically require a persistent store (e.g., Redis, Database).</strong></li>
-<li><strong>Notification Helpers:</strong> When using a <code>BaseTaskStore</code>, call methods like <code>task_store.notify_status_update(...)</code>, <code>task_store.notify_message_event(...)</code>, <code>task_store.notify_artifact_event(...)</code> from your agent logic. The SDK's router integration uses these to automatically send SSE events to subscribed clients.</li>
+<li><strong><code>TaskContext</code>:</strong> A basic dataclass holding <code>task_id</code>, <code>current_state</code>, <code>created_at</code>, <code>updated_at</code>. You can subclass this to store agent-specific task data (e.g., conversation history, intermediate results). Includes state transition validation logic.</li>
+<li><strong><code>BaseTaskStore</code>:</strong> An abstract base class defining the interface for storing, retrieving, updating, and deleting <code>TaskContext</code> objects (e.g., <code>create_task</code>, <code>get_task</code>, <code>update_task_state</code>, <code>delete_task</code>). It also defines the interface for managing SSE event listeners (<code>add_listener</code>, <code>remove_listener</code>) and notifying them (<code>notify_status_update</code>, <code>notify_message_event</code>, <code>notify_artifact_event</code>).</li>
+<li><strong><code>InMemoryTaskStore</code>:</strong> A simple, <strong>non-persistent</strong> dictionary-based implementation of <code>BaseTaskStore</code>. <strong>Suitable only for development or single-instance agents where task state loss on restart is acceptable.</strong> Production agents typically require implementing a custom <code>BaseTaskStore</code> backed by a persistent database (SQL, NoSQL) or a distributed cache (Redis).</li>
+<li><strong>Notification Helpers:</strong> When using a <code>BaseTaskStore</code> implementation (like <code>InMemoryTaskStore</code> or your own), your agent logic should call methods like <code>task_store.notify_status_update(...)</code>, <code>task_store.notify_message_event(...)</code>, <code>task_store.notify_artifact_event(...)</code> whenever a relevant event occurs (e.g., state change, message generation). The <code>create_a2a_router</code> integration uses these notifications to automatically format and send the correct SSE events to subscribed clients via the <code>handle_subscribe_request</code> stream.</li>
 </ul>
-<h3 id="3-fastapi-integration-create_a2a_router">3. FastAPI Integration (<code>create_a2a_router</code>)<a class="headerlink" href="#3-fastapi-integration-create_a2a_router" title="Permanent link">&para;</a></h3>
-<p>This function bridges your agent logic with the FastAPI web framework.</p>
+<h3 id="3-fastapi-integration-fastapi_integrationpy">3. FastAPI Integration (<code>fastapi_integration.py</code>)<a class="headerlink" href="#3-fastapi-integration-fastapi_integrationpy" title="Permanent link">&para;</a></h3>
+<p>The <code>create_a2a_router</code> function bridges your agent logic (either a <code>BaseA2AAgent</code> subclass or a class using <code>@a2a_method</code>) with the FastAPI web framework.</p>
 <ul>
-<li><strong>Purpose:</strong> Creates a FastAPI <code>APIRouter</code> that automatically exposes the standard A2A JSON-RPC methods (<code>tasks/send</code>, <code>tasks/get</code>, <code>tasks/cancel</code>, <code>tasks/sendSubscribe</code>) and routes them to your <code>BaseA2AAgent</code> implementation's corresponding <code>handle_...</code> methods (or decorated methods).</li>
+<li><strong>Purpose:</strong> Creates a FastAPI <code>APIRouter</code> that automatically exposes the standard A2A JSON-RPC methods (<code>tasks/send</code>, <code>tasks/get</code>, <code>tasks/cancel</code>, <code>tasks/sendSubscribe</code>) and routes them to your agent implementation's corresponding <code>handle_...</code> methods or decorated methods. It also handles JSON-RPC request parsing, basic validation, and SSE stream setup.</li>
 <li><strong>Usage:</strong>
     <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># In your main FastAPI app file (e.g., main.py)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_a2a_router</span><span class="p">,</span> <span class="n">BaseA2AAgent</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.state</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryTaskStore</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.state</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryTaskStore</span> <span class="c1"># Or your custom store</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Import your agent class</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">my_agent_logic</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyAgent</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
@@ -1413,101 +1414,110 @@
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">task_store</span> <span class="o">=</span> <span class="n">InMemoryTaskStore</span><span class="p">()</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">my_agent_instance</span> <span class="o">=</span> <span class="n">MyAgent</span><span class="p">(</span><span class="n">task_store_ref</span><span class="o">=</span><span class="n">task_store</span><span class="p">)</span> <span class="c1"># Pass store if needed</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># 2. Create the A2A router</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># 2. Create the A2A router, passing the agent and store</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">a2a_router</span> <span class="o">=</span> <span class="n">create_a2a_router</span><span class="p">(</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">agent</span><span class="o">=</span><span class="n">my_agent_instance</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">task_store</span><span class="o">=</span><span class="n">task_store</span> <span class="c1"># Provide the store instance</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">task_store</span><span class="o">=</span><span class="n">task_store</span> <span class="c1"># Required for SSE notifications</span>
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">)</span>
 </span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># 3. Create the FastAPI app and include the router</span>
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My A2A Agent&quot;</span><span class="p">)</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">a2a_router</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/a2a&quot;</span><span class="p">)</span> <span class="c1"># Mount at /a2a</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">a2a_router</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/a2a&quot;</span><span class="p">)</span> <span class="c1"># Mount at standard /a2a path</span>
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 4. IMPORTANT: Add required exception handlers</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># (See example below and basic_a2a_server example)</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># ... add exception handlers ...</span>
-</span></code></pre></div></li>
-<li><strong>Exception Handling:</strong> The router relies on specific exception handlers being added to the <em>main FastAPI app</em> to translate internal errors (like <code>TaskNotFoundError</code>, <code>ValueError</code>, <code>AgentServerError</code>) into correct JSON-RPC error responses. You <strong>must</strong> add these handlers:
-    <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">FastAPI</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONResponse</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">PydanticValidationError</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentServerError</span><span class="p">,</span> <span class="n">TaskNotFoundError</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.fastapi_integration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">task_not_found_handler</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">agent_server_error_handler</span><span class="p">,</span> <span class="n">generic_exception_handler</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span> <span class="c1"># Your app instance</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># ... include router ...</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">TaskNotFoundError</span><span class="p">,</span> <span class="n">task_not_found_handler</span><span class="p">)</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">)</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">)</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">PydanticValidationError</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">)</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">AgentServerError</span><span class="p">,</span> <span class="n">agent_server_error_handler</span><span class="p">)</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">generic_exception_handler</span><span class="p">)</span> <span class="c1"># Catch-all</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 4. !!! CRITICAL: Add Required Exception Handlers !!!</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># These handlers translate SDK/agent errors into proper JSON-RPC error responses.</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Your application WILL NOT return correct errors without them.</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONResponse</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">PydanticValidationError</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># --- Use pydantic_core.ValidationError if using Pydantic v2 ---</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># from pydantic_core import ValidationError as PydanticValidationError</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentServerError</span><span class="p">,</span> <span class="n">TaskNotFoundError</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.fastapi_integration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    <span class="n">task_not_found_handler</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">,</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="n">agent_server_error_handler</span><span class="p">,</span> <span class="n">generic_exception_handler</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="p">)</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">TaskNotFoundError</span><span class="p">,</span> <span class="n">task_not_found_handler</span><span class="p">)</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">)</span> <span class="c1"># Catches basic validation</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">)</span> <span class="c1"># Catches type errors in params</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">PydanticValidationError</span><span class="p">,</span> <span class="n">validation_exception_handler</span><span class="p">)</span> <span class="c1"># Catches Pydantic errors</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">AgentServerError</span><span class="p">,</span> <span class="n">agent_server_error_handler</span><span class="p">)</span> <span class="c1"># Catches agent-specific errors</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">generic_exception_handler</span><span class="p">)</span> <span class="c1"># Catch-all for unexpected errors</span>
 </span></code></pre></div></li>
 </ul>
 <h3 id="4-a2a-method-decorator-a2a_method">4. A2A Method Decorator (<code>@a2a_method</code>)<a class="headerlink" href="#4-a2a-method-decorator-a2a_method" title="Permanent link">&para;</a></h3>
-<p>An alternative for exposing specific methods without implementing the full <code>BaseA2AAgent</code> interface.</p>
+<p>An alternative or supplement to implementing the full <code>BaseA2AAgent</code> interface.</p>
 <ul>
-<li><strong>Purpose:</strong> Expose individual <code>async def</code> methods in your class as specific JSON-RPC methods. Useful for simpler agents or custom methods.</li>
+<li><strong>Purpose:</strong> Expose individual <code>async def</code> methods within your agent class as specific JSON-RPC methods. Useful for simpler agents, custom methods beyond the standard A2A set, or overriding specific standard methods with custom logic.</li>
 <li><strong>Usage:</strong>
-    <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseA2AAgent</span><span class="p">,</span> <span class="n">a2a_method</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span> <span class="c1"># Example import</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">DecoratedAgent</span><span class="p">(</span><span class="n">BaseA2AAgent</span><span class="p">):</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nd">@a2a_method</span><span class="p">(</span><span class="s2">&quot;custom/ping&quot;</span><span class="p">)</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ping_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="k">return</span> <span class="s2">&quot;pong&quot;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nd">@a2a_method</span><span class="p">(</span><span class="s2">&quot;tasks/get&quot;</span><span class="p">)</span> <span class="c1"># Override standard method</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">custom_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Task</span><span class="p">:</span> <span class="c1"># Params validated from type hints</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="c1"># ... custom logic to fetch task ...</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">task_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_my_task_data</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="c1"># Return value validated against type hint</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="k">return</span> <span class="n">Task</span><span class="p">(</span><span class="o">**</span><span class="n">task_data</span><span class="p">)</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="c1"># No need to implement handle_task_send, handle_task_cancel etc.</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="c1"># if only using decorators for the methods you support.</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="c1"># The router will return &quot;Method not found&quot; for others.</span>
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseA2AAgent</span><span class="p">,</span> <span class="n">a2a_method</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span> <span class="c1"># Example import</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">DecoratedAgent</span><span class="p">(</span><span class="n">BaseA2AAgent</span><span class="p">):</span> <span class="c1"># Still inherit for structure</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nd">@a2a_method</span><span class="p">(</span><span class="s2">&quot;custom/ping&quot;</span><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ping_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="c1"># No parameters needed</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="k">return</span> <span class="s2">&quot;pong&quot;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="nd">@a2a_method</span><span class="p">(</span><span class="s2">&quot;tasks/get&quot;</span><span class="p">)</span> <span class="c1"># Override standard method</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">custom_get_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Task</span><span class="p">:</span> <span class="c1"># Params validated from type hints</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="c1"># ... custom logic to fetch task ...</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="n">task_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_my_task_data</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="c1"># Return value validated against type hint</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="k">return</span> <span class="n">Task</span><span class="p">(</span><span class="o">**</span><span class="n">task_data</span><span class="p">)</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="c1"># If using only decorators for standard methods, you don&#39;t *need*</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="c1"># to implement the corresponding handle_ methods. The router will</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="c1"># prioritize decorated methods and return &quot;Method not found&quot; for others.</span>
 </span></code></pre></div></li>
-<li><strong>Validation:</strong> The router automatically validates incoming <code>params</code> against the decorated function's type hints and validates the return value against the function's return type hint using Pydantic.</li>
+<li><strong>Validation:</strong> The <code>create_a2a_router</code> automatically validates incoming JSON-RPC <code>params</code> against the decorated function's type hints (using Pydantic internally) and validates the return value against the function's return type hint.</li>
 </ul>
-<h3 id="5-packaging-tool-agentvault-sdk-package">5. Packaging Tool (<code>agentvault-sdk package</code>)<a class="headerlink" href="#5-packaging-tool-agentvault-sdk-package" title="Permanent link">&para;</a></h3>
-<p>A CLI tool to help prepare your agent for deployment, typically via Docker.</p>
+<h3 id="5-packaging-tool-agentvault-sdk-package-packagerclipy">5. Packaging Tool (<code>agentvault-sdk package</code>) (<code>packager/cli.py</code>)<a class="headerlink" href="#5-packaging-tool-agentvault-sdk-package-packagerclipy" title="Permanent link">&para;</a></h3>
+<p>A CLI tool to help prepare your agent project for deployment, typically via Docker.</p>
 <ul>
 <li><strong>Command:</strong> <code>agentvault-sdk package [OPTIONS]</code></li>
-<li><strong>Functionality:</strong> Generates a standard multi-stage <code>Dockerfile</code>, a <code>.dockerignore</code> file, and copies <code>requirements.txt</code> and optionally <code>agent-card.json</code> to an output directory.</li>
+<li><strong>Functionality:</strong> Generates a standard multi-stage <code>Dockerfile</code>, a <code>.dockerignore</code> file, and copies <code>requirements.txt</code> and optionally <code>agent-card.json</code> to a specified output directory, ready for <code>docker build</code>.</li>
 <li><strong>Key Options:</strong><ul>
-<li><code>--output-dir</code> / <code>-o</code> (Required): Where to put generated files.</li>
-<li><code>--entrypoint</code> / <code>-e</code> (Required): Import path to your FastAPI app instance (e.g., <code>my_agent.main:app</code>).</li>
-<li><code>--python</code>: Python version for Docker image (default: 3.11).</li>
-<li><code>--suffix</code>: Base image suffix (default: slim-bookworm).</li>
-<li><code>--port</code>: Port inside the container (default: 8000).</li>
-<li><code>--requirements</code> / <code>-r</code>: Path to <code>requirements.txt</code> (defaults to <code>./requirements.txt</code>).</li>
-<li><code>--agent-card</code> / <code>-c</code>: Path to <code>agent-card.json</code> to copy.</li>
+<li><code>--output-dir DIRECTORY</code> / <code>-o DIRECTORY</code>: <strong>(Required)</strong> Directory to write Dockerfile and other artifacts.</li>
+<li><code>--entrypoint TEXT</code>: <strong>(Required)</strong> Python import path to the FastAPI app instance (e.g., <code>my_agent.main:app</code>).</li>
+<li><code>--python TEXT</code>: Python version for the base image tag (e.g., 3.10, 3.11). [default: 3.11]</li>
+<li><code>--suffix TEXT</code>: Suffix for the python base image (e.g., slim-bookworm, alpine). [default: slim-bookworm]</li>
+<li><code>--port INTEGER</code>: Port the application will listen on inside the container. [default: 8000]</li>
+<li><code>--requirements PATH</code> / <code>-r PATH</code>: Path to the requirements.txt file. If not provided, it looks for <code>./requirements.txt</code> in the current directory and copies it if found. Issues a warning if the SDK dependency seems missing.</li>
+<li><code>--agent-card PATH</code> / <code>-c PATH</code>: Path to the agent-card.json file. If provided, it will be copied into the output directory.</li>
+<li><code>--app-dir TEXT</code>: Directory inside the container where the application code will reside. [default: /app]</li>
 </ul>
 </li>
 <li><strong>Example:</strong>
-    <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>agentvault-sdk<span class="w"> </span>package<span class="w"> </span>-o<span class="w"> </span>./build<span class="w"> </span>-e<span class="w"> </span>my_agent.main:app<span class="w"> </span>-r<span class="w"> </span>./requirements.txt<span class="w"> </span>-c<span class="w"> </span>./agent-card.json
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Then build: docker build -t my-agent-image -f ./build/Dockerfile .</span>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Assuming FastAPI app is in src/my_agent/main.py as &#39;app&#39;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># and requirements.txt / agent-card.json are in the current directory</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>agentvault-sdk<span class="w"> </span>package<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--output-dir<span class="w"> </span>./build<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>--entrypoint<span class="w"> </span>my_agent.main:app<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--requirements<span class="w"> </span>./requirements.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>--agent-card<span class="w"> </span>./agent-card.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--python<span class="w"> </span><span class="m">3</span>.11
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Then build the image from the project root:</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># docker build -t my-agent-image:latest -f ./build/Dockerfile .</span>
 </span></code></pre></div></li>
 </ul>
 <h2 id="building-a-basic-agent-conceptual-steps">Building a Basic Agent (Conceptual Steps)<a class="headerlink" href="#building-a-basic-agent-conceptual-steps" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Define Agent Logic:</strong> Create a class inheriting from <code>BaseA2AAgent</code>.</li>
-<li><strong>Implement Handlers/Methods:</strong> Implement the required <code>handle_...</code> methods or use the <code>@a2a_method</code> decorator for the A2A methods your agent supports. Use a <code>TaskStore</code> (like <code>InMemoryTaskStore</code> initially) to manage state. Use <code>notify_...</code> methods on the store to trigger SSE events.</li>
-<li><strong>Create FastAPI App:</strong> Set up a basic FastAPI application (<code>main.py</code>).</li>
+<li><strong>Define Agent Logic:</strong> Create a class inheriting from <code>BaseA2AAgent</code> (or use decorators).</li>
+<li><strong>Implement Handlers/Methods:</strong> Implement the required <code>async handle_...</code> methods (or decorate specific methods) to handle A2A requests.</li>
+<li><strong>Manage State:</strong> Choose or implement a <code>BaseTaskStore</code> (start with <code>InMemoryTaskStore</code> for development). Pass it to your agent instance if needed. Use <code>task_store.notify_...</code> methods within your agent logic to trigger SSE events for subscribed clients.</li>
+<li><strong>Create FastAPI App:</strong> Set up a standard FastAPI application (<code>main.py</code>).</li>
 <li><strong>Instantiate Agent &amp; Store:</strong> Create instances of your agent class and task store.</li>
-<li><strong>Create &amp; Include Router:</strong> Use <code>create_a2a_router(agent=..., task_store=...)</code> and include it in your FastAPI app (e.g., at prefix <code>/a2a</code>).</li>
-<li><strong>Add Exception Handlers:</strong> Add the required handlers (shown above) to your main FastAPI app instance.</li>
-<li><strong>Create Agent Card:</strong> Write an <code>agent-card.json</code> describing your agent, ensuring the <code>url</code> points to your FastAPI endpoint (e.g., <code>http://your-host/a2a</code>).</li>
+<li><strong>Create &amp; Include Router:</strong> Use <code>create_a2a_router(agent=..., task_store=...)</code> and include the returned router in your FastAPI app (e.g., at prefix <code>/a2a</code>).</li>
+<li><strong>Add Exception Handlers:</strong> <strong>Crucially</strong>, add the required SDK exception handlers (<code>task_not_found_handler</code>, etc.) to your main FastAPI app instance using <code>app.add_exception_handler(...)</code>.</li>
+<li><strong>Create Agent Card:</strong> Write an <code>agent-card.json</code> describing your agent, ensuring the <code>url</code> points to your FastAPI A2A endpoint (e.g., <code>http://your-host/a2a</code>). Include appropriate <code>authSchemes</code>.</li>
 <li><strong>Run:</strong> Use <code>uvicorn main:app --host ... --port ...</code>.</li>
-<li><strong>(Optional) Package:</strong> Use <code>agentvault-sdk package</code> to create Docker artifacts.</li>
+<li><strong>(Optional) Package:</strong> Use <code>agentvault-sdk package</code> to generate Docker artifacts for deployment.</li>
 </ol>
-<p>Refer to the <a href="../../examples/">Basic A2A Server Example</a> for a runnable implementation.</p>
+<p>Refer to the <a href="../../examples/">Basic A2A Server Example</a> for a complete, runnable implementation.</p>
 
 
 
