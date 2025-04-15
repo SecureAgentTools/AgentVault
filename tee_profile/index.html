@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://SecureAgentTools.github.io/AgentVault/concepts/">
+        <link rel="canonical" href="https://SecureAgentTools.github.io/AgentVault/tee_profile/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../a2a_profile_v0.2/">
       
-      
-        <link rel="next" href="../architecture/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +20,7 @@
     
     
       
-        <title>Concepts - AgentVault Documentation</title>
+        <title>TEE Profile - AgentVault Documentation</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#core-concepts" class="md-skip">
+        <a href="#agentvault-tee-profile-v01-declarative" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Concepts
+              TEE Profile
             
           </span>
         </div>
@@ -238,13 +236,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../concepts/" class="md-tabs__link">
           
   
   
@@ -319,10 +315,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../a2a_profile_v0.2/" class="md-tabs__link">
           
   
@@ -427,31 +425,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -464,7 +457,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Introduction
@@ -475,32 +468,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Concepts
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
         
   
   
@@ -511,107 +482,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#agent-card" class="md-nav__link">
-    <span class="md-ellipsis">
-      Agent Card
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agent-to-agent-a2a-protocol" class="md-nav__link">
-    <span class="md-ellipsis">
-      Agent-to-Agent (A2A) Protocol
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#model-context-protocol-mcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      Model Context Protocol (MCP)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agentvault-registry" class="md-nav__link">
-    <span class="md-ellipsis">
-      AgentVault Registry
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agentvault-library-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      AgentVault Library (Client)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agentvault-server-sdk" class="md-nav__link">
-    <span class="md-ellipsis">
-      AgentVault Server SDK
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agentvault-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      AgentVault CLI
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trusted-execution-environment-tee" class="md-nav__link">
-    <span class="md-ellipsis">
-      Trusted Execution Environment (TEE)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#service-identifier" class="md-nav__link">
-    <span class="md-ellipsis">
-      Service Identifier
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -911,26 +781,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -943,7 +818,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Protocols
@@ -977,10 +852,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../tee_profile/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    TEE Profile
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -991,6 +888,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-card-declaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Card Declaration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discovery-via-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Discovery via Registry
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-scope-limitations-v01" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Scope &amp; Limitations (v0.1)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Work
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1041,63 +1003,60 @@
 
 
 
-<h1 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h1>
-<p>This page defines the key concepts and terminology used throughout the AgentVault ecosystem. Understanding these concepts is crucial for effectively using the tools and contributing to the project.</p>
-<h2 id="agent-card">Agent Card<a class="headerlink" href="#agent-card" title="Permanent link">&para;</a></h2>
+<h1 id="agentvault-tee-profile-v01-declarative">AgentVault TEE Profile (v0.1 - Declarative)<a class="headerlink" href="#agentvault-tee-profile-v01-declarative" title="Permanent link">&para;</a></h1>
+<p>This document outlines the initial support for Trusted Execution Environments (TEEs) within the AgentVault ecosystem, focusing on declaration and discovery.</p>
+<p><strong>Version:</strong> 0.1 (Declarative Phase)</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Trusted Execution Environments (TEEs) like Intel SGX, AMD SEV, AWS Nitro Enclaves, etc., provide hardware-level isolation to protect the confidentiality and integrity of code and data being processed. Leveraging TEEs can significantly enhance the security posture of AI agents, especially when handling sensitive information or performing critical tasks.</p>
+<p>AgentVault aims to facilitate the use of TEEs by allowing agents to declare their TEE usage and enabling clients to discover agents based on this capability.</p>
+<h2 id="agent-card-declaration">Agent Card Declaration<a class="headerlink" href="#agent-card-declaration" title="Permanent link">&para;</a></h2>
+<p>Agents running within a TEE can declare this capability in their <code>agent-card.json</code> file within the <code>capabilities</code> object, using the optional <code>teeDetails</code> field.</p>
+<p><strong>Schema:</strong></p>
 <ul>
-<li><strong>Definition:</strong> A standardized JSON document (typically named <code>agent-card.json</code>) containing metadata that describes an A2A-compliant agent. It's the agent's "business card" for the digital world.</li>
-<li><strong>Purpose:</strong> Enables discovery via the <a href="#agentvault-registry">AgentVault Registry</a> and provides essential information for clients (other agents or applications) to connect, authenticate, and interact with the agent.</li>
-<li><strong>Schema:</strong> The structure and required fields are defined by the AgentVault project, aligning with emerging A2A standards. See the <a href="../a2a_profile_v0.2/">A2A Profile v0.2</a> for the current specification details.</li>
-<li><strong>Key Fields:</strong> Includes the agent's unique <code>humanReadableId</code>, display <code>name</code>, <code>description</code>, the A2A endpoint <code>url</code>, technical <code>capabilities</code> (like supported protocol versions), required <code>authSchemes</code>, and details about the <code>provider</code>.</li>
+<li><strong><code>capabilities.teeDetails</code></strong> (Optional Object): Contains details about the TEE. If present, indicates the agent utilizes a TEE.<ul>
+<li><strong><code>type</code></strong> (String, Required if <code>teeDetails</code> is present): An identifier for the specific TEE technology used. Examples: <code>"Intel SGX"</code>, <code>"AMD SEV-SNP"</code>, <code>"AWS Nitro Enclaves"</code>, <code>"Azure Confidential Computing"</code>, <code>"Confidential Space"</code>. Standardized identifiers are preferred, but custom strings are allowed.</li>
+<li><strong><code>attestationEndpoint</code></strong> (String, Optional, Format: URL): A URL where clients can potentially obtain or verify an attestation document for the specific TEE instance hosting the agent. The format and verification process for the attestation document are specific to the TEE type and are <strong>outside the scope of this profile version</strong>.</li>
+<li><strong><code>publicKey</code></strong> (String, Optional): A public key associated with the TEE instance, potentially used for establishing secure channels or verifying attestations. The format (e.g., PEM, JWK) depends on the TEE type and attestation protocol.</li>
+<li><strong><code>description</code></strong> (String, Optional): A human-readable description of the TEE setup, its purpose, or the guarantees it provides for this agent.</li>
 </ul>
-<h2 id="agent-to-agent-a2a-protocol">Agent-to-Agent (A2A) Protocol<a class="headerlink" href="#agent-to-agent-a2a-protocol" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Definition:</strong> The standardized communication protocol enabling direct interaction between AgentVault clients and A2A-compliant agent servers. It defines the methods, message formats, and interaction patterns.</li>
-<li><strong>Based On:</strong> Inspired by and aligned with concepts from the <a href="https://github.com/google/A2A">Google A2A Protocol</a> specification, utilizing JSON-RPC 2.0 over HTTP POST for requests and Server-Sent Events (SSE) over HTTP for asynchronous streaming updates.</li>
-<li><strong>Key Methods:</strong> Defines standard operations like initiating tasks (<code>tasks/send</code>), retrieving task status (<code>tasks/get</code>), requesting cancellation (<code>tasks/cancel</code>), and subscribing to real-time updates (<code>tasks/sendSubscribe</code>).</li>
-<li><strong>Profile:</strong> The specific implementation details, method signatures, payload structures, and state transitions used within AgentVault are documented in the <a href="../a2a_profile_v0.2/">AgentVault A2A Profile v0.2</a>.</li>
+</li>
 </ul>
-<h2 id="model-context-protocol-mcp">Model Context Protocol (MCP)<a class="headerlink" href="#model-context-protocol-mcp" title="Permanent link">&para;</a></h2>
+<p><strong>Example <code>agent-card.json</code> Snippet:</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;schemaVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="c1">// ... other fields ...</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;a2aVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="c1">// ... other capabilities ...</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">&quot;teeDetails&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS Nitro Enclaves&quot;</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">&quot;attestationEndpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://attestation.example-agent.com/verify&quot;</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agent runs within an AWS Nitro Enclave for enhanced data confidentiality during processing.&quot;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="c1">// ... other fields ...</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="discovery-via-registry">Discovery via Registry<a class="headerlink" href="#discovery-via-registry" title="Permanent link">&para;</a></h2>
+<p>The AgentVault Registry API (<code>agentvault_registry</code>) supports filtering agents based on their TEE declaration:</p>
 <ul>
-<li><strong>Definition:</strong> (Conceptual / Future Work) A protocol intended for exchanging richer, structured contextual information between agents beyond simple text prompts. This might include user profiles, conversation history summaries, references to external data, or task-specific parameters.</li>
-<li><strong>Status:</strong> Currently in the conceptual phase within AgentVault. The <code>agentvault_library</code> provides basic utilities (<code>mcp_utils.py</code>) for embedding arbitrary context data within the <code>metadata['mcp_context']</code> field of A2A <code>Message</code> objects. A formal MCP specification is planned for future development.</li>
-<li><strong>Goal:</strong> To enable more sophisticated, context-aware collaboration and task handoff between specialized agents.</li>
+<li><strong><code>GET /api/v1/agent-cards/?has_tee=true</code></strong>: Returns only agents whose Agent Card includes the <code>capabilities.teeDetails</code> object (regardless of its content).</li>
+<li><strong><code>GET /api/v1/agent-cards/?has_tee=false</code></strong>: Returns only agents whose Agent Card <em>does not</em> include the <code>capabilities.teeDetails</code> object.</li>
+<li><strong><code>GET /api/v1/agent-cards/?tee_type=&lt;type_string&gt;</code></strong>: Returns only agents where <code>capabilities.teeDetails.type</code> matches the provided <code>&lt;type_string&gt;</code> (case-insensitive comparison recommended for the registry implementation). Example: <code>?tee_type=AWS%20Nitro%20Enclaves</code>.</li>
 </ul>
-<h2 id="agentvault-registry">AgentVault Registry<a class="headerlink" href="#agentvault-registry" title="Permanent link">&para;</a></h2>
+<p>The public Registry Web UI also includes a filter option to show only TEE-enabled agents.</p>
+<h2 id="current-scope-limitations-v01">Current Scope &amp; Limitations (v0.1)<a class="headerlink" href="#current-scope-limitations-v01" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Definition:</strong> A central API service and web UI acting as the discovery hub for the ecosystem. Developers register their agents by submitting Agent Cards, and clients query the registry to find agents based on various criteria.</li>
-<li><strong>Component:</strong> <code>agentvault_registry</code></li>
-<li><strong>Features:</strong> Public API for listing, searching (by name, description, tags, TEE support), and retrieving Agent Cards. Authenticated API for developers to submit, update, and deactivate their cards. Includes Agent Card validation, developer verification status, and a basic web UI for discovery and developer management. See the <a href="../developer_guide/registry/">Registry API Guide</a>.</li>
+<li><strong>Declarative Only:</strong> This version focuses solely on allowing agents to <em>declare</em> their TEE usage and enabling <em>discovery</em> based on that declaration.</li>
+<li><strong>No Automated Verification:</strong> AgentVault clients (library, CLI) <strong>do not</strong> automatically perform TEE attestation verification based on the <code>attestationEndpoint</code> or <code>publicKey</code>. Implementing robust and generic attestation verification is complex due to the variety of TEE technologies and attestation protocols.</li>
+<li><strong>Client Responsibility:</strong> Clients wishing to verify an agent's TEE status must currently implement the verification logic themselves, specific to the declared <code>teeDetails.type</code> and using the provided <code>attestationEndpoint</code> or other out-of-band mechanisms.</li>
+<li><strong>No Secure Channel Guarantee:</strong> Declaring TEE usage does not automatically establish a TEE-secured communication channel. Standard transport security (HTTPS) is still required.</li>
 </ul>
-<h2 id="agentvault-library-client">AgentVault Library (Client)<a class="headerlink" href="#agentvault-library-client" title="Permanent link">&para;</a></h2>
+<h2 id="future-work">Future Work<a class="headerlink" href="#future-work" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Definition:</strong> The core Python library (<code>agentvault</code>) providing the client-side tools needed to interact with the ecosystem.</li>
-<li><strong>Component:</strong> <code>agentvault_library</code></li>
-<li><strong>Features:</strong> Provides the <code>AgentVaultClient</code> for making A2A calls (handling JSON-RPC, SSE, authentication), the <code>KeyManager</code> for secure local credential handling (API keys, OAuth credentials from env/file/keyring), utilities for Agent Card parsing and validation (<code>agent_card_utils</code>), and Pydantic models defining all necessary data structures. See the <a href="../developer_guide/library/">Library Guide</a>.</li>
-</ul>
-<h2 id="agentvault-server-sdk">AgentVault Server SDK<a class="headerlink" href="#agentvault-server-sdk" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Definition:</strong> A Python Software Development Kit (<code>agentvault-server-sdk</code>) designed to accelerate the development of A2A-compliant agent servers.</li>
-<li><strong>Component:</strong> <code>agentvault_server_sdk</code></li>
-<li><strong>Features:</strong> Includes the <code>BaseA2AAgent</code> abstract class, FastAPI integration helpers (<code>create_a2a_router</code>, <code>@a2a_method</code> decorator) to automatically expose agent logic via the A2A protocol, abstractions for task state management (<code>BaseTaskStore</code>, <code>InMemoryTaskStore</code>), utilities for handling MCP context server-side, and a command-line tool (<code>agentvault-sdk package</code>) for packaging agents into Docker containers. See the <a href="../developer_guide/server_sdk/">Server SDK Guide</a>.</li>
-</ul>
-<h2 id="agentvault-cli">AgentVault CLI<a class="headerlink" href="#agentvault-cli" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Definition:</strong> A command-line interface (<code>agentvault-cli</code>) providing a user-friendly way to interact with AgentVault features.</li>
-<li><strong>Component:</strong> <code>agentvault_cli</code></li>
-<li><strong>Features:</strong> Allows users to manage local credentials (<code>config</code>), discover agents in the registry (<code>discover</code>), and execute tasks on remote agents (<code>run</code>). Built using the <code>agentvault</code> library. See the <a href="../user_guide/cli/">CLI User Guide</a>.</li>
-</ul>
-<h2 id="trusted-execution-environment-tee">Trusted Execution Environment (TEE)<a class="headerlink" href="#trusted-execution-environment-tee" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Definition:</strong> A secure, isolated environment within a computer's processor that provides hardware-level guarantees for the confidentiality and integrity of code and data executed within it. Examples include Intel SGX, AMD SEV, AWS Nitro Enclaves.</li>
-<li><strong>Relevance:</strong> Agents can optionally run within a TEE to enhance security and provide verifiable guarantees about their execution environment. Agent Cards can declare TEE usage (<code>capabilities.teeDetails</code>) including the type and potentially an attestation endpoint. The registry allows filtering for TEE-enabled agents.</li>
-<li><strong>Current Scope:</strong> AgentVault currently supports the <em>declaration</em> and <em>discovery</em> of TEE capabilities. Automated verification of TEE attestations during A2A communication is a planned future enhancement. See the <a href="../tee_profile/">TEE Profile</a> (placeholder).</li>
-</ul>
-<h2 id="service-identifier">Service Identifier<a class="headerlink" href="#service-identifier" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Definition:</strong> A string used by the <code>KeyManager</code> to look up the correct local credentials (API Key or OAuth Client ID/Secret) for a specific agent or service.</li>
-<li><strong>Source:</strong> Can be explicitly defined in an agent's <code>AgentCard</code> within the <code>authSchemes[].service_identifier</code> field. If omitted, clients might default to using the agent's <code>humanReadableId</code> or require the user to specify an override (e.g., via <code>agentvault_cli run --key-service</code>).</li>
-<li><strong>Purpose:</strong> Allows a single credential (like an OpenAI key) stored locally under one <code>service_identifier</code> (e.g., "openai") to be used by multiple different agents that all require OpenAI authentication.</li>
+<li>Researching and potentially integrating standardized TEE attestation verification libraries or protocols into the <code>agentvault</code> client library.</li>
+<li>Defining mechanisms for establishing secure communication channels directly with TEE enclaves, possibly leveraging the declared <code>publicKey</code>.</li>
+<li>Standardizing <code>teeDetails.type</code> identifiers.</li>
 </ul>
 
 

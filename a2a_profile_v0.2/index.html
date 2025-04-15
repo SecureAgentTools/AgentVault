@@ -14,6 +14,8 @@
         <link rel="prev" href="../developer_guide/testing/">
       
       
+        <link rel="next" href="../tee_profile/">
+      
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
@@ -257,6 +259,25 @@
   
   
   
+    <li class="md-tabs__item">
+      <a href="../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
     
     
       <li class="md-tabs__item">
@@ -311,6 +332,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
   
 
       
@@ -508,6 +548,28 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -522,10 +584,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -538,8 +600,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             User Guide
           </label>
@@ -595,10 +657,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -611,8 +673,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Developer Guide
           </label>
@@ -630,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    Library (Client)
+    Client Library (`agentvault`)
     
   </span>
   
@@ -653,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    Server SDK
+    Server SDK (`agentvault-server-sdk`)
     
   </span>
   
@@ -676,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    Registry API
+    Registry API (`agentvault_registry`)
     
   </span>
   
@@ -699,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    Testing Utilities
+    Testing Utilities (`agentvault-testing-utils`)
     
   </span>
   
@@ -742,10 +804,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -758,8 +820,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Protocols
           </label>
@@ -831,9 +893,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#transport" class="md-nav__link">
+  <a href="#transport-details" class="md-nav__link">
     <span class="md-ellipsis">
-      Transport
+      Transport Details
     </span>
   </a>
   
@@ -849,13 +911,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#json-rpc-methods" class="md-nav__link">
+  <a href="#json-rpc-20-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      JSON-RPC Methods
+      JSON-RPC 2.0 Structure
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="JSON-RPC Methods">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-a2a-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard A2A Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Standard A2A Methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -918,9 +989,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#json-rpc-errors" class="md-nav__link">
+  <a href="#json-rpc-error-codes" class="md-nav__link">
     <span class="md-ellipsis">
-      JSON-RPC Errors
+      JSON-RPC Error Codes
     </span>
   </a>
   
@@ -935,9 +1006,54 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tee_profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TEE Profile
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -959,156 +1075,276 @@
 
 
 <h1 id="agentvault-a2a-profile-v02">AgentVault A2A Profile v0.2<a class="headerlink" href="#agentvault-a2a-profile-v02" title="Permanent link">&para;</a></h1>
-<p>This document specifies the Agent-to-Agent (A2A) communication profile implemented by AgentVault components (as of v0.2.x of the libraries/SDK). It defines how clients interact with A2A-compliant agent servers.</p>
+<p>This document specifies the Agent-to-Agent (A2A) communication profile implemented by AgentVault components (as of v0.2.x of the libraries/SDK). It defines how clients interact with A2A-compliant agent servers, aligning with concepts from emerging A2A standards like Google's A2A protocol.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Protocol:</strong> JSON-RPC 2.0</li>
-<li><strong>Transport:</strong> HTTP/1.1 or HTTP/2 (HTTPS REQUIRED for non-localhost communication)</li>
-<li><strong>Request Method:</strong> Primarily <code>POST</code> for all JSON-RPC requests, including <code>tasks/sendSubscribe</code>.</li>
-<li><strong>Streaming:</strong> Server-Sent Events (SSE) for real-time updates (<code>tasks/sendSubscribe</code>).</li>
-<li><strong>Data Format:</strong> JSON</li>
+<li><strong>Protocol:</strong> JSON-RPC 2.0 Specification.</li>
+<li><strong>Transport:</strong> HTTP/1.1 or HTTP/2. <strong>HTTPS is REQUIRED</strong> for all communication except potentially during local development targeting <code>localhost</code>.</li>
+<li><strong>Request Method:</strong> <code>POST</code> for all JSON-RPC requests.</li>
+<li><strong>Streaming:</strong> Server-Sent Events (SSE) via the <code>tasks/sendSubscribe</code> method for real-time updates.</li>
+<li><strong>Data Format:</strong> JSON (UTF-8 encoding).</li>
+<li><strong>Authentication:</strong> Defined via <code>authSchemes</code> in the <a href="../concepts/#agent-card">Agent Card</a>. Supported schemes include <code>none</code>, <code>apiKey</code>, and <code>oauth2</code> (Client Credentials Grant).</li>
 </ul>
-<h2 id="transport">Transport<a class="headerlink" href="#transport" title="Permanent link">&para;</a></h2>
-<p>All JSON-RPC requests are sent using the HTTP <code>POST</code> method to the agent's A2A endpoint URL specified in its Agent Card (<code>url</code> field).</p>
-<p>Responses to standard JSON-RPC requests are returned in the HTTP response body.</p>
-<p>For streaming updates via <code>tasks/sendSubscribe</code>, the server responds with HTTP <code>200 OK</code> and a <code>Content-Type: text/event-stream</code> header, followed by the SSE stream in the response body.</p>
-<p>HTTPS is mandatory for all communication except potentially during local development targeting <code>localhost</code>.</p>
+<h2 id="transport-details">Transport Details<a class="headerlink" href="#transport-details" title="Permanent link">&para;</a></h2>
+<p>All JSON-RPC requests, including method calls and notifications (if used), MUST be sent using the HTTP <code>POST</code> method to the agent's designated A2A endpoint URL (found in the <code>url</code> field of its Agent Card).</p>
+<ul>
+<li><strong>Request Headers:</strong><ul>
+<li><code>Content-Type: application/json</code> is REQUIRED.</li>
+<li>Authentication headers (e.g., <code>X-Api-Key</code> or <code>Authorization: Bearer &lt;token&gt;</code>) MUST be included if required by the agent's <code>authSchemes</code>.</li>
+</ul>
+</li>
+<li><strong>Request Body:</strong> Contains the standard JSON-RPC 2.0 request object (see below).</li>
+<li><strong>Response Body (Non-Streaming):</strong> Contains the standard JSON-RPC 2.0 response object (either <code>result</code> or <code>error</code>).</li>
+<li><strong>Response Body (Streaming via <code>tasks/sendSubscribe</code>):</strong> The server responds with HTTP <code>200 OK</code> and <code>Content-Type: text/event-stream</code>. The body then contains a stream of Server-Sent Events (see SSE section below).</li>
+</ul>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Agents declare their supported authentication methods in their Agent Card (<code>authSchemes</code>). Clients MUST support at least one of the declared schemes. The <code>agentvault</code> library currently supports the following client-side implementations:</p>
+<p>Refer to the main <a href="../security/#agent-authentication-client---agent">Security Considerations</a> document for details on how <code>none</code>, <code>apiKey</code>, and <code>oauth2</code> (Client Credentials) schemes are implemented and handled by the <code>agentvault</code> client library and expected by servers.</p>
+<h2 id="json-rpc-20-structure">JSON-RPC 2.0 Structure<a class="headerlink" href="#json-rpc-20-structure" title="Permanent link">&para;</a></h2>
+<p>All requests and responses adhere to the JSON-RPC 2.0 specification.</p>
+<p><strong>Request Object:</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;method_name&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;parame</span><span class="kc">ters</span><span class="err">_objec</span><span class="kc">t</span><span class="err">_or_array&gt;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;reques</span><span class="kc">t</span><span class="err">_id_s</span><span class="kc">tr</span><span class="err">i</span><span class="kc">n</span><span class="err">g_or_</span><span class="kc">nu</span><span class="err">mber_or_</span><span class="kc">null</span><span class="err">&gt;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+</span></code></pre></div>
 <ul>
-<li><strong><code>none</code>:</strong> No authentication is performed. The client sends the request without any specific authentication headers.</li>
-<li><strong><code>apiKey</code>:</strong><ul>
-<li>The client retrieves the appropriate API key using the <code>KeyManager</code> (based on the <code>service_identifier</code> in the Agent Card or an override).</li>
-<li>The client includes the key in the <code>X-Api-Key</code> HTTP header.</li>
-<li>The server is responsible for validating this key.</li>
+<li><code>jsonrpc</code>: MUST be exactly "2.0".</li>
+<li><code>method</code>: A string containing the name of the method to be invoked (e.g., "tasks/send").</li>
+<li><code>params</code>: An optional structured value (object or array) containing parameter values. If omitted, the method is assumed to take no parameters. AgentVault methods use parameter objects (dictionaries).</li>
+<li><code>id</code>: An identifier established by the Client. If included, the response MUST include the same value. If omitted (for notifications), the server MUST NOT reply. AgentVault methods generally expect an ID.</li>
+</ul>
+<p><strong>Response Object (Success):</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;resul</span><span class="kc">t</span><span class="err">_value&gt;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;ma</span><span class="kc">t</span><span class="err">chi</span><span class="kc">n</span><span class="err">g_reques</span><span class="kc">t</span><span class="err">_id&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><code>result</code>: The value returned by the method invocation. Its structure depends on the method called.</li>
+<li><code>id</code>: Must match the <code>id</code> from the Request Object.</li>
+</ul>
+<p><strong>Response Object (Error):</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;i</span><span class="kc">nte</span><span class="err">ger&gt;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;s</span><span class="kc">tr</span><span class="err">i</span><span class="kc">n</span><span class="err">g&gt;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;op</span><span class="kc">t</span><span class="err">io</span><span class="kc">nal</span><span class="err">_a</span><span class="kc">n</span><span class="err">y&gt;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;ma</span><span class="kc">t</span><span class="err">chi</span><span class="kc">n</span><span class="err">g_reques</span><span class="kc">t</span><span class="err">_id_or_</span><span class="kc">null</span><span class="err">&gt;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><code>error</code>: An object describing the error.<ul>
+<li><code>code</code>: A Number that indicates the error type that occurred. See <a href="#json-rpc-error-codes">Error Codes</a>.</li>
+<li><code>message</code>: A String providing a short description of the error.</li>
+<li><code>data</code>: Optional. A Primitive or Structured value containing additional information about the error.</li>
 </ul>
 </li>
-<li><strong><code>oauth2</code> (Client Credentials Grant):</strong><ul>
-<li>The Agent Card MUST provide a valid <code>tokenUrl</code> and optionally <code>scopes</code>.</li>
-<li>The client uses <code>KeyManager</code> to retrieve the <code>clientId</code> and <code>clientSecret</code> associated with the agent's <code>service_identifier</code>.</li>
-<li>The client makes a <code>POST</code> request to the <code>tokenUrl</code> with <code>grant_type=client_credentials</code>, <code>client_id</code>, <code>client_secret</code>, and optionally <code>scope</code>.</li>
-<li>The client extracts the <code>access_token</code> from the token endpoint's JSON response.</li>
-<li>The client includes the token in the <code>Authorization: Bearer &lt;access_token&gt;</code> HTTP header for subsequent requests to the agent's A2A endpoint.</li>
-<li>The client library performs basic in-memory caching of the obtained token based on its <code>expires_in</code> value (if provided).</li>
-<li>The agent server is responsible for validating the received Bearer token.</li>
+<li><code>id</code>: Must match the <code>id</code> from the Request Object. If the error occurred before the ID could be determined (e.g., Parse Error), it SHOULD be <code>null</code>.</li>
 </ul>
-</li>
-</ul>
-<h2 id="json-rpc-methods">JSON-RPC Methods<a class="headerlink" href="#json-rpc-methods" title="Permanent link">&para;</a></h2>
-<p>All methods follow the JSON-RPC 2.0 specification.</p>
+<h2 id="standard-a2a-methods">Standard A2A Methods<a class="headerlink" href="#standard-a2a-methods" title="Permanent link">&para;</a></h2>
+<p>These methods form the core of the AgentVault A2A interaction model.</p>
 <h3 id="taskssend"><code>tasks/send</code><a class="headerlink" href="#taskssend" title="Permanent link">&para;</a></h3>
+<p>Initiates a new task or sends a subsequent message to an existing task.</p>
 <ul>
-<li><strong>Purpose:</strong> Initiates a new task or sends a subsequent message to an existing task. Can optionally register a webhook for push notifications if the agent supports it.</li>
-<li><strong>Params:</strong> <code>TaskSendParams</code> model<ul>
-<li><code>id</code> (Optional[str]): Task ID if continuing an existing task, <code>null</code> or omitted if initiating.</li>
-<li><code>message</code> (Message): The message object to send.</li>
-<li><code>webhookUrl</code> (Optional[str]): URL for the agent to send push notifications to (if supported by the agent).</li>
-<li><em>(Other fields like <code>sessionId</code>, <code>historyLength</code> might be added based on spec evolution)</em></li>
+<li><strong>Params:</strong> <code>TaskSendParams</code> object
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Example: Initiate a new task</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What is the weather in London?&quot;</span><span class="p">}],</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">&quot;mcp_context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* Optional MCP data */</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">&quot;webhookUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-client.example.com/webhook/task-updates&quot;</span><span class="w"> </span><span class="c1">// Optional</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">}</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">// Example: Send subsequent message to existing task</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">{</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-abc-123&quot;</span><span class="p">,</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What about tomorrow?&quot;</span><span class="p">}]</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">}</span>
+</span></code></pre></div><ul>
+<li><code>id</code> (Optional[str]): Task ID if continuing, omit/null if initiating.</li>
+<li><code>message</code> (Message): The message object.</li>
+<li><code>webhookUrl</code> (Optional[str]): URL for agent push notifications (if supported).</li>
 </ul>
 </li>
-<li><strong>Result:</strong> <code>TaskSendResult</code> model<ul>
-<li><code>id</code> (str): The ID of the task (newly created or existing).</li>
-</ul>
-</li>
+<li><strong>Result:</strong> <code>TaskSendResult</code> object
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-abc-123&quot;</span><span class="w"> </span><span class="c1">// The ID of the task (new or existing)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">}</span>
+</span></code></pre></div></li>
 </ul>
 <h3 id="tasksget"><code>tasks/get</code><a class="headerlink" href="#tasksget" title="Permanent link">&para;</a></h3>
+<p>Retrieve the current status and details of a specific task.</p>
 <ul>
-<li><strong>Purpose:</strong> Retrieve the current status, message history, and artifacts of a specific task.</li>
-<li><strong>Params:</strong> <code>TaskGetParams</code> model (or simply <code>{"id": "task-id"}</code>)<ul>
-<li><code>id</code> (str): The ID of the task to retrieve.</li>
-<li><em>(Optional parameters like <code>historyLength</code> might be added)</em></li>
-</ul>
-</li>
-<li><strong>Result:</strong> <code>Task</code> model - Contains the full task state (<code>id</code>, <code>state</code>, <code>createdAt</code>, <code>updatedAt</code>, <code>messages</code>, <code>artifacts</code>, <code>metadata</code>).</li>
+<li><strong>Params:</strong> <code>TaskGetParams</code> object (or just the <code>id</code> field)
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-abc-123&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
+</span></code></pre></div></li>
+<li><strong>Result:</strong> <code>Task</code> object (See <code>agentvault.models.Task</code> for full structure)
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-abc-123&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WORKING&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// Or COMPLETED, FAILED, etc.</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-04-15T10:00:00Z&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-04-15T10:05:30Z&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">&quot;messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]},</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]}</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">&quot;artifacts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;artifact-1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text/plain&quot;</span><span class="p">}</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* Optional task-level metadata */</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span>
+</span></code></pre></div></li>
 </ul>
 <h3 id="taskscancel"><code>tasks/cancel</code><a class="headerlink" href="#taskscancel" title="Permanent link">&para;</a></h3>
+<p>Request the cancellation of an ongoing task.</p>
 <ul>
-<li><strong>Purpose:</strong> Request the cancellation of an ongoing task.</li>
-<li><strong>Params:</strong> <code>TaskCancelParams</code> model (or simply <code>{"id": "task-id"}</code>)<ul>
-<li><code>id</code> (str): The ID of the task to cancel.</li>
-</ul>
-</li>
-<li><strong>Result:</strong> <code>TaskCancelResult</code> model<ul>
-<li><code>success</code> (bool): Indicates if the cancellation request was accepted by the agent (doesn't guarantee immediate termination).</li>
-<li><code>message</code> (Optional[str]): Optional message from the agent regarding cancellation.</li>
-</ul>
-</li>
+<li><strong>Params:</strong> <code>TaskCancelParams</code> object (or just the <code>id</code> field)
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-abc-123&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">}</span>
+</span></code></pre></div></li>
+<li><strong>Result:</strong> <code>TaskCancelResult</code> object
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// Indicates request was accepted, not necessarily completed cancellation</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cancellation request received.&quot;</span><span class="w"> </span><span class="c1">// Optional</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">}</span>
+</span></code></pre></div></li>
 </ul>
 <h3 id="taskssendsubscribe"><code>tasks/sendSubscribe</code><a class="headerlink" href="#taskssendsubscribe" title="Permanent link">&para;</a></h3>
+<p>Subscribe to real-time updates for a task via Server-Sent Events (SSE).</p>
 <ul>
-<li><strong>Purpose:</strong> Subscribe to real-time updates for a task via Server-Sent Events (SSE).</li>
-<li><strong>Params:</strong> <code>TaskIdParams</code> model (or simply <code>{"id": "task-id"}</code>)<ul>
-<li><code>id</code> (str): The ID of the task to subscribe to.</li>
-</ul>
-</li>
-<li><strong>Response:</strong><ul>
-<li>Initial HTTP <code>200 OK</code> with <code>Content-Type: text/event-stream</code>.</li>
-<li>Followed by a stream of SSE messages in the response body (see SSE section below).</li>
-<li>The connection remains open until the task reaches a terminal state or is closed by either party.</li>
-</ul>
-</li>
+<li><strong>Params:</strong> Object containing the task ID
+    <div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-abc-123&quot;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">}</span>
+</span></code></pre></div></li>
+<li><strong>Response:</strong> HTTP <code>200 OK</code> with <code>Content-Type: text/event-stream</code>, followed by SSE stream in the body. <strong>No JSON-RPC <code>result</code> field is sent in the initial HTTP response body.</strong></li>
 </ul>
 <h2 id="task-states-taskstate-enum">Task States (<code>TaskState</code> Enum)<a class="headerlink" href="#task-states-taskstate-enum" title="Permanent link">&para;</a></h2>
-<p>Defines the lifecycle of an A2A task:</p>
+<p>The defined states for an A2A task lifecycle:</p>
 <ul>
-<li><strong><code>SUBMITTED</code></strong>: Task received by the agent, awaiting execution.</li>
-<li><strong><code>WORKING</code></strong>: Task is actively being processed by the agent.</li>
-<li><strong><code>INPUT_REQUIRED</code></strong>: Task is paused, awaiting further input from the user/client (support for handling this state might vary).</li>
-<li><strong><code>COMPLETED</code></strong>: Task finished successfully. (Terminal State)</li>
-<li><strong><code>FAILED</code></strong>: Task terminated due to an error during execution. (Terminal State)</li>
-<li><strong><code>CANCELED</code></strong>: Task was canceled by user request before completion. (Terminal State)</li>
+<li><strong><code>SUBMITTED</code></strong>: Task received, awaiting execution.</li>
+<li><strong><code>WORKING</code></strong>: Task actively being processed.</li>
+<li><strong><code>INPUT_REQUIRED</code></strong>: Task paused, awaiting further client input (advanced use case).</li>
+<li><strong><code>COMPLETED</code></strong>: Task finished successfully. (Terminal)</li>
+<li><strong><code>FAILED</code></strong>: Task terminated due to an error. (Terminal)</li>
+<li><strong><code>CANCELED</code></strong>: Task canceled by request. (Terminal)</li>
 </ul>
 <h2 id="server-sent-events-sse">Server-Sent Events (SSE)<a class="headerlink" href="#server-sent-events-sse" title="Permanent link">&para;</a></h2>
-<p>Used by the <code>tasks/sendSubscribe</code> method for streaming updates.</p>
+<p>Used for the <code>tasks/sendSubscribe</code> stream.</p>
 <ul>
-<li><strong>Format:</strong> Standard SSE format. Each message consists of lines like <code>field: value</code>, followed by an empty line (<code>\n\n</code>).
-    <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>event: &lt;event_type&gt;
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>data: &lt;json_payload&gt;
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>event: &lt;another_event_type&gt;
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>data: &lt;another_json_payload&gt;
+<li><strong>Format:</strong> Standard SSE. Each event consists of <code>event:</code> and <code>data:</code> lines, terminated by <code>\n\n</code>.
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>event: &lt;event_type&gt;
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>data: &lt;json_payload_string&gt;
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>event: &lt;another_event_type&gt;
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>data: &lt;another_json_payload_string&gt;
 </span></code></pre></div></li>
 <li><strong>Event Types (<code>event:</code> field):</strong><ul>
-<li><code>task_status</code>: Indicates a change in the task's overall state.</li>
-<li><code>task_message</code>: Indicates a new message has been added to the task's history (usually from the agent or a tool).</li>
-<li><code>task_artifact</code>: Indicates a new artifact has been created or updated for the task.</li>
-<li><code>error</code>: Indicates an error occurred on the server side during streaming (distinct from JSON-RPC errors).</li>
+<li><code>task_status</code>: Task state change. <code>data</code> is JSON of <code>TaskStatusUpdateEvent</code>.</li>
+<li><code>task_message</code>: New message added. <code>data</code> is JSON of <code>TaskMessageEvent</code>.</li>
+<li><code>task_artifact</code>: Artifact created/updated. <code>data</code> is JSON of <code>TaskArtifactUpdateEvent</code>.</li>
+<li><code>error</code>: Server-side error during streaming. <code>data</code> is a JSON object like <code>{"error": "code", "message": "desc"}</code>.</li>
 </ul>
 </li>
-<li><strong>Data Payload (<code>data:</code> field):</strong> A JSON string representing the corresponding Pydantic model:<ul>
-<li><code>event: task_status</code> -&gt; <code>data: TaskStatusUpdateEvent</code> JSON</li>
-<li><code>event: task_message</code> -&gt; <code>data: TaskMessageEvent</code> JSON</li>
-<li><code>event: task_artifact</code> -&gt; <code>data: TaskArtifactUpdateEvent</code> JSON</li>
-<li><code>event: error</code> -&gt; <code>data: {"error": "...", "message": "...", ...}</code> JSON (structure may vary)</li>
+<li><strong>Data Payload (<code>data:</code> field):</strong> A <strong>single line</strong> containing a JSON string representing the corresponding event model (e.g., <code>TaskStatusUpdateEvent</code>, <code>TaskMessageEvent</code>, <code>TaskArtifactUpdateEvent</code>).</li>
 </ul>
-</li>
-</ul>
-<h2 id="json-rpc-errors">JSON-RPC Errors<a class="headerlink" href="#json-rpc-errors" title="Permanent link">&para;</a></h2>
-<p>Standard JSON-RPC 2.0 error objects are returned within the JSON response body when a request cannot be fulfilled normally.</p>
-<ul>
-<li><strong>Structure:</strong>
-    <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;i</span><span class="kc">nte</span><span class="err">ger&gt;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;s</span><span class="kc">tr</span><span class="err">i</span><span class="kc">n</span><span class="err">g&gt;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;op</span><span class="kc">t</span><span class="err">io</span><span class="kc">nal</span><span class="err">_a</span><span class="kc">n</span><span class="err">y&gt;</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;reques</span><span class="kc">t</span><span class="err">_id_or_</span><span class="kc">null</span><span class="err">&gt;</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
-</span></code></pre></div></li>
-<li><strong>Common Codes Used:</strong><ul>
-<li><code>-32700</code>: Parse Error (Invalid JSON received).</li>
-<li><code>-32600</code>: Invalid Request (JSON is not a valid Request object).</li>
-<li><code>-32601</code>: Method Not Found.</li>
-<li><code>-32602</code>: Invalid Params (Invalid method parameters).</li>
-<li><code>-32603</code>: Internal Error (Server-side error not covered by others).</li>
-<li><code>-32000</code>: Generic Application Error (Used by SDK for agent logic errors).</li>
-<li><code>-32001</code>: Task Not Found (Custom application error).</li>
-<li><em>(Others may be defined)</em></li>
-</ul>
-</li>
-</ul>
+<p><strong>Example SSE Stream:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>event: task_status
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>data: {&quot;taskId&quot;: &quot;task-abc-123&quot;, &quot;state&quot;: &quot;WORKING&quot;, &quot;timestamp&quot;: &quot;2024-04-15T10:05:00Z&quot;, &quot;message&quot;: null}
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>event: task_message
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>data: {&quot;taskId&quot;: &quot;task-abc-123&quot;, &quot;message&quot;: {&quot;role&quot;: &quot;assistant&quot;, &quot;parts&quot;: [{&quot;type&quot;: &quot;text&quot;, &quot;content&quot;: &quot;Thinking...&quot;}], &quot;metadata&quot;: null}, &quot;timestamp&quot;: &quot;2024-04-15T10:05:05Z&quot;}
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>event: task_artifact
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>data: {&quot;taskId&quot;: &quot;task-abc-123&quot;, &quot;artifact&quot;: {&quot;id&quot;: &quot;log-1&quot;, &quot;type&quot;: &quot;debug_log&quot;, &quot;content&quot;: &quot;Processing step 1&quot;, &quot;url&quot;: null, &quot;mediaType&quot;: &quot;text/plain&quot;, &quot;metadata&quot;: null}, &quot;timestamp&quot;: &quot;2024-04-15T10:05:10Z&quot;}
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>event: task_status
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>data: {&quot;taskId&quot;: &quot;task-abc-123&quot;, &quot;state&quot;: &quot;COMPLETED&quot;, &quot;timestamp&quot;: &quot;2024-04-15T10:05:15Z&quot;, &quot;message&quot;: &quot;Task finished successfully.&quot;}
+</span></code></pre></div>
+<h2 id="json-rpc-error-codes">JSON-RPC Error Codes<a class="headerlink" href="#json-rpc-error-codes" title="Permanent link">&para;</a></h2>
+<p>Standard codes should be used where applicable. AgentVault defines some application-specific codes in the <code>-32000</code> to <code>-32099</code> range.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">Message</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">-32700</td>
+<td style="text-align: left;">Parse error</td>
+<td style="text-align: left;">Invalid JSON was received by the server.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32600</td>
+<td style="text-align: left;">Invalid Request</td>
+<td style="text-align: left;">The JSON sent is not a valid Request object.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32601</td>
+<td style="text-align: left;">Method not found</td>
+<td style="text-align: left;">The method does not exist / is not available.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32602</td>
+<td style="text-align: left;">Invalid Params</td>
+<td style="text-align: left;">Invalid method parameter(s).</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32603</td>
+<td style="text-align: left;">Internal error</td>
+<td style="text-align: left;">Internal JSON-RPC error on the server.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32000</td>
+<td style="text-align: left;">Agent Server Error</td>
+<td style="text-align: left;">Generic application error on the agent.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32001</td>
+<td style="text-align: left;">Task Not Found</td>
+<td style="text-align: left;">Specified <code>task_id</code> does not exist.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32002</td>
+<td style="text-align: left;">Authentication Error</td>
+<td style="text-align: left;">API Key / Token invalid or missing.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32003</td>
+<td style="text-align: left;">Authorization Error</td>
+<td style="text-align: left;">Authenticated user cannot perform action.</td>
+</tr>
+<tr>
+<td style="text-align: left;">-32004</td>
+<td style="text-align: left;">Invalid State</td>
+<td style="text-align: left;">Operation not allowed in current task state.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><em>others</em></td>
+<td style="text-align: left;"><em>Implementation Defined</em></td>
+<td style="text-align: left;">Server may define other -320xx errors.</td>
+</tr>
+</tbody>
+</table>
+<p>Servers SHOULD include meaningful information in the <code>message</code> and optionally the <code>data</code> part of the error object.</p>
 
 
 
