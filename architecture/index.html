@@ -1298,31 +1298,33 @@
         User[User / Client App] --&gt;|Uses| CLI(agentvault_cli)
         CLI --&gt;|Uses| Lib(agentvault_library)
         User --&gt;|Uses| Lib
-        Lib --&gt;|Manages Keys via KeyManager| KeyStore([Local Credential Store&lt;br&gt;(Env, File, Keyring)])
+        Lib --&gt;|Manages Keys via KeyManager| KeyStore[Local Credential Store Env/File/Keyring]
     end
 
     subgraph Developer Side
         Dev[Agent Developer] --&gt;|Uses| SDK(agentvault_server_sdk)
-        SDK --&gt;|Builds Agent + Card| AgentServer(A2A Agent Server&lt;br&gt;e.g., FastAPI)
-        Dev --&gt;|Creates/Manages Registry Key| DevKeyStore([Developer API Key&lt;br&gt;Stored by Developer])
-        Dev --&gt;|Submits Card via API&lt;br&gt;(Uses DevKeyStore)| RegistryAPI(Registry API&lt;br&gt;/api/v1)
+        SDK --&gt;|Builds Agent + Card| AgentServer(A2A Agent Server FastAPI)
+        Dev --&gt;|Creates/Manages Registry Key| DevKeyStore[Developer API Key Stored by Dev]
+        Dev --&gt;|Submits Card via API Uses DevKeyStore| RegistryAPI(Registry API /api/v1)
     end
 
     subgraph Central Service
-        RegistryAPI --&gt;|Reads/Writes Hashes| DB[(Registry PostgreSQL DB&lt;br&gt;Stores Cards &amp; Hashed Dev Keys)]
-        RegistryAPI --&gt;|Serves UI| RegistryUI(Registry Web UI&lt;br&gt;/ui, /ui/developer)
+        RegistryAPI --&gt;|Reads/Writes Hashes| DB[Registry DB Cards Hashed Keys]
+        RegistryAPI --&gt;|Serves UI| RegistryUI(Registry Web UI /ui)
         User --&gt;|Browses| RegistryUI
     end
 
+    %% --- MODIFIED: Removed numbering from edge labels ---
     subgraph Communication Paths
-        Lib -- 1. Discover Agent (Public API) --&gt; RegistryAPI
-        Lib -- 2. Get Agent Card (Public API) --&gt; RegistryAPI
-        Lib -- 3. Run Task (A2A Protocol)&lt;br&gt;Uses KeyManager for Agent Auth --&gt; AgentServer
+        Lib --&gt;|Discover Agent Public API| RegistryAPI
+        Lib --&gt;|Get Agent Card Public API| RegistryAPI
+        Lib --&gt;|Run Task A2A Protocol| AgentServer
         AgentServer --&gt;|Optional: Uses Lib/SDK| ExternalService[External APIs / Services]
     end
+    %% --- END MODIFIED ---
 
-    style Dev fill:#f9f,stroke:#333,stroke-width:2px
-    style User fill:#ccf,stroke:#333,stroke-width:2px
+    style Dev fill:#ff99ff,stroke:#333333,stroke-width:2px
+    style User fill:#ccccff,stroke:#333333,stroke-width:2px
     style KeyStore stroke-dasharray: 5 5
     style DevKeyStore stroke-dasharray: 5 5</code></pre>
 <p><strong>Explanation of Flows:</strong></p>
@@ -1408,7 +1410,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy", "content.code.annotate", "mermaid"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
