@@ -614,6 +614,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#3-running-the-registry-local-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Running the Registry (Local Development)
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1338,8 +1347,8 @@
 </ul>
 <p><strong>Verification (CLI):</strong></p>
 <p>After installing the CLI, check that the command is available:</p>
-<p><code>bash
-agentvault_cli --version</code></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>agentvault_cli<span class="w"> </span>--version
+</span></code></pre></div>
 <h2 id="2-setting-up-for-development-contributing-or-running-from-source">2. Setting up for Development (Contributing or Running from Source)<a class="headerlink" href="#2-setting-up-for-development-contributing-or-running-from-source" title="Permanent link">&para;</a></h2>
 <p>If you want to contribute to AgentVault, run components locally from the source code (like the registry), or use features not yet released on PyPI, follow these steps. This sets up the entire monorepo.</p>
 <p><strong>Prerequisites:</strong></p>
@@ -1347,60 +1356,63 @@ agentvault_cli --version</code></p>
 <li>Git</li>
 <li>Python 3.10 or 3.11</li>
 <li><a href="https://python-poetry.org/docs/#installation">Poetry</a> (Python dependency management and packaging tool)</li>
+<li><strong>PostgreSQL Server</strong> (Required <em>only</em> if running the <code>agentvault_registry</code> locally).</li>
 </ul>
 <p><strong>Steps:</strong></p>
 <ol>
 <li>
 <p><strong>Clone the Repository:</strong>
-    <code>bash
-    git clone https://github.com/SecureAgentTools/AgentVault.git
-    cd AgentVault</code></p>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SecureAgentTools/AgentVault.git
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">cd</span><span class="w"> </span>AgentVault
+</span></code></pre></div></p>
 </li>
 <li>
 <p><strong>Install Dependencies (including Development Tools):</strong> Navigate to the project root (<code>AgentVault/</code>) and use Poetry to install all dependencies for all workspace packages:
-    ```bash
-    # Installs production AND development dependencies (pytest, httpx, mkdocs, etc.)
-    poetry install --with dev</p>
-<h1 id="to-include-optional-os-keyring-support-for-development">To include optional OS Keyring support for development:<a class="headerlink" href="#to-include-optional-os-keyring-support-for-development" title="Permanent link">&para;</a></h1>
-<h1 id="poetry-install-with-dev-extras-os_keyring">poetry install --with dev --extras os_keyring<a class="headerlink" href="#poetry-install-with-dev-extras-os_keyring" title="Permanent link">&para;</a></h1>
-<p><code>``
-*   This command reads the</code>pyproject.toml<code>files in each component directory (</code>agentvault_library<code>,</code>agentvault_cli<code>, etc.).
-*   It resolves all dependencies across the workspace.
-*   It installs everything into a single virtual environment located in the project root (usually</code>.venv/`).</p>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Installs production AND development dependencies (pytest, httpx, mkdocs, etc.)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># To include optional OS Keyring support for development:</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># poetry install --with dev --extras os_keyring</span>
+</span></code></pre></div></p>
+<ul>
+<li>This command reads the <code>pyproject.toml</code> files in each component directory (<code>agentvault_library</code>, <code>agentvault_cli</code>, etc.).</li>
+<li>It resolves all dependencies across the workspace.</li>
+<li>It installs everything into a single virtual environment located in the project root (usually <code>.venv/</code>).</li>
+</ul>
 </li>
 <li>
 <p><strong>Activate Virtual Environment:</strong> Before running any commands or tests from source, activate the environment created by Poetry:</p>
 <ul>
 <li><strong>Linux/macOS (bash/zsh):</strong>
-    <code>bash
-    source .venv/bin/activate</code></li>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span></code></pre></div></li>
 <li><strong>Windows (PowerShell):</strong>
-    <code>powershell
-    .\.venv\Scripts\Activate.ps1</code></li>
+    <div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
+</span></code></pre></div></li>
 <li><strong>Windows (Command Prompt):</strong>
-    <code>cmd
-    .\.venv\Scripts\activate.bat</code>
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>.\.venv\Scripts\activate.bat
+</span></code></pre></div>
 You should see <code>(.venv)</code> appear at the beginning of your command prompt line.</li>
 </ul>
 </li>
 <li>
 <p><strong>Verify Installation:</strong> You can now run commands from different components, e.g.:
-    <code>bash
-    # Check CLI version (running from source)
-    agentvault_cli --version
-    # Run library tests
-    pytest agentvault_library/tests/
-    # Check docs tool
-    mkdocs --version</code></p>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check CLI version (running from source)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>agentvault_cli<span class="w"> </span>--version
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Run library tests</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>pytest<span class="w"> </span>agentvault_library/tests/
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Check docs tool</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>mkdocs<span class="w"> </span>--version
+</span></code></pre></div></p>
 </li>
 </ol>
 <h2 id="3-running-the-registry-local-development">3. Running the Registry (Local Development)<a class="headerlink" href="#3-running-the-registry-local-development" title="Permanent link">&para;</a></h2>
 <p>To run the <code>agentvault_registry</code> API locally (e.g., for testing agents or the CLI against it):</p>
 <ol>
-<li><strong>Complete Development Setup:</strong> Follow the steps in section 2 above.</li>
+<li><strong>Complete Development Setup:</strong> Follow the steps in section 2 above. Ensure you have a running <strong>PostgreSQL</strong> server accessible.</li>
 <li><strong>Navigate:</strong>
-    <code>bash
-    cd agentvault_registry</code></li>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">cd</span><span class="w"> </span>agentvault_registry
+</span></code></pre></div></li>
 <li><strong>Configure Database &amp; Secrets:</strong><ul>
 <li>Copy <code>.env.example</code> to <code>.env</code> (if it exists) or create a <code>.env</code> file in the <code>agentvault_registry/</code> directory.</li>
 <li>Set the <code>DATABASE_URL</code> environment variable in the <code>.env</code> file to point to your local PostgreSQL instance (ensure it uses the <code>asyncpg</code> driver, e.g., <code>postgresql+asyncpg://user:pass@host:port/dbname</code>).</li>
@@ -1410,15 +1422,15 @@ You should see <code>(.venv)</code> appear at the beginning of your command prom
 <li><strong>Database Setup:</strong><ul>
 <li>Ensure your PostgreSQL server is running and the specified database exists.</li>
 <li>Run database migrations using Alembic (make sure your virtual environment is activated):
-    <code>bash
-    # Run from the agentvault_registry/ directory
-    alembic upgrade head</code></li>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Run from the agentvault_registry/ directory</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>alembic<span class="w"> </span>upgrade<span class="w"> </span>head
+</span></code></pre></div></li>
 </ul>
 </li>
 <li><strong>Run the Server:</strong> Use Uvicorn (which was installed as part of development dependencies):
-    <code>bash
-    # Run from the agentvault_registry/ directory
-    uvicorn agentvault_registry.main:app --reload --host 0.0.0.0 --port 8000</code><ul>
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Run from the agentvault_registry/ directory</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>uvicorn<span class="w"> </span>agentvault_registry.main:app<span class="w"> </span>--reload<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</span></code></pre></div><ul>
 <li><code>--reload</code>: Automatically restarts the server when code changes.</li>
 <li><code>--host 0.0.0.0</code>: Makes the server accessible from other devices on your network (use <code>127.0.0.1</code> for localhost only).</li>
 <li><code>--port 8000</code>: The default port.</li>
