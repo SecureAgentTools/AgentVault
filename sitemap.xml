@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/a2a_profile_v0.2/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/a2a_profile_v0.2/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/architecture/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/architecture/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/concepts/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/concepts/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/security/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/security/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/developer_guide/library/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/library/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/developer_guide/registry/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/registry/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/developer_guide/server_sdk/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/server_sdk/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/developer_guide/testing/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/testing/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
-         <loc>https://github.com/raphaeljeziorny/AgentVault/user_guide/cli/</loc>
+         <loc>https://SecureAgentTools.github.io/AgentVault/user_guide/cli/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>
 </urlset>
