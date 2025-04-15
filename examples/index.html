@@ -739,6 +739,75 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="oauth_agent_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OAuth Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="stateful_agent_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stateful Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="library_usage_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Direct Library Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1330,13 +1399,28 @@
 </ul>
 </li>
 <li>
-<p><strong>(Coming Soon) OAuth Agent Example:</strong> An example agent demonstrating the implementation of the <code>oauth2</code> (Client Credentials) authentication scheme using the Server SDK.</p>
+<p><strong><a href="oauth_agent_example/">OAuth Agent Example</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/oauth_agent_example">View Code</a>)</p>
+<ul>
+<li><strong>Focus:</strong> Demonstrates implementing the <code>oauth2</code> (Client Credentials) authentication scheme using the Server SDK and FastAPI.</li>
+<li><strong>Features:</strong> Includes a custom <code>/token</code> endpoint, uses environment variables for mock credentials, and protects the <code>/a2a</code> endpoint using a FastAPI dependency.</li>
+<li><strong>Good for:</strong> Developers needing to implement OAuth2 authentication for their agents.</li>
+</ul>
 </li>
 <li>
-<p><strong>(Coming Soon) Stateful Agent Example:</strong> An example agent showcasing how to manage task state across multiple interactions using the Server SDK's state management features.</p>
+<p><strong><a href="stateful_agent_example/">Stateful Agent Example</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/stateful_agent_example">View Code</a>)</p>
+<ul>
+<li><strong>Focus:</strong> Demonstrates managing task state (like chat history) across multiple client interactions within a single task ID using the Server SDK.</li>
+<li><strong>Features:</strong> Uses a custom <code>TaskContext</code> subclass, <code>InMemoryTaskStore</code>, and <code>asyncio.Event</code> to handle multi-turn interactions and background processing.</li>
+<li><strong>Good for:</strong> Developers building conversational agents or agents that require maintaining context over several requests.</li>
+</ul>
 </li>
 <li>
-<p><strong>(Coming Soon) Library Usage Example:</strong> A Python script demonstrating direct usage of the <code>agentvault</code> client library to discover and interact with an agent, bypassing the CLI.</p>
+<p><strong><a href="library_usage_example/">Direct Library Usage</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/library_usage_example">View Code</a>)</p>
+<ul>
+<li><strong>Focus:</strong> Shows how to use the <code>agentvault</code> client library directly in a Python script to interact with an agent.</li>
+<li><strong>Features:</strong> Demonstrates loading agent cards, using <code>KeyManager</code>, calling <code>AgentVaultClient</code> methods (<code>initiate_task</code>, <code>receive_messages</code>), and handling events and errors.</li>
+<li><strong>Good for:</strong> Developers integrating AgentVault client functionality into custom applications or scripts.</li>
+</ul>
 </li>
 </ul>
 <h2 id="running-the-examples">Running the Examples<a class="headerlink" href="#running-the-examples" title="Permanent link">&para;</a></h2>

@@ -85,6 +85,18 @@
          <lastmod>2025-04-15</lastmod>
     </url>
     <url>
+         <loc>https://SecureAgentTools.github.io/AgentVault/examples/library_usage_example/</loc>
+         <lastmod>2025-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://SecureAgentTools.github.io/AgentVault/examples/oauth_agent_example/</loc>
+         <lastmod>2025-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://SecureAgentTools.github.io/AgentVault/examples/stateful_agent_example/</loc>
+         <lastmod>2025-04-15</lastmod>
+    </url>
+    <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/user_guide/cli/</loc>
          <lastmod>2025-04-15</lastmod>
     </url>

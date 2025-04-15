@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://SecureAgentTools.github.io/AgentVault/user_guide/cli/">
       
       
-        <link rel="prev" href="../../examples/langchain_integration/">
+        <link rel="prev" href="../../examples/library_usage_example/">
       
       
         <link rel="next" href="../../developer_guide/library/">
@@ -674,6 +674,75 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/oauth_agent_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OAuth Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/stateful_agent_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stateful Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/library_usage_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Direct Library Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -826,6 +895,39 @@
   <a href="#run" class="md-nav__link">
     <span class="md-ellipsis">
       run
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Tips
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#re-running-run-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Re-running run Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-agent-selection-discover-fzf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Agent Selection (discover + fzf)
     </span>
   </a>
   
@@ -1426,33 +1528,38 @@
 <p>Search for agents registered in the central AgentVault Registry.</p>
 <p><strong>Usage:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>--help
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span><span class="o">[</span>SEARCH_QUERY<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="sb">```</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>*<span class="w">   </span>**<span class="sb">`</span><span class="o">[</span>SEARCH_QUERY<span class="o">]</span><span class="sb">`</span><span class="w"> </span><span class="o">(</span>Optional<span class="o">)</span>:**<span class="w"> </span>Text<span class="w"> </span>to<span class="w"> </span>search<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="o">(</span><span class="k">case</span>-insensitive<span class="o">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>agent<span class="w"> </span>names<span class="w"> </span>or<span class="w"> </span>descriptions.
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>*<span class="w">   </span>**<span class="sb">`</span>--registry<span class="w"> </span>&lt;url&gt;<span class="sb">`</span>:**<span class="w"> </span>Specify<span class="w"> </span>the<span class="w"> </span>URL<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>AgentVault<span class="w"> </span>Registry.<span class="w"> </span>Defaults<span class="w"> </span>to<span class="w"> </span><span class="sb">`</span>http://localhost:8000<span class="sb">`</span><span class="w"> </span>or<span class="w"> </span>the<span class="w"> </span>value<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span><span class="sb">`</span>AGENTVAULT_REGISTRY_URL<span class="sb">`</span><span class="w"> </span>environment<span class="w"> </span>variable<span class="w"> </span><span class="k">if</span><span class="w"> </span>set.
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>*<span class="w">   </span>**<span class="sb">`</span>--limit<span class="w"> </span>&lt;n&gt;<span class="sb">`</span>:**<span class="w"> </span>Maximum<span class="w"> </span>results<span class="w"> </span>per<span class="w"> </span>page<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span><span class="m">25</span>,<span class="w"> </span>max:<span class="w"> </span><span class="m">250</span><span class="o">)</span>.
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>*<span class="w">   </span>**<span class="sb">`</span>--offset<span class="w"> </span>&lt;n&gt;<span class="sb">`</span>:**<span class="w"> </span>Number<span class="w"> </span>of<span class="w"> </span>results<span class="w"> </span>to<span class="w"> </span>skip<span class="w"> </span><span class="o">(</span><span class="k">for</span><span class="w"> </span>pagination,<span class="w"> </span>default:<span class="w"> </span><span class="m">0</span><span class="o">)</span>.
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>*<span class="w">   </span>**<span class="sb">`</span>--tags<span class="w"> </span>&lt;tag&gt;<span class="sb">`</span><span class="w"> </span><span class="o">(</span>Repeatable<span class="o">)</span>:**<span class="w"> </span>Filter<span class="w"> </span>by<span class="w"> </span>tags.<span class="w"> </span>Only<span class="w"> </span>agents<span class="w"> </span>possessing<span class="w"> </span>*all*<span class="w"> </span>specified<span class="w"> </span>tags<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>returned<span class="w"> </span><span class="o">(</span>e.g.,<span class="w"> </span><span class="sb">`</span>--tags<span class="w"> </span>weather<span class="w"> </span>--tags<span class="w"> </span>forecast<span class="sb">`</span><span class="o">)</span>.
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>*<span class="w">   </span>**<span class="sb">`</span>--has-tee<span class="w"> </span><span class="o">[</span>true<span class="p">|</span>false<span class="o">]</span><span class="sb">`</span><span class="w"> </span><span class="o">(</span>Optional<span class="o">)</span>:**<span class="w"> </span>Filter<span class="w"> </span>agents<span class="w"> </span>based<span class="w"> </span>on<span class="w"> </span>whether<span class="w"> </span>they<span class="w"> </span><span class="nb">declare</span><span class="w"> </span>TEE<span class="w"> </span>support<span class="w"> </span><span class="k">in</span><span class="w"> </span>their<span class="w"> </span>Agent<span class="w"> </span>Card.
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>*<span class="w">   </span>**<span class="sb">`</span>--tee-type<span class="w"> </span>&lt;type&gt;<span class="sb">`</span><span class="w"> </span><span class="o">(</span>Optional<span class="o">)</span>:**<span class="w"> </span>Filter<span class="w"> </span>agents<span class="w"> </span>by<span class="w"> </span>the<span class="w"> </span>specific<span class="w"> </span>TEE<span class="w"> </span><span class="nb">type</span><span class="w"> </span>declared<span class="w"> </span><span class="o">(</span>e.g.,<span class="w"> </span><span class="sb">`</span>AWS<span class="w"> </span>Nitro<span class="w"> </span>Enclaves<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>Intel<span class="w"> </span>SGX<span class="sb">`</span><span class="o">)</span>.
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>*Example:*
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="sb">```</span>bash
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># List first 10 agents containing &quot;weather&quot;</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>weather<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># List agents tagged with both &quot;summarization&quot; and &quot;nlp&quot;</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>--tags<span class="w"> </span>summarization<span class="w"> </span>--tags<span class="w"> </span>nlp
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Find agents declaring TEE support</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>--has-tee<span class="w"> </span><span class="nb">true</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span><span class="o">[</span>SEARCH_QUERY<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </span></code></pre></div>
+<ul>
+<li><strong><code>[SEARCH_QUERY]</code> (Optional):</strong> Text to search for (case-insensitive) in agent names or descriptions.</li>
+<li><strong><code>--registry &lt;url&gt;</code>:</strong> Specify the URL of the AgentVault Registry API.<ul>
+<li>Defaults to the value of the <code>AGENTVAULT_REGISTRY_URL</code> environment variable if set.</li>
+<li>If the environment variable is not set, it defaults to the public registry: <code>https://agentvault-registry-api.onrender.com</code>.</li>
+<li><em>(Note: The public registry runs on a free tier and may take up to 60 seconds to wake up on the first request.)</em></li>
+</ul>
+</li>
+<li><strong><code>--limit &lt;n&gt;</code>:</strong> Maximum results per page (default: 25, max: 250).</li>
+<li><strong><code>--offset &lt;n&gt;</code>:</strong> Number of results to skip (for pagination, default: 0).</li>
+<li><strong><code>--tags &lt;tag&gt;</code> (Repeatable):</strong> Filter by tags. Only agents possessing <em>all</em> specified tags will be returned (e.g., <code>--tags weather --tags forecast</code>).</li>
+<li><strong><code>--has-tee [true|false]</code> (Optional):</strong> Filter agents based on whether they declare TEE support in their Agent Card.</li>
+<li><strong><code>--tee-type &lt;type&gt;</code> (Optional):</strong> Filter agents by the specific TEE type declared (e.g., <code>AWS Nitro Enclaves</code>, <code>Intel SGX</code>).</li>
+</ul>
+<p><em>Example:</em>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List first 10 agents containing &quot;weather&quot; from the public registry</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>weather<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List agents tagged with &quot;nlp&quot; from a local registry</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>--tags<span class="w"> </span>nlp<span class="w"> </span>--registry<span class="w"> </span>http://localhost:8000
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Find agents declaring TEE support on the public registry</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>--has-tee<span class="w"> </span><span class="nb">true</span>
+</span></code></pre></div></p>
 <p>The output is displayed in a table format.</p>
 <h3 id="run"><code>run</code><a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
 <p>Execute a task on a specific remote agent using the A2A protocol.</p>
 <p><strong>Usage:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--help
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>&lt;agent_ref&gt;<span class="w"> </span>--input<span class="w"> </span>&lt;input_data&gt;<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--help
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>&lt;agent_ref&gt;<span class="w"> </span>--input<span class="w"> </span>&lt;input_data&gt;<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </span></code></pre></div>
 <ul>
 <li><strong><code>--agent &lt;agent_ref&gt;</code> / <code>-a &lt;agent_ref&gt;</code> (Required):</strong> Identifies the target agent. This is crucial. It can be:<ul>
@@ -1466,50 +1573,45 @@
 </ul>
 </li>
 <li><strong><code>--context-file &lt;path&gt;</code>:</strong> Path to a local JSON file containing MCP context data to send with the initial message.</li>
-<li><strong><code>--registry &lt;url&gt;</code>:</strong> Registry URL (only used if <code>&lt;agent_ref&gt;</code> is an Agent ID). Defaults to <code>http://localhost:8000</code> or <code>AGENTVAULT_REGISTRY_URL</code> env var.</li>
+<li><strong><code>--registry &lt;url&gt;</code>:</strong> Registry URL (only used if <code>&lt;agent_ref&gt;</code> is an Agent ID). Defaults to <code>AGENTVAULT_REGISTRY_URL</code> env var or the public registry <code>https://agentvault-registry-api.onrender.com</code>. <em>(Note the cold start delay for the public instance).</em></li>
 <li><strong><code>--key-service &lt;service_id&gt;</code>:</strong> <strong>Important for Authentication.</strong> If the agent requires authentication (e.g., <code>apiKey</code> or <code>oauth2</code>) and its Agent Card doesn't specify a <code>service_identifier</code>, or if you want to use credentials stored under a different local name, use this flag to tell the <code>KeyManager</code> which local service ID to use for lookup. Example: <code>--key-service openai</code>.</li>
 <li><strong><code>--auth-key &lt;key&gt;</code>:</strong> <strong>INSECURE - FOR TESTING ONLY.</strong> Directly provide the API key on the command line. This bypasses the <code>KeyManager</code> lookup for agents using the <code>apiKey</code> scheme. Avoid using this for sensitive keys.</li>
 <li><strong><code>--output-artifacts &lt;directory&gt;</code>:</strong> If provided, artifact content larger than 1KB received via SSE will be saved to files in this directory (named using artifact ID and inferred extension) instead of being printed (truncated) to the console.</li>
 </ul>
-<p><em>Example (Running the basic SDK example agent):</em>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Assumes the basic_a2a_server example is running on port 8000</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>http://localhost:8000/agent-card.json<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Hello Agent!&quot;</span>
+<p><em>Example (Running the basic SDK example agent locally):</em>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Assumes the basic_a2a_server example is running on port 8000</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>http://localhost:8000/agent-card.json<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Hello Agent!&quot;</span>
 </span></code></pre></div></p>
-<p><em>Example (Running an agent from registry requiring an OpenAI key):</em>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># First, ensure the key is configured:</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># agentvault config set openai --keyring (and enter key)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Then run the task (assuming agent &#39;some-org/openai-agent&#39; uses &#39;openai&#39; service ID)</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>some-org/openai-agent<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Summarize the concept of AI agents.&quot;</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Or, if the agent card didn&#39;t specify &#39;openai&#39; as service_identifier:</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>some-org/openai-agent<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Summarize...&quot;</span><span class="w"> </span>--key-service<span class="w"> </span>openai<span class="sb">```</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>The<span class="w"> </span><span class="sb">`</span>run<span class="sb">`</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>connects<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>agent<span class="w"> </span>and<span class="w"> </span>streams<span class="w"> </span>Server-Sent<span class="w"> </span>Events<span class="w"> </span><span class="o">(</span>SSE<span class="o">)</span><span class="w"> </span>back<span class="w"> </span>to<span class="w"> </span>your<span class="w"> </span>terminal,<span class="w"> </span>showing<span class="w"> </span>status<span class="w"> </span>updates,<span class="w"> </span>messages<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>agent/tools,<span class="w"> </span>and<span class="w"> </span>artifact<span class="w"> </span>information<span class="w"> </span>using<span class="w"> </span><span class="sb">`</span>rich<span class="sb">`</span><span class="w"> </span>formatting<span class="w"> </span><span class="k">for</span><span class="w"> </span>better<span class="w"> </span>readability.
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1">## Usage Tips</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>*<span class="o">(</span>Same<span class="w"> </span>as<span class="w"> </span>before<span class="w"> </span>-<span class="w"> </span>Shell<span class="w"> </span>History,<span class="w"> </span>fzf<span class="w"> </span>+<span class="w"> </span>awk<span class="o">)</span>*
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1">### Re-running `run` Commands</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>The<span class="w"> </span><span class="sb">`</span>agentvault_cli<span class="w"> </span>run<span class="sb">`</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>can<span class="w"> </span>sometimes<span class="w"> </span>involve<span class="w"> </span>long<span class="w"> </span>agent<span class="w"> </span>identifiers<span class="w"> </span>or<span class="w"> </span>input<span class="w"> </span>strings.<span class="w"> </span>To<span class="w"> </span>easily<span class="w"> </span>recall<span class="w"> </span>and<span class="w"> </span>reuse<span class="w"> </span>previous<span class="w"> </span>commands:
-</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
-</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>*<span class="w">   </span>**Shell<span class="w"> </span>History<span class="w"> </span>Search<span class="w"> </span><span class="o">(</span>Ctrl+R<span class="o">)</span>:**<span class="w"> </span>Most<span class="w"> </span>shells<span class="w"> </span>allow<span class="w"> </span>you<span class="w"> </span>to<span class="w"> </span>search<span class="w"> </span>your<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="nb">history</span><span class="w"> </span>interactively.<span class="w"> </span>Press<span class="w"> </span><span class="sb">`</span>Ctrl+R<span class="sb">`</span><span class="w"> </span>and<span class="w"> </span>start<span class="w"> </span>typing<span class="w"> </span>parts<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span><span class="nb">command</span><span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w"> </span>find<span class="w"> </span><span class="o">(</span>e.g.,<span class="w"> </span><span class="sb">`</span>run<span class="sb">`</span>,<span class="w"> </span>the<span class="w"> </span>agent<span class="w"> </span>ID,<span class="w"> </span>part<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>input<span class="o">)</span>.
-</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>*<span class="w">   </span>**<span class="sb">`</span><span class="nb">history</span><span class="sb">`</span><span class="w"> </span>Command:**<span class="w"> </span>Use<span class="w"> </span><span class="sb">`</span><span class="nb">history</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>agentvault_cli<span class="w"> </span>run<span class="sb">`</span><span class="w"> </span><span class="o">(</span>or<span class="w"> </span>similar<span class="w"> </span>filter<span class="o">)</span><span class="w"> </span>to<span class="w"> </span>list<span class="w"> </span>previous<span class="w"> </span>run<span class="w"> </span>commands.<span class="w"> </span>You<span class="w"> </span>can<span class="w"> </span><span class="k">then</span><span class="w"> </span>execute<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span><span class="nb">command</span><span class="w"> </span>number<span class="w"> </span><span class="o">(</span>e.g.,<span class="w"> </span><span class="sb">`</span>!123<span class="sb">`</span><span class="o">)</span>.
-</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>*<span class="w">   </span>**<span class="sb">`</span>fzf<span class="sb">`</span><span class="w"> </span><span class="o">(</span>Fuzzy<span class="w"> </span>Finder<span class="o">)</span>:**<span class="w"> </span>If<span class="w"> </span>you<span class="w"> </span>have<span class="w"> </span><span class="sb">`</span>fzf<span class="sb">`</span><span class="w"> </span>installed,<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>pipe<span class="w"> </span>your<span class="w"> </span><span class="nb">history</span><span class="w"> </span>to<span class="w"> </span>it<span class="w"> </span><span class="k">for</span><span class="w"> </span>interactive<span class="w"> </span>fuzzy<span class="w"> </span>searching:<span class="w"> </span><span class="sb">`</span><span class="nb">history</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fzf<span class="sb">`</span>.<span class="w"> </span>Select<span class="w"> </span>the<span class="w"> </span>desired<span class="w"> </span><span class="nb">command</span><span class="w"> </span>and<span class="w"> </span>press<span class="w"> </span>Enter<span class="w"> </span>to<span class="w"> </span>execute<span class="w"> </span>it.<span class="w"> </span>This<span class="w"> </span>is<span class="w"> </span>very<span class="w"> </span>powerful<span class="w"> </span><span class="k">for</span><span class="w"> </span>quickly<span class="w"> </span>finding<span class="w"> </span>complex<span class="w"> </span>commands.
-</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
-</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c1">### Interactive Agent Selection (`discover` + `fzf`)</span>
-</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
-</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>If<span class="w"> </span>you<span class="w"> </span>have<span class="w"> </span>command-line<span class="w"> </span>tools<span class="w"> </span>like<span class="w"> </span><span class="sb">`</span>fzf<span class="sb">`</span><span class="w"> </span><span class="o">(</span>fuzzy<span class="w"> </span>finder<span class="o">)</span><span class="w"> </span>and<span class="w"> </span><span class="sb">`</span>awk<span class="sb">`</span><span class="w"> </span>installed,<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>create<span class="w"> </span>powerful<span class="w"> </span>interactive<span class="w"> </span>workflows.<span class="w"> </span>For<span class="w"> </span>example,<span class="w"> </span>to<span class="w"> </span>discover<span class="w"> </span>agents,<span class="w"> </span><span class="k">select</span><span class="w"> </span>one<span class="w"> </span>interactively,<span class="w"> </span>and<span class="w"> </span><span class="k">then</span><span class="w"> </span>immediately<span class="w"> </span>run<span class="w"> </span>a<span class="w"> </span>task<span class="w"> </span>on<span class="w"> </span>it:
-</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
-</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="sb">```</span>bash
-</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="c1"># Example: Discover agents matching &quot;weather&quot;, select one, run with input</span>
-</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>weather<span class="w"> </span><span class="p">|</span><span class="w"> </span>fzf<span class="w"> </span>--height<span class="w"> </span><span class="m">40</span>%<span class="w"> </span>--border<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;Select Agent:&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;What is the forecast for London?&quot;</span>
+<p><em>Example (Running an agent from the public registry requiring an OpenAI key):</em>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># First, ensure the key is configured:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># agentvault config set openai --keyring (and enter key)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Then run the task (assuming agent &#39;some-org/openai-agent&#39; uses &#39;openai&#39; service ID)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># The --registry flag is omitted, so it uses the default public registry</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>some-org/openai-agent<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Summarize the concept of AI agents.&quot;</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Or, if the agent card didn&#39;t specify &#39;openai&#39; as service_identifier:</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span>some-org/openai-agent<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Summarize...&quot;</span><span class="w"> </span>--key-service<span class="w"> </span>openai
 </span></code></pre></div></p>
+<p>The <code>run</code> command connects to the agent and streams Server-Sent Events (SSE) back to your terminal, showing status updates, messages from the agent/tools, and artifact information using <code>rich</code> formatting for better readability.</p>
+<h2 id="usage-tips">Usage Tips<a class="headerlink" href="#usage-tips" title="Permanent link">&para;</a></h2>
+<p><em>(Same as before - Shell History, fzf + awk)</em></p>
+<h3 id="re-running-run-commands">Re-running <code>run</code> Commands<a class="headerlink" href="#re-running-run-commands" title="Permanent link">&para;</a></h3>
+<p>The <code>agentvault_cli run</code> command can sometimes involve long agent identifiers or input strings. To easily recall and reuse previous commands:</p>
+<ul>
+<li><strong>Shell History Search (Ctrl+R):</strong> Most shells allow you to search your command history interactively. Press <code>Ctrl+R</code> and start typing parts of the command you want to find (e.g., <code>run</code>, the agent ID, part of the input).</li>
+<li><strong><code>history</code> Command:</strong> Use <code>history | grep agentvault_cli run</code> (or similar filter) to list previous run commands. You can then execute a specific command number (e.g., <code>!123</code>).</li>
+<li><strong><code>fzf</code> (Fuzzy Finder):</strong> If you have <code>fzf</code> installed, you can pipe your history to it for interactive fuzzy searching: <code>history | fzf</code>. Select the desired command and press Enter to execute it. This is very powerful for quickly finding complex commands.</li>
+</ul>
+<h3 id="interactive-agent-selection-discover-fzf">Interactive Agent Selection (<code>discover</code> + <code>fzf</code>)<a class="headerlink" href="#interactive-agent-selection-discover-fzf" title="Permanent link">&para;</a></h3>
+<p>If you have command-line tools like <code>fzf</code> (fuzzy finder) and <code>awk</code> installed, you can create powerful interactive workflows. For example, to discover agents, select one interactively, and then immediately run a task on it:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Example: Discover agents matching &quot;weather&quot;, select one, run with input</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Assumes default public registry or AGENTVAULT_REGISTRY_URL is set</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>agentvault_cli<span class="w"> </span>discover<span class="w"> </span>weather<span class="w"> </span><span class="p">|</span><span class="w"> </span>fzf<span class="w"> </span>--height<span class="w"> </span><span class="m">40</span>%<span class="w"> </span>--border<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;Select Agent:&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>agentvault_cli<span class="w"> </span>run<span class="w"> </span>--agent<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;What is the forecast for London?&quot;</span>
+</span></code></pre></div>
 <p><strong>Explanation:</strong></p>
 <ol>
-<li><code>agentvault_cli discover weather</code>: Lists agents matching "weather".</li>
+<li><code>agentvault_cli discover weather</code>: Lists agents matching "weather" from the configured registry.</li>
 <li><code>| fzf ...</code>: Pipes the list to <code>fzf</code> for interactive selection.</li>
 <li><code>| awk '{print $1}'</code>: Extracts the first column (the Agent ID) from the line selected in <code>fzf</code>. <em>Note: You might need to adjust <code>$1</code> if the ID is in a different column based on your terminal width or <code>discover</code> output format.</em></li>
 <li><code>| xargs -I {} ...</code>: Takes the extracted ID (<code>{}</code>) and inserts it into the <code>agentvault_cli run</code> command.</li>

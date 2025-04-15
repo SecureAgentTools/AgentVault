@@ -743,6 +743,75 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/oauth_agent_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OAuth Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stateful_agent_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stateful Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/library_usage_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Direct Library Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1349,6 +1418,17 @@
 <p>After installing the CLI, check that the command is available:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>agentvault_cli<span class="w"> </span>--version
 </span></code></pre></div>
+<p><strong>Connecting to the Public Registry:</strong></p>
+<p>You can use the installed CLI or library with the publicly hosted registry:</p>
+<ul>
+<li><strong>URL:</strong> <code>https://agentvault-registry-api.onrender.com</code></li>
+<li><strong>Usage:</strong><ul>
+<li>Set the environment variable: <code>export AGENTVAULT_REGISTRY_URL=https://agentvault-registry-api.onrender.com</code> (Linux/macOS) or <code>set AGENTVAULT_REGISTRY_URL=https://agentvault-registry-api.onrender.com</code> (Windows Cmd) or <code>$env:AGENTVAULT_REGISTRY_URL='https://agentvault-registry-api.onrender.com'</code> (PowerShell).</li>
+<li>Or use the <code>--registry</code> flag with CLI commands: <code>agentvault_cli discover --registry https://agentvault-registry-api.onrender.com</code></li>
+</ul>
+</li>
+<li><strong>Note (Cold Start):</strong> This instance runs on Render's free tier. If it hasn't received traffic recently, it might take <strong>up to 60 seconds</strong> to respond to the first request while it "wakes up". Subsequent requests will be faster. You can send a simple request like <code>curl https://agentvault-registry-api.onrender.com/health</code> to wake it up before running commands if needed.</li>
+</ul>
 <h2 id="2-setting-up-for-development-contributing-or-running-from-source">2. Setting up for Development (Contributing or Running from Source)<a class="headerlink" href="#2-setting-up-for-development-contributing-or-running-from-source" title="Permanent link">&para;</a></h2>
 <p>If you want to contribute to AgentVault, run components locally from the source code (like the registry), or use features not yet released on PyPI, follow these steps. This sets up the entire monorepo.</p>
 <p><strong>Prerequisites:</strong></p>
