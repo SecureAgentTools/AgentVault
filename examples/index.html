@@ -14,7 +14,7 @@
         <link rel="prev" href="../installation/">
       
       
-        <link rel="next" href="../user_guide/cli/">
+        <link rel="next" href="basic_a2a_server/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -693,6 +693,52 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="basic_a2a_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic A2A Server
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="langchain_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LangChain Tool
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1268,7 +1314,7 @@
 <p>The source code for these examples can be found in the <code>/examples/</code> directory of the <a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples">AgentVault GitHub repository</a>.</p>
 <ul>
 <li>
-<p><strong>Basic A2A Server:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/basic_a2a_server">View Code</a>)</p>
+<p><strong><a href="basic_a2a_server/">Basic A2A Server</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/basic_a2a_server">View Code</a>)</p>
 <ul>
 <li><strong>Focus:</strong> Demonstrates the minimal setup required to create an A2A-compliant agent server using the <code>agentvault-server-sdk</code> and FastAPI.</li>
 <li><strong>Features:</strong> Implements a simple "EchoAgent", uses the SDK's router integration (<code>create_a2a_router</code>), includes a basic <code>agent-card.json</code>, and shows how to run the server with Uvicorn.</li>
@@ -1276,7 +1322,7 @@
 </ul>
 </li>
 <li>
-<p><strong>LangChain Integration:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/langchain_integration">View Code</a>)</p>
+<p><strong><a href="langchain_integration/">LangChain Integration</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/langchain_integration">View Code</a>)</p>
 <ul>
 <li><strong>Focus:</strong> Shows how to wrap an AgentVault A2A agent as a custom <code>Tool</code> within the LangChain framework.</li>
 <li><strong>Features:</strong> Defines an <code>A2AAgentTool</code> class that uses the <code>agentvault</code> client library internally to communicate with a remote agent based on an agent reference (ID, URL, or file path). Includes example usage.</li>
@@ -1294,7 +1340,7 @@
 </li>
 </ul>
 <h2 id="running-the-examples">Running the Examples<a class="headerlink" href="#running-the-examples" title="Permanent link">&para;</a></h2>
-<p>Please refer to the <code>README.md</code> file within each specific example directory for detailed setup and execution instructions. Generally, you will need to:</p>
+<p>Please refer to the <code>README.md</code> file within each specific example directory (linked via "[View Code]" above) for detailed setup and execution instructions. Generally, you will need to:</p>
 <ol>
 <li>Ensure you have the main development environment set up (see <a href="../installation/">Installation Guide</a>).</li>
 <li>Navigate to the specific example directory (e.g., <code>cd examples/basic_a2a_server</code>).</li>
