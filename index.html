@@ -1455,11 +1455,14 @@
 <p><strong>AgentVault is an open-source ecosystem designed to facilitate secure and interoperable communication between AI agents (Agent-to-Agent or A2A).</strong></p>
 <p>This project provides libraries, tools, and specifications to enable seamless interaction in a multi-agent world.</p>
 <hr />
-<p><strong>➡️ Public Registry Available!</strong></p>
-<p>A live instance of the AgentVault Registry API is hosted at:
+<p><strong>➡️ Public Registry &amp; UI Available!</strong></p>
+<p>A live instance of the AgentVault Registry API and its associated Web UI is hosted at:
 <strong><a href="https://agentvault-registry-api.onrender.com"><code>https://agentvault-registry-api.onrender.com</code></a></strong></p>
 <ul>
-<li><strong>Note:</strong> This is hosted on Render's free tier. If inactive, it may take <strong>up to 60 seconds</strong> to "wake up" on the first request. You can use this URL with the <code>agentvault_cli</code> (<code>--registry</code> flag or <code>AGENTVAULT_REGISTRY_URL</code> environment variable) or when interacting with the API directly.</li>
+<li><strong>Public Discovery UI:</strong> <a href="https://agentvault-registry-api.onrender.com/ui"><code>https://agentvault-registry-api.onrender.com/ui</code></a></li>
+<li><strong>Developer Portal UI:</strong> <a href="https://agentvault-registry-api.onrender.com/ui/developer"><code>https://agentvault-registry-api.onrender.com/ui/developer</code></a></li>
+<li><strong>API Base:</strong> <code>https://agentvault-registry-api.onrender.com/api/v1</code></li>
+<li><strong>Note (Cold Start):</strong> This is hosted on Render's free tier. If inactive, it may take <strong>up to 60 seconds</strong> to "wake up" on the first request. You can visit the <code>/health</code> endpoint or the UI to wake it up.</li>
 </ul>
 <hr />
 <p><strong>➡️ For detailed documentation, please visit the <a href="./">AgentVault Documentation Hub</a> ⬅️</strong>
@@ -1470,7 +1473,7 @@
 <ul>
 <li><strong><code>agentvault_library</code></strong>: (<a href="developer_guide/library/">Developer Guide</a>) Core Python client library for interacting with A2A agents, managing keys, and handling protocols (A2A, MCP).</li>
 <li><strong><code>agentvault_cli</code></strong>: (<a href="user_guide/cli/">User Guide</a>) Command-line interface for users and developers to manage credentials, discover agents, and run tasks.</li>
-<li><strong><code>agentvault_registry</code></strong>: (<a href="developer_guide/registry/">Developer Guide</a>) Backend API server (FastAPI) acting as the central discovery point for registered agents. Includes a basic web UI. <em>(Live instance available above)</em></li>
+<li><strong><code>agentvault_registry</code></strong>: (<a href="developer_guide/registry/">Developer Guide</a>) Backend API server (FastAPI) acting as the central discovery point for registered agents. Also serves a <strong>Web UI</strong> for public discovery (<code>/ui</code>) and developer management (<code>/ui/developer</code>). <em>(Live instance available above)</em></li>
 <li><strong><code>agentvault_server_sdk</code></strong>: (<a href="developer_guide/server_sdk/">Developer Guide</a>) Python SDK to help developers build A2A-compliant agent servers easily, integrating with frameworks like FastAPI. Includes packaging tools.</li>
 <li><strong><code>agentvault_testing_utils</code></strong>: (<a href="developer_guide/testing/">Developer Guide</a>) Shared mocks, fixtures, factories, and helpers for testing AgentVault components.</li>
 <li><strong><code>examples/</code></strong>: Contains practical examples demonstrating how to use the SDK and library (e.g., basic A2A server, LangChain integration). See the <a href="examples/">Examples Overview</a>.</li>

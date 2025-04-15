@@ -1467,7 +1467,7 @@
 <ol>
 <li><strong><code>agentvault_library</code> (Core Client Library):</strong> The foundation for client-side interactions. Contains the <code>AgentVaultClient</code> (handles A2A protocol logic), <code>KeyManager</code> (secure credential storage), Pydantic models (AgentCard, A2A messages), and utility functions (card parsing, MCP handling). Used by the CLI and any custom application wanting to interact with agents.</li>
 <li><strong><code>agentvault_cli</code> (Command Line Interface):</strong> The primary tool for end-users and developers to interact with the system from the terminal. Uses the <code>agentvault_library</code> to perform actions like configuring keys, discovering agents via the registry, and running tasks on agents.</li>
-<li><strong><code>agentvault_registry</code> (Registry API &amp; UI):</strong> A central FastAPI web service acting as the discovery hub. It stores Agent Card metadata submitted by developers in a PostgreSQL database. It provides a public REST API for searching/retrieving cards and an authenticated API for developers to manage their listings. It also serves a basic web UI for discovery and developer management.</li>
+<li><strong><code>agentvault_registry</code> (Registry API &amp; UI):</strong> A central FastAPI web service acting as the discovery hub. It stores Agent Card metadata submitted by developers in a PostgreSQL database. It provides a public REST API (<code>/api/v1</code>) for searching/retrieving cards and an authenticated API for developers to manage their listings. It also serves a basic <strong>Web UI</strong> for public discovery (<code>/ui</code>) and developer management (<code>/ui/developer</code>).</li>
 <li><strong><code>agentvault_server_sdk</code> (Server SDK):</strong> A toolkit for developers <em>building</em> A2A-compliant agents. Provides base classes (<code>BaseA2AAgent</code>), FastAPI integration helpers (<code>create_a2a_router</code>, <code>@a2a_method</code>), task state management abstractions, and packaging utilities (<code>agentvault-sdk package</code>) to simplify agent development and deployment.</li>
 <li><strong><code>agentvault_testing_utils</code> (Testing Utilities):</strong> A shared internal package containing mocks, pytest fixtures, factories, and assertion helpers used across the test suites of the other components to ensure consistency and reduce boilerplate. Not intended for direct use by end-users.</li>
 </ol>
@@ -1493,14 +1493,12 @@
         User --&gt;|Browses| RegistryUI
     end
 
-    %% --- MODIFIED: Removed numbering from edge labels ---
     subgraph Communication Paths
         Lib --&gt;|Discover Agent Public API| RegistryAPI
         Lib --&gt;|Get Agent Card Public API| RegistryAPI
         Lib --&gt;|Run Task A2A Protocol| AgentServer
         AgentServer --&gt;|Optional: Uses Lib/SDK| ExternalService[External APIs / Services]
     end
-    %% --- END MODIFIED ---
 
     style Dev fill:#ff99ff,stroke:#333333,stroke-width:2px
     style User fill:#ccccff,stroke:#333333,stroke-width:2px
@@ -1508,30 +1506,28 @@
     style DevKeyStore stroke-dasharray: 5 5</code></pre>
 <p><strong>Explanation of Flows:</strong></p>
 <ol>
-<li><strong>Discovery:</strong> A user or client application (using the Library or CLI) queries the Registry API's public endpoints to find agents based on criteria (search, tags, TEE support, etc.).</li>
-<li><strong>Card Retrieval:</strong> The client retrieves the specific Agent Card for the desired agent from the Registry API (also a public endpoint).</li>
+<li><strong>Discovery:</strong> A user or client application (using the Library or CLI) queries the Registry API's public endpoints (<code>/api/v1/...</code>) or browses the public Web UI (<code>/ui</code>) to find agents based on criteria.</li>
+<li><strong>Card Retrieval:</strong> The client retrieves the specific Agent Card for the desired agent from the Registry API (public endpoint).</li>
 <li><strong>Interaction (Client -&gt; Agent):</strong><ul>
 <li>The client application uses the information in the retrieved Agent Card (endpoint <code>url</code>, <code>authSchemes</code>).</li>
-<li>The <code>agentvault_library</code>'s <code>KeyManager</code> component attempts to load the necessary local credentials (API Key or OAuth Client ID/Secret) based on the agent's required <code>authSchemes</code> and the relevant <code>service_identifier</code>.</li>
-<li>The <code>AgentVaultClient</code> constructs and sends A2A protocol requests (JSON-RPC over POST for standard methods, potentially initiating an SSE stream via <code>tasks/sendSubscribe</code>) directly to the target Agent Server's endpoint (<code>url</code>).</li>
-<li><strong>Crucially, the <code>AgentVaultClient</code> automatically adds the correct authentication headers</strong> (e.g., <code>X-Api-Key: &lt;key&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>) based on the retrieved credentials and the scheme specified in the Agent Card. For OAuth2 Client Credentials, it handles the token fetching from the agent's <code>tokenUrl</code> automatically.</li>
-<li>The Agent Server (potentially built with the <code>agentvault-server-sdk</code>) receives the request, authenticates it based on the headers and its configuration, processes the task, and sends back JSON-RPC responses or streams SSE events.</li>
+<li>The <code>agentvault_library</code>'s <code>KeyManager</code> component attempts to load the necessary local credentials.</li>
+<li>The <code>AgentVaultClient</code> constructs and sends A2A protocol requests directly to the target Agent Server's endpoint, automatically adding required authentication headers.</li>
+<li>The Agent Server receives the request, authenticates it, processes the task, and sends back responses/events.</li>
 </ul>
 </li>
 <li><strong>Registration (Developer -&gt; Registry):</strong><ul>
-<li>The Agent Developer obtains a unique Developer API Key from the Registry administrators (process TBD, currently manual).</li>
-<li>The Developer uses this key in the <code>X-Api-Key</code> header when interacting with the authenticated endpoints of the Registry API (e.g., <code>POST /api/v1/agent-cards/</code>, <code>PUT /api/v1/agent-cards/{uuid}</code>) to submit or manage their Agent Cards.</li>
-<li>The Registry API verifies the key against stored hashes in its database.</li>
+<li>The Agent Developer uses their unique Developer API Key with the authenticated endpoints of the Registry API (<code>/api/v1/...</code>) or potentially the Developer Portal UI (<code>/ui/developer</code>) to submit or manage their Agent Cards.</li>
+<li>The Registry API verifies the key against stored hashes.</li>
 </ul>
 </li>
 </ol>
 <h2 id="key-architectural-principles">Key Architectural Principles<a class="headerlink" href="#key-architectural-principles" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Decentralized Execution:</strong> Agents run independently wherever the developer chooses to host them. The AgentVault Registry is <strong>only for discovery metadata</strong>, not for agent execution or proxying A2A communication.</li>
-<li><strong>Standardized Interface:</strong> Client-Agent communication relies on the defined <a href="../a2a_profile_v0.2/">AgentVault A2A Profile v0.2</a> (JSON-RPC/SSE) and the <code>AgentCard</code> schema defined by <code>agentvault.models</code>.</li>
-<li><strong>Component-Based:</strong> The ecosystem is modular, broken down into logical components (library, CLI, registry, SDK, testing utils) with distinct responsibilities.</li>
-<li><strong>Security Focus:</strong> Emphasis on secure credential management on the client (<code>KeyManager</code>), hashed API keys on the registry, HTTPS enforcement for all external communication, and awareness/declaration of TEE capabilities.</li>
-<li><strong>Developer Experience:</strong> The SDK and CLI tools aim to simplify common tasks for both agent developers (building, packaging, registering) and users (discovery, interaction, credential management).</li>
+<li><strong>Decentralized Execution:</strong> Agents run independently. The Registry is only for discovery metadata.</li>
+<li><strong>Standardized Interface:</strong> Communication relies on the defined <a href="../a2a_profile_v0.2/">AgentVault A2A Profile v0.2</a> and the <code>AgentCard</code> schema.</li>
+<li><strong>Component-Based:</strong> Logical components (library, CLI, registry, SDK, testing utils) with distinct responsibilities.</li>
+<li><strong>Security Focus:</strong> Secure credential management, hashed keys, HTTPS enforcement, TEE awareness.</li>
+<li><strong>Developer Experience:</strong> SDK and CLI tools simplify common tasks.</li>
 </ul>
 
 

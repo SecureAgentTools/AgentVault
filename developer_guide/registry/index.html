@@ -1483,11 +1483,15 @@
 
 
 <h1 id="developer-guide-registry-api-agentvault_registry">Developer Guide: Registry API (<code>agentvault_registry</code>)<a class="headerlink" href="#developer-guide-registry-api-agentvault_registry" title="Permanent link">&para;</a></h1>
-<p>The AgentVault Registry provides a central RESTful API service for discovering and managing Agent Cards. Developers interact with it to publish their agents, while clients (like the <code>agentvault_cli</code> or other applications) use it to find agents.</p>
+<p>The AgentVault Registry provides a central RESTful API service for discovering and managing Agent Cards. Developers interact with it programmatically to publish their agents, while clients (like the <code>agentvault_cli</code> or other applications) use it to find agents.</p>
+<p><em>(Note: Alongside the API, the <code>agentvault_registry</code> service also hosts a basic Web UI for public discovery at <code>/ui</code> and a developer portal at <code>/ui/developer</code> on the same host where the API is deployed.)</em></p>
 <h2 id="api-base-path-public-instance">API Base Path &amp; Public Instance<a class="headerlink" href="#api-base-path-public-instance" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Base Path:</strong> All registry API endpoints are prefixed with <code>/api/v1</code>.</li>
-<li><strong>Public Instance:</strong> A live instance is available at: <strong><code>https://agentvault-registry-api.onrender.com</code></strong></li>
+<li><strong>Public Instance:</strong> A live instance is available at: <strong><code>https://agentvault-registry-api.onrender.com</code></strong><ul>
+<li><em>API Endpoint Example:</em> <code>https://agentvault-registry-api.onrender.com/api/v1/agent-cards/</code></li>
+</ul>
+</li>
 <li><strong>Public Instance Note (Cold Start):</strong> This instance runs on Render's free tier. If inactive, it may take <strong>up to 60 seconds</strong> to respond to the first request. Subsequent requests will be faster. Consider sending a simple request (e.g., <code>GET /health</code>) to wake it up before making critical calls if latency is a concern.</li>
 <li><strong>Local Development:</strong> When running locally (see <a href="../../installation/">Installation Guide</a>), the base URL is typically <code>http://localhost:8000/api/v1</code>.</li>
 </ul>
