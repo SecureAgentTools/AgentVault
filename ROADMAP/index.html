@@ -1463,49 +1463,50 @@
 <p>The AgentVault project has established a functional baseline across its core components:</p>
 <ul>
 <li><strong><code>agentvault</code> Library:</strong> Core client implemented for A2A JSON-RPC/SSE interactions, API Key/None/OAuth2 (Client Creds) auth, secure local KeyManager (env, file, keyring), Agent Card parsing/validation, basic MCP utilities. Published on PyPI.</li>
-<li><strong><code>agentvault_registry</code> API:</strong> FastAPI backend operational, supporting Agent Card submission/management (developer key auth), validation, list/search/get (including basic TEE/tag filtering), developer verification status. Uses PostgreSQL/Alembic. Basic rate limiting and CORS in place. Basic Web UI for discovery and developer portal implemented.</li>
+<li><strong><code>agentvault_registry</code> API:</strong> FastAPI backend operational, supporting Agent Card submission/management (developer key auth), validation, list/search/get (including basic TEE/tag filtering), developer verification status. Uses PostgreSQL/Alembic. Basic rate limiting and CORS in place. Basic Web UI for discovery and developer portal implemented. <em>(Note: Developer registration is currently manual/admin-driven).</em></li>
 <li><strong><code>agentvault_cli</code>:</strong> Functional CLI for local key config (<code>config</code>), registry discovery (<code>discover</code>), and task execution (<code>run</code>) using the library. Includes <code>rich</code> output formatting and artifact saving.</li>
 <li><strong><code>agentvault_server_sdk</code>:</strong> Foundational SDK available with <code>BaseA2AAgent</code>, FastAPI integration (<code>create_a2a_router</code>, <code>@a2a_method</code>), <code>InMemoryTaskStore</code> with listener/notification support, and packaging tool (<code>agentvault-sdk package</code>). Published on PyPI.</li>
 <li><strong><code>agentvault_testing_utils</code>:</strong> Shared utilities including <code>MockAgentVaultClient</code>, <code>mock_a2a_server</code> fixture, <code>create_test_agent_card</code> factory, <code>EchoAgent</code>, and assertion helpers.</li>
-<li><strong>Documentation:</strong> Initial documentation structure created with MkDocs, core concepts/architecture/security outlined, basic guides drafted, A2A profile documented. Deployed via GitHub Pages. Core structure and links recently refined.</li>
+<li><strong>Documentation:</strong> Foundational documentation structure created with MkDocs, core concepts/architecture/security outlined, component guides drafted, A2A profile documented, examples added. Deployed via GitHub Pages.</li>
 <li><strong>CI/CD:</strong> Workflows for dependency audit and documentation deployment are functional.</li>
 </ul>
 <h2 id="next-steps-phase-25-ecosystem-enablement-refinement">Next Steps: Phase 2.5 - Ecosystem Enablement &amp; Refinement<a class="headerlink" href="#next-steps-phase-25-ecosystem-enablement-refinement" title="Permanent link">&para;</a></h2>
 <p><strong>Objective:</strong> Solidify the existing components, improve developer/user experience through better documentation and examples, and prepare for broader adoption.</p>
 <p><strong>Key Tasks:</strong></p>
 <ol>
-<li><strong>Documentation Overhaul (Ongoing):</strong><ul>
-<li><strong>Enhance Component Guides:</strong> Detail usage, APIs, and configuration for <code>agentvault_library</code>, <code>agentvault_cli</code>, <code>agentvault_registry</code>, <code>agentvault_server_sdk</code>. (Phase 3 of Doc Improvement Plan)</li>
-<li><strong>Improve Core Concepts:</strong> Ensure clarity and accuracy in <code>concepts.md</code>, <code>architecture.md</code>, <code>a2a_profile_v0.2.md</code>. (Phase 2 of Doc Improvement Plan - In Progress)</li>
-<li><strong>Finalize Policies:</strong> Review and finalize <code>REGISTRY_POLICY.md</code>, <code>TERMS_OF_SERVICE.md</code>, <code>PRIVACY_POLICY.md</code>, <code>CONTRIBUTING.md</code>, <code>CODE_OF_CONDUCT.md</code>. Replace placeholder contacts. (Phase 4 of Doc Improvement Plan)</li>
-<li><strong>Installation Guide:</strong> Ensure <code>installation.md</code> is comprehensive and accurate. (Phase 4 of Doc Improvement Plan)</li>
+<li><strong>Documentation Overhaul (Largely Complete - Minor Polish Remaining):</strong><ul>
+<li>Enhance Component Guides (Done).</li>
+<li>Improve Core Concepts (Done).</li>
+<li>Finalize Policies (Placeholders updated).</li>
+<li>Installation Guide (Enhanced).</li>
+<li>Examples Overview (Updated).</li>
+<li>Vision Document (Added).</li>
+<li>Use Cases Document (Added).</li>
 </ul>
 </li>
-<li><strong>Example Implementations:</strong><ul>
-<li><strong>Refine Existing:</strong> Ensure <code>basic_a2a_server</code> and <code>langchain_integration</code> examples are robust and well-documented in their READMEs and linked from the main docs (<code>examples.md</code>). (Phase 4 of Doc Improvement Plan)</li>
-<li><strong>Create New Examples:</strong><ul>
-<li>Agent using OAuth2 authentication scheme (Server SDK).</li>
-<li>Agent demonstrating stateful task management (Server SDK).</li>
-<li>Script demonstrating direct client library usage (bypassing CLI).</li>
-</ul>
-</li>
+<li><strong>Example Implementations (Complete):</strong><ul>
+<li>Basic A2A Server (Done).</li>
+<li>LangChain Integration (Done).</li>
+<li>OAuth Agent Example (Done).</li>
+<li>Stateful Agent Example (Done).</li>
+<li>Direct Library Usage Example (Done).</li>
 </ul>
 </li>
 <li><strong>Registry UI/UX Improvements:</strong><ul>
-<li>Enhance the developer portal UI (<code>/ui/developer</code>) for easier card management (editing, viewing status).</li>
-<li>Improve filtering/search capabilities on the public UI (<code>/ui</code>).</li>
-<li>Display developer verification status clearly.</li>
+<li><strong>TODO:</strong> Enhance the developer portal UI (<code>/ui/developer</code>) for easier card management (editing, viewing status).</li>
+<li><strong>TODO:</strong> Improve filtering/search capabilities on the public UI (<code>/ui</code>).</li>
+<li><strong>TODO:</strong> Display developer verification status clearly.</li>
 </ul>
 </li>
 <li><strong>SDK &amp; Testing Refinements:</strong><ul>
-<li>Improve Server SDK state management abstractions (consider adding basic persistent store examples or interfaces).</li>
-<li>Expand <code>agentvault-testing-utils</code> with more assertion helpers or complex mocks as needed.</li>
-<li>Increase test coverage across all components.</li>
+<li><strong>TODO:</strong> Improve Server SDK state management abstractions (consider adding basic persistent store examples or interfaces).</li>
+<li><strong>TODO:</strong> Expand <code>agentvault-testing-utils</code> with more assertion helpers or complex mocks as needed.</li>
+<li><strong>TODO:</strong> Increase test coverage across all components.</li>
 </ul>
 </li>
 <li><strong>TEE Feature Polish:</strong><ul>
-<li>Ensure TEE filtering in the registry API and UI works reliably.</li>
-<li>Clarify TEE support limitations (declarative only) in documentation (<code>tee_profile.md</code>).</li>
+<li><strong>TODO:</strong> Test and verify TEE filtering in the registry API and UI works reliably.</li>
+<li><strong>TODO:</strong> Ensure TEE support limitations (declarative only) are clearly documented (<code>tee_profile.md</code>).</li>
 </ul>
 </li>
 </ol>
@@ -1519,6 +1520,7 @@
 </ul>
 </li>
 <li><strong>Phase 3: Advanced Features &amp; Ecosystem Growth:</strong><ul>
+<li><strong>Developer Self-Registration:</strong> Implement a secure self-service workflow for developers to register and obtain API keys via the Registry API/UI (including email verification).</li>
 <li><strong>Multimodality (WebRTC):</strong> Integrate <code>aiortc</code> for optional real-time audio/video streaming support within the A2A protocol.</li>
 <li><strong>Deeper MCP Integration:</strong> Align with finalized MCP specifications, provide SDK helpers for context manipulation.</li>
 <li><strong>TEE Attestation Verification:</strong> Implement client-side verification of TEE attestations based on <code>attestationEndpoint</code> in Agent Cards.</li>
