@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1309,9 +1309,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#credential-management-keymanager" class="md-nav__link">
+  <a href="#credential-management-keymanager-client-side" class="md-nav__link">
     <span class="md-ellipsis">
-      Credential Management (KeyManager)
+      Credential Management (KeyManager - Client Side)
     </span>
   </a>
   
@@ -1522,83 +1522,70 @@
 <blockquote>
 <p><strong>Note:</strong> For the official security policy and vulnerability reporting process, please see the <a href="../security_policy/">Security Policy</a> document.</p>
 </blockquote>
-<p>This document details the security mechanisms, considerations, and best practices...
-Security is a fundamental aspect of the AgentVault ecosystem, designed to enable trustworthy interactions between agents and protect user/developer credentials. This document details the security mechanisms, considerations, and best practices.</p>
+<p>This document details the security mechanisms, considerations, and best practices within the AgentVault ecosystem. Security is fundamental to enabling trustworthy interactions between agents and protecting user/developer credentials.</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p>Authentication verifies the identity of the communicating parties. AgentVault employs different mechanisms for client-to-agent and developer-to-registry interactions.</p>
 <h3 id="1-client-to-agent-authentication-a2a">1. Client-to-Agent Authentication (A2A)<a class="headerlink" href="#1-client-to-agent-authentication-a2a" title="Permanent link">&para;</a></h3>
-<p>Agents declare how clients should authenticate in their <code>AgentCard</code> (<code>authSchemes</code>). The <code>agentvault</code> library (used by the CLI and custom clients) supports:</p>
+<p>Agents declare how clients should authenticate in their <code>AgentCard</code> (<code>authSchemes</code>). The <code>agentvault</code> library supports:</p>
 <ul>
-<li><strong><code>none</code>:</strong><ul>
-<li><strong>Mechanism:</strong> No authentication headers are sent.</li>
-<li><strong>Use Case:</strong> Suitable for public agents providing non-sensitive information or actions.</li>
-<li><strong>Security:</strong> Offers no protection against unauthorized access. Use only when the agent's functionality requires no access control.</li>
+<li><strong><code>none</code>:</strong> No authentication. Use only for public, non-sensitive agents.</li>
+<li><strong><code>apiKey</code>:</strong> Client sends a pre-shared secret in <code>X-Api-Key</code>. Requires secure key management on both client (<code>KeyManager</code>) and server (agent implementation).</li>
+<li><strong><code>oauth2</code> (Client Credentials Grant):</strong> Client uses its ID/Secret (managed by <code>KeyManager</code>) to get a Bearer token from the agent's <code>/token</code> endpoint. The client sends this token in the <code>Authorization: Bearer &lt;token&gt;</code> header for A2A requests. The <code>AgentVaultClient</code> handles token fetching/caching. The agent server must implement the <code>/token</code> endpoint and validate Bearer tokens at its <code>/a2a</code> endpoint.</li>
+<li><strong><code>bearer</code>:</strong> Client sends a pre-obtained Bearer token. Token lifecycle management is external to AgentVault library. Agent server must validate the token.</li>
 </ul>
-</li>
-<li><strong><code>apiKey</code>:</strong><ul>
-<li><strong>Mechanism:</strong> The client sends a pre-shared secret key in the <code>X-Api-Key</code> HTTP header.</li>
-<li><strong>Client-Side:</strong> The <code>agentvault</code> library's <code>KeyManager</code> retrieves the key associated with the agent's <code>service_identifier</code> from local storage (env, file, or OS keyring).</li>
-<li><strong>Server-Side:</strong> The agent server (implementer) is responsible for receiving the <code>X-Api-Key</code> header and validating the key against its own secure storage (e.g., environment variable, configuration management system, database with hashed keys). <strong>Never hardcode keys in agent source code.</strong></li>
-<li><strong>Security:</strong> Relies on the secrecy of the key and secure transport (HTTPS). Simpler to implement but less flexible than OAuth.</li>
-</ul>
-</li>
-<li><strong><code>oauth2</code> (Client Credentials Grant):</strong><ul>
-<li><strong>Mechanism:</strong> The client uses its own credentials (Client ID &amp; Secret) to obtain a short-lived Bearer token from the agent's designated Token Endpoint (<code>tokenUrl</code> in Agent Card), then uses that token for subsequent A2A requests.</li>
-<li><strong>Client-Side:</strong> <code>KeyManager</code> retrieves the Client ID/Secret for the agent's <code>service_identifier</code>. <code>AgentVaultClient</code> performs the POST request to the <code>tokenUrl</code> to get the <code>access_token</code> and caches it (in memory). It sends the token in the <code>Authorization: Bearer &lt;token&gt;</code> header.</li>
-<li><strong>Server-Side:</strong> The agent server must provide a <code>/token</code> endpoint compliant with the OAuth 2.0 Client Credentials grant flow. It validates the received Client ID/Secret and issues a signed, potentially short-lived Bearer token (e.g., a JWT). The main <code>/a2a</code> endpoint must then validate incoming Bearer tokens (check signature, expiry, audience, scopes if applicable).</li>
-<li><strong>Security:</strong> More complex but standard-based. Allows for token revocation, scopes, and avoids sending long-lived secrets directly to the agent endpoint after initial token exchange. Requires secure handling of Client ID/Secret on the client and robust token validation on the server.</li>
-</ul>
-</li>
-<li><strong><code>bearer</code>:</strong><ul>
-<li><strong>Mechanism:</strong> The client sends a pre-existing Bearer token in the <code>Authorization: Bearer &lt;token&gt;</code> header.</li>
-<li><strong>Client-Side:</strong> Assumes the client application has obtained a suitable token through some other means (e.g., user login flow, separate OAuth process). The <code>agentvault</code> library simply passes this token along if configured.</li>
-<li><strong>Server-Side:</strong> The agent server must validate the received Bearer token.</li>
-<li><strong>Security:</strong> Depends entirely on the security of the token issuance and validation process external to the basic A2A interaction.</li>
-</ul>
-</li>
-</ul>
+<p><em>(Refer to the <a href="../a2a_profile_v0.2/">A2A Profile</a> for more detail)</em></p>
 <h3 id="2-developer-to-registry-authentication">2. Developer-to-Registry Authentication<a class="headerlink" href="#2-developer-to-registry-authentication" title="Permanent link">&para;</a></h3>
+<p>The registry uses a multi-faceted approach for developers managing their agents:</p>
 <ul>
-<li><strong>Mechanism:</strong> Uses an API Key (<code>X-Api-Key</code> header) specific to the developer.</li>
-<li><strong>Key Generation:</strong> Keys are generated by registry administrators (currently manual, future portal TBD) using <code>secrets.token_urlsafe</code> and prefixed (<code>avreg_</code>).</li>
-<li><strong>Storage:</strong> The <strong>hash</strong> of the developer's API key is stored in the registry database (<code>Developer.api_key_hash</code>) using <code>passlib</code> with <code>bcrypt</code>. <strong>Plain text keys are never stored.</strong></li>
-<li><strong>Verification:</strong> The registry API uses <code>passlib.verify(plain_key, stored_hash)</code> to authenticate developers attempting to manage their Agent Cards.</li>
-<li><strong>Security:</strong> Relies on the developer keeping their plain-text key secret and secure transport (HTTPS). Hashing prevents exposure of the plain key even if the database is compromised. The current lookup method iterates hashes, which is a scalability concern but not a direct security flaw for moderate numbers of developers.</li>
+<li><strong>Account Creation:</strong> Developers register using <strong>email and password</strong>. Passwords are <strong>hashed using bcrypt</strong> (<code>passlib</code>) before storage. Email verification is required.</li>
+<li><strong>Login (JWT):</strong> Successful login (<code>POST /auth/login</code>) returns a <strong>JSON Web Token (JWT)</strong> signed using a server-side secret (<code>API_KEY_SECRET</code> from config). This JWT acts as a session token.</li>
+<li><strong>Authenticated Requests (JWT):</strong> Developers include the JWT in the <code>Authorization: Bearer &lt;token&gt;</code> header for subsequent requests to protected endpoints (e.g., managing agent cards, API keys, using the agent builder). The registry API verifies the token's signature and expiry.</li>
+<li><strong>Account Recovery (Recovery Keys):</strong> During registration, <strong>single-use recovery keys</strong> are generated. One representative key's <strong>hash (using bcrypt)</strong> is stored. If a developer loses their password, they can use their email and one of the <em>plain text</em> recovery keys (which they stored securely offline) via <code>POST /auth/recover-account</code>. The server verifies the key against the stored hash. If valid, it issues a very short-lived JWT specifically for setting a new password (<code>POST /auth/set-new-password</code>). The recovery key hash is then invalidated in the database.</li>
+<li><strong>Programmatic API Keys:</strong><ul>
+<li><strong>Purpose:</strong> For non-interactive use (scripts, CI/CD) to manage agent cards.</li>
+<li><strong>Generation:</strong> Developers generate these keys via the Developer Portal UI or <code>POST /developers/me/apikeys</code>. The full key (e.g., <code>avreg_...</code>) is shown <strong>only once</strong>.</li>
+<li><strong>Storage:</strong> The <strong>hash</strong> of the full key (using <code>passlib</code> with bcrypt) and the non-secret prefix (<code>avreg_</code>) are stored in the <code>developer_api_keys</code> database table.</li>
+<li><strong>Verification:</strong> For requests using the <code>X-Api-Key</code> header, the registry API finds potential keys based on the prefix, then uses <code>passlib.verify()</code> to check the provided plain key against the stored hashes for active keys belonging to the developer associated with the prefix match (lookup logic might need optimization for scale).</li>
 </ul>
-<h2 id="credential-management-keymanager">Credential Management (<code>KeyManager</code>)<a class="headerlink" href="#credential-management-keymanager" title="Permanent link">&para;</a></h2>
+</li>
+</ul>
+<p><strong>Security Implications:</strong></p>
+<ul>
+<li>JWTs provide standard session management but require secure handling of the <code>API_KEY_SECRET</code> on the server.</li>
+<li>Recovery keys provide a fallback but <em>must</em> be stored securely by the developer; losing them means losing account access if password reset fails. Hashing the stored key prevents direct compromise from database leaks.</li>
+<li>Programmatic API keys offer convenience for automation but must be treated as sensitive secrets by the developer. Hashing provides database-level protection.</li>
+</ul>
+<h2 id="credential-management-keymanager-client-side">Credential Management (<code>KeyManager</code> - Client Side)<a class="headerlink" href="#credential-management-keymanager-client-side" title="Permanent link">&para;</a></h2>
+<p><em>(This section remains largely the same as before, emphasizing keyring usage)</em></p>
 <p>The <code>agentvault</code> library's <code>KeyManager</code> provides a unified way for clients (like the CLI) to manage credentials needed for agent authentication.</p>
 <ul>
-<li><strong>Secure Storage:</strong> Strongly recommends using the OS Keyring (<code>--keyring</code> option in CLI <code>config set</code>) for storing sensitive API keys and OAuth secrets. This leverages platform-specific secure storage mechanisms.</li>
-<li><strong>Alternative Sources:</strong> Supports loading from environment variables and <code>.env</code>/<code>.json</code> files for flexibility, but users should be aware of the security implications of storing secrets in these locations (filesystem permissions, environment variable visibility).</li>
-<li><strong>Abstraction:</strong> Client code interacts with <code>KeyManager</code> (<code>get_key</code>, <code>get_oauth_client_id</code>, etc.) without needing to know <em>where</em> the credential came from.</li>
+<li><strong>Secure Storage:</strong> Strongly recommends using the OS Keyring (<code>--keyring</code> or <code>--oauth-configure</code> options in CLI <code>config set</code>) for storing sensitive API keys and OAuth secrets.</li>
+<li><strong>Alternative Sources:</strong> Supports loading from environment variables and <code>.env</code>/<code>.json</code> files, but users must ensure appropriate security for these methods.</li>
+<li><strong>Abstraction:</strong> Client code interacts with <code>KeyManager</code> without needing to know the storage location.</li>
 </ul>
 <h2 id="transport-security">Transport Security<a class="headerlink" href="#transport-security" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>HTTPS is MANDATORY</strong> for all communication with the AgentVault Registry API and any A2A agent endpoint not running on <code>localhost</code>.</li>
-<li>Agent Card <code>url</code> and <code>tokenUrl</code> fields should use <code>https://</code>.</li>
-<li>Failure to use HTTPS exposes authentication credentials (API keys, Bearer tokens) and message content to eavesdropping.</li>
+<li><strong>HTTPS is MANDATORY</strong> for all communication with the AgentVault Registry API and any A2A agent endpoint not run on <code>localhost</code>.</li>
 </ul>
 <h2 id="data-validation">Data Validation<a class="headerlink" href="#data-validation" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Pydantic:</strong> All components heavily utilize Pydantic models for defining data structures (Agent Cards, API request/response bodies, A2A messages). Pydantic performs automatic data validation on input, preventing many types of injection or malformed data errors.</li>
-<li><strong>Registry:</strong> Validates submitted <code>card_data</code> against the canonical <code>agentvault.models.AgentCard</code> schema before storing it.</li>
-<li><strong>Server SDK:</strong> The <code>create_a2a_router</code> automatically validates incoming JSON-RPC <code>params</code> against the type hints of the corresponding agent handler method.</li>
+<li><strong>Pydantic:</strong> Used extensively for request/response validation in the registry API, server SDK, and core library models, preventing malformed data issues.</li>
+<li><strong>Registry:</strong> Validates submitted <code>card_data</code> against the canonical <code>agentvault.models.AgentCard</code> schema.</li>
 </ul>
 <h2 id="rate-limiting">Rate Limiting<a class="headerlink" href="#rate-limiting" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Registry:</strong> Implements basic IP-based rate limiting using <code>slowapi</code> to mitigate simple denial-of-service and abuse patterns. Production deployments may require more sophisticated limiting.</li>
-<li><strong>Agents:</strong> Agent developers are responsible for implementing appropriate rate limiting on their own A2A endpoints if needed.</li>
+<li><strong>Registry:</strong> Implements basic IP-based rate limiting (<code>slowapi</code>).</li>
+<li><strong>Agents:</strong> Agent developers should implement their own rate limiting.</li>
 </ul>
 <h2 id="trusted-execution-environments-tee">Trusted Execution Environments (TEE)<a class="headerlink" href="#trusted-execution-environments-tee" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Declaration:</strong> Agent Cards can declare (<code>capabilities.teeDetails</code>) that an agent runs within a TEE, providing metadata like the TEE type and potentially an attestation endpoint URL.</li>
-<li><strong>Discovery:</strong> The registry allows filtering agents based on TEE support.</li>
-<li><strong>Verification (Future Work):</strong> Currently, AgentVault clients <strong>do not</strong> automatically verify TEE attestations. Implementing robust, automated attestation verification and potentially establishing secure channels based on TEE keys is a complex task planned for future development. Users currently rely on the agent's declaration and must perform any verification manually or through out-of-band mechanisms.</li>
+<li><strong>Current Status:</strong> Declarative only. Agent Cards can specify TEE usage, and the registry supports filtering based on this.</li>
+<li><strong>Future Work:</strong> Automated attestation verification is planned.</li>
 </ul>
 <h2 id="dependency-security">Dependency Security<a class="headerlink" href="#dependency-security" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Auditing:</strong> The project includes a GitHub Actions workflow (<code>dependency_audit.yml</code>) using <code>pip-audit</code> to automatically scan dependencies listed in <code>poetry.lock</code> files for known vulnerabilities on pushes/PRs to <code>main</code>.</li>
-<li><strong>Updates:</strong> Regularly updating dependencies (e.g., via <code>poetry update</code>) is crucial to patch vulnerabilities.</li>
+<li><strong>Auditing:</strong> Automated checks via GitHub Actions (<code>pip-audit</code>).</li>
+<li><strong>Updates:</strong> Regular updates are crucial.</li>
 </ul>
 <h2 id="reporting-vulnerabilities">Reporting Vulnerabilities<a class="headerlink" href="#reporting-vulnerabilities" title="Permanent link">&para;</a></h2>
 <p>Please report suspected security vulnerabilities privately according to the <a href="../security_policy/">Security Policy</a>.</p>

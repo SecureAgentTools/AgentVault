@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1389,27 +1389,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-status-april-2025" class="md-nav__link">
+  <a href="#current-status-april-2025-phase-25-underway" class="md-nav__link">
     <span class="md-ellipsis">
-      Current Status (April 2025)
+      Current Status (April 2025 - Phase 2.5 Underway)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps-phase-25-ecosystem-enablement-refinement" class="md-nav__link">
+  <a href="#next-steps-phase-26-automation-robustness-polish" class="md-nav__link">
     <span class="md-ellipsis">
-      Next Steps: Phase 2.5 - Ecosystem Enablement &amp; Refinement
+      Next Steps: Phase 2.6 - Automation, Robustness &amp; Polish
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#future-considerations-beyond-phase-25-ideas" class="md-nav__link">
+  <a href="#future-considerations-phase-3-beyond" class="md-nav__link">
     <span class="md-ellipsis">
-      Future Considerations (Beyond Phase 2.5 / Ideas)
+      Future Considerations (Phase 3 &amp; Beyond)
     </span>
   </a>
   
@@ -1459,79 +1459,63 @@
 <h1 id="agentvault-project-roadmap">AgentVault Project Roadmap<a class="headerlink" href="#agentvault-project-roadmap" title="Permanent link">&para;</a></h1>
 <p>This document outlines the planned development phases and features for the AgentVault ecosystem. Our goal is to create a secure, interoperable, and easy-to-use platform for AI agent communication based on open standards like A2A and MCP concepts.</p>
 <p><em>Disclaimer: This roadmap represents our current plans and priorities. It is subject to change based on development progress, community feedback, and the evolution of underlying standards.</em></p>
-<h2 id="current-status-april-2025">Current Status (April 2025)<a class="headerlink" href="#current-status-april-2025" title="Permanent link">&para;</a></h2>
-<p>The AgentVault project has established a functional baseline across its core components:</p>
+<h2 id="current-status-april-2025-phase-25-underway">Current Status (April 2025 - Phase 2.5 Underway)<a class="headerlink" href="#current-status-april-2025-phase-25-underway" title="Permanent link">&para;</a></h2>
+<p>The AgentVault project has established a functional baseline across its core components and is actively refining the ecosystem based on initial implementation and usability testing.</p>
 <ul>
-<li><strong><code>agentvault</code> Library:</strong> Core client implemented for A2A JSON-RPC/SSE interactions, API Key/None/OAuth2 (Client Creds) auth, secure local KeyManager (env, file, keyring), Agent Card parsing/validation, basic MCP utilities. Published on PyPI.</li>
-<li><strong><code>agentvault_registry</code> API:</strong> FastAPI backend operational, supporting Agent Card submission/management (developer key auth), validation, list/search/get (including basic TEE/tag filtering), developer verification status. Uses PostgreSQL/Alembic. Basic rate limiting and CORS in place. Basic Web UI for discovery and developer portal implemented. <em>(Note: Developer registration is currently manual/admin-driven).</em></li>
-<li><strong><code>agentvault_cli</code>:</strong> Functional CLI for local key config (<code>config</code>), registry discovery (<code>discover</code>), and task execution (<code>run</code>) using the library. Includes <code>rich</code> output formatting and artifact saving.</li>
-<li><strong><code>agentvault_server_sdk</code>:</strong> Foundational SDK available with <code>BaseA2AAgent</code>, FastAPI integration (<code>create_a2a_router</code>, <code>@a2a_method</code>), <code>InMemoryTaskStore</code> with listener/notification support, and packaging tool (<code>agentvault-sdk package</code>). Published on PyPI.</li>
-<li><strong><code>agentvault_testing_utils</code>:</strong> Shared utilities including <code>MockAgentVaultClient</code>, <code>mock_a2a_server</code> fixture, <code>create_test_agent_card</code> factory, <code>EchoAgent</code>, and assertion helpers.</li>
-<li><strong>Documentation:</strong> Foundational documentation structure created with MkDocs, core concepts/architecture/security outlined, component guides drafted, A2A profile documented, examples added. Deployed via GitHub Pages.</li>
-<li><strong>CI/CD:</strong> Workflows for dependency audit and documentation deployment are functional.</li>
+<li><strong><code>agentvault</code> Library:</strong> Core client implemented (A2A JSON-RPC/SSE, Auth Schemes, KeyManager, Models, Utils). Published.</li>
+<li><strong><code>agentvault_registry</code> API &amp; UI:</strong> Operational API (Card CRUD, Validation, Discovery Filters incl. TEE/Tags). <strong>New:</strong> Developer authentication via email/password (JWT), email verification, recovery keys, programmatic API key management (<code>/developers/me/apikeys</code>), Agent Builder endpoint (<code>/agent-builder/generate</code>). Web UI for public discovery (<code>/ui</code>) and developer portal (<code>/ui/developer</code>) with login/register/recovery flows implemented. Uses PostgreSQL/Alembic. Rate limiting/CORS active. <em>(Note: Email sending depends on deployment configuration).</em></li>
+<li><strong><code>agentvault_cli</code>:</strong> Functional CLI (<code>config</code>, <code>discover</code>, <code>run</code>). Supports KeyManager (keyring, oauth config), SSE streaming, artifact saving.</li>
+<li><strong><code>agentvault_server_sdk</code>:</strong> Foundational SDK (<code>BaseA2AAgent</code>, FastAPI integration, <code>@a2a_method</code>, <code>InMemoryTaskStore</code> with notifications), packaging tool (<code>agentvault-sdk package</code>). Published.</li>
+<li><strong><code>agentvault_testing_utils</code>:</strong> Shared utilities (<code>MockAgentVaultClient</code>, <code>mock_a2a_server</code> fixture, factory, <code>EchoAgent</code>, assertions).</li>
+<li><strong>Examples:</strong> Basic Server, LangChain Tool, OAuth Agent, Stateful Agent, Library Usage examples available.</li>
+<li><strong>Documentation:</strong> Structure established, core concepts/architecture/security documented, component guides drafted, A2A/TEE profiles documented, examples included. Deployed via GitHub Pages.</li>
+<li><strong>CI/CD:</strong> Dependency audit and docs deployment workflows functional.</li>
 </ul>
-<h2 id="next-steps-phase-25-ecosystem-enablement-refinement">Next Steps: Phase 2.5 - Ecosystem Enablement &amp; Refinement<a class="headerlink" href="#next-steps-phase-25-ecosystem-enablement-refinement" title="Permanent link">&para;</a></h2>
-<p><strong>Objective:</strong> Solidify the existing components, improve developer/user experience through better documentation and examples, and prepare for broader adoption.</p>
+<h2 id="next-steps-phase-26-automation-robustness-polish">Next Steps: Phase 2.6 - Automation, Robustness &amp; Polish<a class="headerlink" href="#next-steps-phase-26-automation-robustness-polish" title="Permanent link">&para;</a></h2>
+<p><strong>Objective:</strong> Complete automation scripts, improve robustness (testing, error handling, scalability), and polish the developer/user experience.</p>
 <p><strong>Key Tasks:</strong></p>
 <ol>
-<li><strong>Documentation Overhaul (Largely Complete - Minor Polish Remaining):</strong><ul>
-<li>Enhance Component Guides (Done).</li>
-<li>Improve Core Concepts (Done).</li>
-<li>Finalize Policies (Placeholders updated).</li>
-<li>Installation Guide (Enhanced).</li>
-<li>Examples Overview (Updated).</li>
-<li>Vision Document (Added).</li>
-<li>Use Cases Document (Added).</li>
+<li><strong>Automation Scripts:</strong><ul>
+<li><strong>TODO:</strong> Finalize and test <code>automation_scripts/</code> (<code>av_create_package_agent</code>, <code>av_deploy_register_agent</code>, <code>av_find_run_task</code>). Ensure they work reliably with the latest components.</li>
+<li><strong>TODO:</strong> Refine agent template generation (e.g., better <code>.env</code> setup based on selected options).</li>
 </ul>
 </li>
-<li><strong>Example Implementations (Complete):</strong><ul>
-<li>Basic A2A Server (Done).</li>
-<li>LangChain Integration (Done).</li>
-<li>OAuth Agent Example (Done).</li>
-<li>Stateful Agent Example (Done).</li>
-<li>Direct Library Usage Example (Done).</li>
+<li><strong>Testing &amp; Coverage:</strong><ul>
+<li><strong>TODO:</strong> Implement CI workflow for running <code>pytest</code> across all components.</li>
+<li><strong>TODO:</strong> Integrate <code>pytest-cov</code> and add coverage reporting/thresholds to CI.</li>
+<li><strong>TODO:</strong> Increase test coverage, focusing on complex logic (client state machine, registry auth flows, SDK router edge cases, CLI interactions).</li>
+<li><strong>TODO:</strong> Add basic end-to-end tests (e.g., CLI -&gt; Registry -&gt; Mock Agent).</li>
 </ul>
 </li>
-<li><strong>Registry UI/UX Improvements:</strong><ul>
-<li><strong>TODO:</strong> Enhance the developer portal UI (<code>/ui/developer</code>) for easier card management (editing, viewing status).</li>
-<li><strong>TODO:</strong> Improve filtering/search capabilities on the public UI (<code>/ui</code>).</li>
-<li><strong>TODO:</strong> Display developer verification status clearly.</li>
+<li><strong>Registry Enhancements:</strong><ul>
+<li><strong>TODO:</strong> Investigate and potentially optimize developer programmatic API key lookup performance if needed for scale.</li>
+<li><strong>TODO:</strong> Implement email-based password reset flow (currently placeholder).</li>
+<li><strong>TODO:</strong> Further UI/UX improvements for the Developer Portal (e.g., easier card editing interface, clearer API key management).</li>
 </ul>
 </li>
-<li><strong>SDK &amp; Testing Refinements:</strong><ul>
-<li><strong>TODO:</strong> Improve Server SDK state management abstractions (consider adding basic persistent store examples or interfaces).</li>
-<li><strong>TODO:</strong> Expand <code>agentvault-testing-utils</code> with more assertion helpers or complex mocks as needed.</li>
-<li><strong>TODO:</strong> Increase test coverage across all components.</li>
+<li><strong>SDK &amp; Error Handling:</strong><ul>
+<li><strong>TODO:</strong> Provide examples or interfaces for persistent <code>BaseTaskStore</code> implementations (e.g., Redis, SQL).</li>
+<li><strong>TODO:</strong> Review and standardize error handling and logging across all components for consistency.</li>
 </ul>
 </li>
-<li><strong>TEE Feature Polish:</strong><ul>
-<li><strong>TODO:</strong> Test and verify TEE filtering in the registry API and UI works reliably.</li>
-<li><strong>TODO:</strong> Ensure TEE support limitations (declarative only) are clearly documented (<code>tee_profile.md</code>).</li>
+<li><strong>Documentation Polish:</strong><ul>
+<li><strong>TODO:</strong> Fill in remaining placeholders in policy documents (Contact emails).</li>
+<li><strong>TODO:</strong> Add more diagrams where helpful (e.g., auth flows).</li>
+<li><strong>TODO:</strong> Review all guides for clarity and accuracy against latest code.</li>
 </ul>
 </li>
 </ol>
-<h2 id="future-considerations-beyond-phase-25-ideas">Future Considerations (Beyond Phase 2.5 / Ideas)<a class="headerlink" href="#future-considerations-beyond-phase-25-ideas" title="Permanent link">&para;</a></h2>
+<h2 id="future-considerations-phase-3-beyond">Future Considerations (Phase 3 &amp; Beyond)<a class="headerlink" href="#future-considerations-phase-3-beyond" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Phase 2.6: Automation &amp; Robustness:</strong><ul>
-<li>Implement the <code>automation_scripts/</code> (<code>av_create_package_agent</code>, <code>av_deploy_register_agent</code>, <code>av_find_run_task</code>).</li>
-<li>Address scalability concerns (e.g., registry developer key lookup).</li>
-<li>Enhance Server SDK state management (persistent stores like DB/Redis).</li>
-<li>Improve error handling depth across all components.</li>
-</ul>
-</li>
-<li><strong>Phase 3: Advanced Features &amp; Ecosystem Growth:</strong><ul>
-<li><strong>Developer Self-Registration:</strong> Implement a secure self-service workflow for developers to register and obtain API keys via the Registry API/UI (including email verification).</li>
-<li><strong>Multimodality (WebRTC):</strong> Integrate <code>aiortc</code> for optional real-time audio/video streaming support within the A2A protocol.</li>
-<li><strong>Deeper MCP Integration:</strong> Align with finalized MCP specifications, provide SDK helpers for context manipulation.</li>
-<li><strong>TEE Attestation Verification:</strong> Implement client-side verification of TEE attestations based on <code>attestationEndpoint</code> in Agent Cards.</li>
-<li><strong>Registry Enhancements:</strong> Community reviews/ratings, usage analytics (opt-in), more advanced search/filtering, improved developer portal features (key rotation, etc.).</li>
+<li><strong>Multimodality (WebRTC):</strong> Integrate <code>aiortc</code> for optional real-time audio/video streaming.</li>
+<li><strong>Deeper MCP Integration:</strong> Align with finalized MCP specifications, provide SDK helpers.</li>
+<li><strong>TEE Attestation Verification:</strong> Implement client-side verification of TEE attestations.</li>
+<li><strong>Registry Features:</strong> Community reviews/ratings, usage analytics (opt-in), advanced search, key rotation.</li>
 <li><strong>Other Language SDKs/Libraries:</strong> Explore SDKs for Node.js, Go, etc.</li>
 <li><strong>Security Audits:</strong> Formal third-party security reviews.</li>
 </ul>
-</li>
-</ul>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
-<p>We welcome community contributions! Please see our <a href="../CONTRIBUTING/">CONTRIBUTING.md</a> for guidelines on reporting issues, suggesting features, and submitting pull requests. You can also join discussions on our GitHub repository.</p>
+<p>We welcome community contributions! Please see our <a href="../CONTRIBUTING/">CONTRIBUTING.md</a> for guidelines.</p>
 
 
 
