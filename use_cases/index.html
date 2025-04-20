@@ -1492,64 +1492,41 @@
 <li><strong>Action:</strong> Upon user confirmation, Orchestrator securely instructs booking agents via A2A to finalize reservations.</li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph TD
-    %% Define styles
-    classDef supportGroup fill:#f3e5f5,stroke:#333,stroke-width:1px
-    classDef agentGroup fill:#e8f5e9,stroke:#333,stroke-width:1px
-    classDef registry fill:#ccf2ff,stroke:#333,stroke-width:2px,shape:cylinder
-    classDef agent fill:#e6ffcc,stroke:#333,stroke-width:1px
-    classDef authAgent fill:#ccf,stroke:#333,stroke-width:1px
-    classDef human fill:#f2f2f2,stroke:#333,stroke-width:1px
-    classDef autoPath fill:#c8e6c9,stroke:#4caf50,stroke-width:1px
-    classDef manualPath fill:#fff9c4,stroke:#fbc02d,stroke-width:1px
-
-    subgraph SupportChannels["🎧 Support Channels"]
-        Helpdesk["🎫 Helpdesk System"]:::agent
-        User["👤 User"]:::human -- "Creates Ticket" --&gt; Helpdesk
+<pre class="mermaid"><code>flowchart TD
+    subgraph UserInteraction["User Interaction"]
+        User(("👤 User"))
+        Orchestrator[/"🧠 OrchestratorAgent"/]
     end
 
-    subgraph AgentNetwork["🌐 Agent Network"]
-        Orchestrator["🧠 Support Orchestrator"]:::agent
-        Registry[("📚 AgentVault Registry")]:::registry
-        SentimentAgent["😊 Sentiment Analysis Agent"]:::agent
-        TopicAgent["🏷️ Topic Classification Agent"]:::agent
-        CRMAgent["👥 CRM Lookup Agent (Auth Req)"]:::authAgent
-        KBAgent["📚 Knowledge Base Agent"]:::agent
-        RoutingAgent["🔀 Routing Logic Agent"]:::agent
-        HelpdeskUpdateAgent["✏️ Helpdesk Update Agent (Auth Req)"]:::authAgent
+    subgraph SecureProfile["Secure User Profile"]
+        ProfileAgent[("👤 Profile Agent(TEE)")]
     end
 
-    %% Fixed missing arrow destination
-    Helpdesk -- "Trigger" --&gt; Orchestrator
-    Orchestrator -- "1. New Ticket Data" --&gt; Orchestrator
+    subgraph AgentDiscovery["Agent Discovery"]
+        Registry["📚 Registry"]
+        FlightAgent["✈️ Flight SearchAgent"]
+        HotelAgent["🏨 Hotel SearchAgent"]
+        BookingAgent{"🔐 Booking Agent(Auth Required)"}
+    end
 
-    Orchestrator -- "2. Find Agents" --&gt; Registry
-    Registry -- "3. Agent Cards" --&gt; Orchestrator
+    User --&gt; Orchestrator
+    Orchestrator --&gt; User
 
-    Orchestrator -- "4. Task: Analyze Sentiment" --&gt; SentimentAgent
-    Orchestrator -- "5. Task: Classify Topic" --&gt; TopicAgent
-    Orchestrator -- "6. Task: Get Customer Info (Auth)" --&gt; CRMAgent
-    SentimentAgent -- "7. Sentiment Score" --&gt; Orchestrator
-    TopicAgent -- "8. Topic Labels" --&gt; Orchestrator
-    CRMAgent -- "9. Customer History/Tier" --&gt; Orchestrator
+    Orchestrator &lt;--&gt; ProfileAgent
 
-    Orchestrator -- "10. Task: Search KB (Topic, Content)" --&gt; KBAgent
-    KBAgent -- "11. Potential Answer / No Match" --&gt; Orchestrator
+    Orchestrator &lt;--&gt; Registry
+    Orchestrator &lt;--&gt; FlightAgent
+    Orchestrator &lt;--&gt; HotelAgent
+    Orchestrator &lt;--&gt; BookingAgent
 
-    %% Fixed the alt/else syntax by using a decision node
-    Orchestrator -- "12. Check KB Match" --&gt; KBDecision{Good KB Match?}
-
-    %% Automated reply path
-    KBDecision -- "Yes" --&gt; HighConfidence[High Confidence KB Match]:::autoPath
-    HighConfidence -- "13a. Task: Send Auto-Reply (Auth)" --&gt; HelpdeskUpdateAgent
-    HelpdeskUpdateAgent -- "14a. Updates" --&gt; Helpdesk
-
-    %% Manual routing path
-    KBDecision -- "No" --&gt; LowConfidence[No KB Match / Low Confidence]:::manualPath
-    LowConfidence -- "13b. Task: Determine Route" --&gt; RoutingAgent
-    RoutingAgent -- "14b. Recommended Queue" --&gt; Orchestrator
-    Orchestrator -- "15b. Task: Assign Ticket (Auth)" --&gt; HelpdeskUpdateAgent
-    HelpdeskUpdateAgent -- "16b. Updates" --&gt; Helpdesk</code></pre>
+    style Orchestrator fill:#ff9e80,stroke:#ff6e40,color:black
+    style Registry fill:#80d8ff,stroke:#40c4ff,color:black
+    style ProfileAgent fill:#ea80fc,stroke:#e040fb,color:black
+    style FlightAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style HotelAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style BookingAgent fill:#84ffff,stroke:#18ffff,color:black
+    style User fill:#fff59d,stroke:#ffee58,color:black
+</code></pre>
 <p><strong>AgentVault Value:</strong>
 *   <strong>Discovery:</strong> Dynamically finds specialized travel agents.
 *   <strong>Interoperability:</strong> Standard A2A ensures communication between diverse agents.
@@ -1567,40 +1544,38 @@
 <li><strong>Report Generation:</strong> Orchestrator sends components to <code>DraftWriterAgent</code>.</li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph TD
-    %% Define styles
-    classDef researcher fill:#f2f2f2,stroke:#333,stroke-width:1px
-    classDef orchestrator fill:#ffd6cc,stroke:#333,stroke-width:2px
-    classDef registry fill:#ccf2ff,stroke:#333,stroke-width:2px,shape:cylinder
-    classDef agent fill:#e6ffcc,stroke:#333,stroke-width:1px
-    classDef secureAgent fill:#f9f,stroke:#333,stroke-width:2px,stroke-dasharray:5 5
+<pre class="mermaid"><code>flowchart LR
+    Researcher(("👩‍🔬 Researcher"))
+    Orchestrator[/"🧠 PipelineOrchestrator"/]
+    Registry(("📚 Registry"))
 
-    Researcher["👩‍🔬 Researcher"]:::researcher -- "Configures" --&gt; Orchestrator["🧠 Pipeline Orchestrator"]:::orchestrator
-    Registry[("📚 AgentVault Registry")]:::registry
-
-    Orchestrator -- "1. Find Agents (search, extract, sim...)" --&gt; Registry
-    Registry -- "2. Agent Cards" --&gt; Orchestrator
-
-    subgraph ResearchTasks["🔬 Research &amp; Analysis Tasks"]
-        SearchAgent["🔎 Lit Search Agent"]:::agent
-        Extractor["📄 PDF Extract Agent"]:::agent
-        Simulator["⚙️ Simulation Agent (TEE)"]:::secureAgent
-        Analyzer["📊 Analysis Agent"]:::agent
-        Writer["📝 Draft Writer Agent"]:::agent
-
-        Orchestrator -- "3. Task: Find Papers" --&gt; SearchAgent
-        SearchAgent -- "4. Paper URLs/Refs" --&gt; Orchestrator
-        Orchestrator -- "5. Task: Extract Data (URLs)" --&gt; Extractor
-        Extractor -- "6. Data Artifacts" --&gt; Orchestrator
-        Orchestrator -- "7. Task: Run Simulation (Data)" --&gt; Simulator
-        Simulator -- "8. Result Artifacts" --&gt; Orchestrator
-        Orchestrator -- "9. Task: Analyze Results" --&gt; Analyzer
-        Analyzer -- "10. Analysis Summary" --&gt; Orchestrator
-        Orchestrator -- "11. Task: Draft Report" --&gt; Writer
-        Writer -- "12. Draft Section" --&gt; Orchestrator
+    subgraph Research["Research &amp; Analysis Pipeline"]
+        direction TB
+        SearchAgent["🔎 LiteratureSearch Agent"]
+        Extractor["📄 PDF ExtractAgent"]
+        Simulator["⚙️ SimulationAgent (TEE)"]
+        Analyzer["📊 AnalysisAgent"]
+        Writer["📝 Draft WriterAgent"]
     end
 
-    Orchestrator -- "13. Final Report" --&gt; Researcher</code></pre>
+    Researcher &lt;--&gt; Orchestrator
+    Orchestrator &lt;--&gt; Registry
+
+    Orchestrator &lt;--&gt; SearchAgent
+    Orchestrator &lt;--&gt; Extractor
+    Orchestrator &lt;--&gt; Simulator
+    Orchestrator &lt;--&gt; Analyzer
+    Orchestrator &lt;--&gt; Writer
+
+    style Researcher fill:#fff59d,stroke:#ffee58,color:black
+    style Orchestrator fill:#ff9e80,stroke:#ff6e40,color:black
+    style Registry fill:#80d8ff,stroke:#40c4ff,color:black
+    style SearchAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style Extractor fill:#b9f6ca,stroke:#69f0ae,color:black
+    style Simulator fill:#ea80fc,stroke:#e040fb,color:black
+    style Analyzer fill:#b9f6ca,stroke:#69f0ae,color:black
+    style Writer fill:#b9f6ca,stroke:#69f0ae,color:black
+</code></pre>
 <p><strong>AgentVault Value:</strong>
 *   <strong>Discovery:</strong> Finds specialized scientific agents, including filtering by TEE capability.
 *   <strong>Interoperability:</strong> Standard A2A allows complex pipeline construction.
@@ -1617,48 +1592,48 @@
 <li><strong>Response:</strong> Alerting Agent notifies humans <em>and</em> tasks a <code>ControlAgent</code> (or specific Device Agent) via <strong>A2A</strong> using required <strong>Auth Scheme</strong> (e.g., <code>apiKey</code>) managed by <code>KeyManager</code>.</li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph TD
-    %% Define styles
-    classDef factoryGroup fill:#fff3e0,stroke:#333,stroke-width:1px
-    classDef controlGroup fill:#e3f2fd,stroke:#333,stroke-width:1px
-    classDef agent fill:#e6ffcc,stroke:#333,stroke-width:1px
-    classDef registry fill:#ccf2ff,stroke:#333,stroke-width:2px,shape:cylinder
-    classDef authAgent fill:#ccf,stroke:#333,stroke-width:1px
-    classDef human fill:#f2f2f2,stroke:#333,stroke-width:1px
-
-    subgraph FactoryFloor["🏭 Factory Floor (Edge)"]
-        SensorAgent["🌡️ Temp Sensor Agent"]:::agent
-        ActuatorAgent["🔧 Valve Actuator Agent (Auth Req)"]:::authAgent
-        MachineAgent["⚙️ Machine Status Agent"]:::agent
+<pre class="mermaid"><code>flowchart TD
+    subgraph FactoryFloor["Factory Floor Edge"]
+        SensorAgent[("🌡️ TemperatureSensor Agent")]
+        ActuatorAgent{"🔧 Valve Actuator(Auth Required)"}
+        MachineAgent[("⚙️ Machine StatusAgent")]
     end
 
-    subgraph ControlNetwork["🌐 Local Control Network"]
-        LocalRegistry[("📚 Local Registry")]:::registry
-        MonitorAgent["👁️ Monitoring Agent"]:::agent
-        AlertAgent["🚨 Alerting Agent"]:::agent
-        ControlAgent["🎮 Control Agent"]:::agent
-        Supervisor["👨‍💼 Human Supervisor"]:::human
+    subgraph ControlNetwork["Local Control Network"]
+        LocalRegistry[("📚 Local Registry")]
+        MonitorAgent[/"👁️ MonitoringAgent"/]
+        AlertAgent[/"🚨 AlertingAgent"/]
+        ControlAgent[/"🎮 ControlAgent"/]
+        Supervisor(("👨‍💼 HumanSupervisor"))
     end
 
-    %% Registration flow
-    SensorAgent -- "Register" --&gt; LocalRegistry
-    ActuatorAgent -- "Register" --&gt; LocalRegistry
-    MachineAgent -- "Register" --&gt; LocalRegistry
-    AlertAgent -- "Register" --&gt; LocalRegistry
-    ControlAgent -- "Register" --&gt; LocalRegistry
+    %% Registration connections
+    SensorAgent --&gt; LocalRegistry
+    ActuatorAgent --&gt; LocalRegistry
+    MachineAgent --&gt; LocalRegistry
+    AlertAgent --&gt; LocalRegistry
+    ControlAgent --&gt; LocalRegistry
 
     %% Monitoring flow
-    MonitorAgent -- "1. Discover Sensors" --&gt; LocalRegistry
-    SensorAgent -- "2. Temp Data (SSE)" --&gt; MonitorAgent
-    MachineAgent -- "3. Status Data (SSE)" --&gt; MonitorAgent
+    MonitorAgent --&gt; LocalRegistry
+    SensorAgent --&gt; MonitorAgent
+    MachineAgent --&gt; MonitorAgent
 
-    %% Alert and response flow
-    MonitorAgent -- "4. Anomaly Detected!" --&gt; AlertAgent
-    AlertAgent -- "5. Notify Supervisor" --&gt; Supervisor
-    AlertAgent -- "6. Find Control Agent" --&gt; LocalRegistry
-    AlertAgent -- "7. Trigger Action" --&gt; ControlAgent
-    ControlAgent -- "8. Find Actuator" --&gt; LocalRegistry
-    ControlAgent -- "9. Send Command (Auth)" --&gt; ActuatorAgent</code></pre>
+    %% Alert flow
+    MonitorAgent --&gt; AlertAgent
+    AlertAgent --&gt; Supervisor
+    AlertAgent --&gt; ControlAgent
+    ControlAgent --&gt; ActuatorAgent
+
+    style SensorAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style ActuatorAgent fill:#84ffff,stroke:#18ffff,color:black
+    style MachineAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style LocalRegistry fill:#80d8ff,stroke:#40c4ff,color:black
+    style MonitorAgent fill:#ff9e80,stroke:#ff6e40,color:black
+    style AlertAgent fill:#ff9e80,stroke:#ff6e40,color:black
+    style ControlAgent fill:#ff9e80,stroke:#ff6e40,color:black
+    style Supervisor fill:#fff59d,stroke:#ffee58,color:black
+</code></pre>
 <p><strong>AgentVault Value:</strong>
 *   <strong>Decentralization:</strong> Enables local discovery and communication via a local Registry.
 *   <strong>Interoperability:</strong> Standard A2A connects heterogeneous devices/agents.
@@ -1677,46 +1652,46 @@
 <li><strong>CRM Update:</strong> Orchestrator updates the lead record in the <strong>CRM</strong> with the enriched data.</li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph TD
-    %% Define styles
-    classDef crmGroup fill:#ffebee,stroke:#333,stroke-width:1px
-    classDef agentGroup fill:#e8f5e9,stroke:#333,stroke-width:1px
-    classDef registry fill:#ccf2ff,stroke:#333,stroke-width:2px,shape:cylinder
-    classDef agent fill:#e6ffcc,stroke:#333,stroke-width:1px
-    classDef authAgent fill:#ccf,stroke:#333,stroke-width:1px
-    classDef human fill:#f2f2f2,stroke:#333,stroke-width:1px
-
-    subgraph CRMSystem["💼 CRM System"]
-        CRM["📊 CRM Platform"]:::agent
-        User["👩‍💼 Sales Rep"]:::human --&gt; CRM
-        CRM -- "Creates Lead" --&gt; Trigger["🔔 Webhook/Trigger"]:::agent
+<pre class="mermaid"><code>flowchart TD
+    subgraph CRMSystem["CRM System"]
+        User(("👩‍💼 Sales Rep"))
+        CRM[("📊 CRM Platform")]
+        Trigger[/"🔔 Webhook/Trigger"/]
     end
 
-    subgraph AgentNetwork["🌐 Agent Network"]
-        Orchestrator["🧠 CRM Orchestrator Agent"]:::agent
-        Registry[("📚 AgentVault Registry")]:::registry
-        LinkedInAgent["🔗 LinkedIn Enricher (Auth Req)"]:::authAgent
-        FirmographicsAgent["🏢 Firmographics Agent (Auth Req)"]:::authAgent
-        ValidatorAgent["✓ Contact Validator"]:::agent
+    subgraph AgentNetwork["Agent Network"]
+        Orchestrator[/"🧠 CRM OrchestratorAgent"/]
+        Registry["📚 Registry"]
+
+        subgraph EnrichmentServices["Enrichment Services"]
+            direction LR
+            LinkedInAgent{"🔗 LinkedIn Enricher(Auth Required)"}
+            FirmographicsAgent{"🏢 Firmographics(Auth Required)"}
+            ValidatorAgent["✓ ContactValidator"]
+        end
     end
 
-    %% Fixed the syntax error in this flow
+    User --&gt; CRM
+    CRM --&gt; Trigger
     Trigger --&gt; Orchestrator
-    Orchestrator -- "1. Enrich Lead Request" --&gt; Orchestrator
 
-    Orchestrator -- "2. Find Agents (linkedin, firmographics...)" --&gt; Registry
-    Registry -- "3. Agent Cards (URLs, Auth)" --&gt; Orchestrator
+    Orchestrator &lt;--&gt; Registry
 
-    Orchestrator -- "4. Task: Find Profile (Auth)" --&gt; LinkedInAgent
-    Orchestrator -- "5. Task: Get Firmographics (Auth)" --&gt; FirmographicsAgent
-    Orchestrator -- "6. Task: Validate Email" --&gt; ValidatorAgent
+    Orchestrator &lt;--&gt; LinkedInAgent
+    Orchestrator &lt;--&gt; FirmographicsAgent
+    Orchestrator &lt;--&gt; ValidatorAgent
 
-    LinkedInAgent -- "7. Profile URL Result" --&gt; Orchestrator
-    FirmographicsAgent -- "8. Company Data Result" --&gt; Orchestrator
-    ValidatorAgent -- "9. Validation Result" --&gt; Orchestrator
+    Orchestrator --&gt; CRM
 
-    Orchestrator -- "10. Synthesize Data" --&gt; Orchestrator
-    Orchestrator -- "11. Update CRM Record" --&gt; CRM</code></pre>
+    style User fill:#fff59d,stroke:#ffee58,color:black
+    style CRM fill:#bbdefb,stroke:#64b5f6,color:black
+    style Trigger fill:#ffcc80,stroke:#ffa726,color:black
+    style Orchestrator fill:#ff9e80,stroke:#ff6e40,color:black
+    style Registry fill:#80d8ff,stroke:#40c4ff,color:black
+    style LinkedInAgent fill:#84ffff,stroke:#18ffff,color:black
+    style FirmographicsAgent fill:#84ffff,stroke:#18ffff,color:black
+    style ValidatorAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+</code></pre>
 <p><strong>AgentVault Value:</strong>
 *   <strong>Modularity:</strong> Easily find and swap enrichment agents via the Registry.
 *   <strong>Standardization:</strong> A2A protocol simplifies interaction with diverse data providers.
@@ -1736,58 +1711,49 @@
 <li><strong>Notification:</strong> Orchestrator notifies E-commerce platform/user of completion.</li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph TD
-    %% Define styles
-    classDef systemsGroup fill:#fff8e1,stroke:#333,stroke-width:1px
-    classDef agentGroup fill:#e1f5fe,stroke:#333,stroke-width:1px
-    classDef registry fill:#ccf2ff,stroke:#333,stroke-width:2px,shape:cylinder
-    classDef agent fill:#e6ffcc,stroke:#333,stroke-width:1px
-    classDef authAgent fill:#ccf,stroke:#333,stroke-width:1px
-    classDef successPath fill:#c8e6c9,stroke:#4caf50,stroke-width:1px
-    classDef errorPath fill:#ffcdd2,stroke:#f44336,stroke-width:1px
+<pre class="mermaid"><code>flowchart TB
+    Ecommerce[("🛍️ E-commercePlatform")] --&gt; OrderAgent[/"📦 Order ProcessingAgent"/]
 
-    subgraph SalesSystems["🛒 Sales &amp; Fulfillment Systems"]
-        Ecommerce["🛍️ E-commerce Platform"]:::agent --&gt; OrderAgent["📦 Order Processing Agent"]:::agent
-        ERP["💻 ERP / WMS / Accounting"]:::agent
-        ShippingAPI["🚚 Shipping Provider API"]:::agent
-        CRM["👥 CRM System"]:::agent
+    subgraph Systems["Enterprise Systems"]
+        ERP[("💻 ERP / WMS")]
+        ShippingAPI[("🚚 Shipping API")]
+        CRM[("👥 CRM System")]
     end
 
-    subgraph AgentNetwork["🌐 Agent Network"]
-        Registry[("📚 AgentVault Registry")]:::registry
-        InventoryAgent["🔢 Inventory Agent"]:::agent
-        ShippingAgent["🏷️ Shipping Label Agent (Auth Req)"]:::authAgent
-        BillingAgent["💰 Billing Agent"]:::agent
-        CRMUpdateAgent["📝 CRM Update Agent"]:::agent
+    subgraph AgentNetwork["Agent Network"]
+        Registry[("📚 Registry")]
+        InventoryAgent["🔢 InventoryAgent"]
+        ShippingAgent{"🏷️ Shipping Label(Auth Required)"}
+        BillingAgent["💰 BillingAgent"]
+        CRMUpdateAgent["📝 CRM UpdateAgent"]
     end
 
-    OrderAgent -- "1. Find Agents" --&gt; Registry
-    Registry -- "2. Agent Cards" --&gt; OrderAgent
+    OrderAgent &lt;--&gt; Registry
 
-    OrderAgent -- "3. Task: Check Stock (SKU)" --&gt; InventoryAgent
-    InventoryAgent -- "Connects" --&gt; ERP
-    InventoryAgent -- "4. Stock Status" --&gt; OrderAgent
+    OrderAgent &lt;--&gt; InventoryAgent
+    InventoryAgent &lt;--&gt; ERP
 
-    %% Fixed the alt/else syntax by using a decision node
-    OrderAgent -- "5. Check Availability" --&gt; StockDecision{Stock Available?}
+    OrderAgent &lt;--&gt; ShippingAgent
+    ShippingAgent &lt;--&gt; ShippingAPI
 
-    %% Success path - stock available
-    StockDecision -- "Yes" --&gt; StockAvailable[Stock Available]:::successPath
-    StockAvailable -- "6a. Task: Create Label (Auth)" --&gt; ShippingAgent
-    ShippingAgent -- "Connects" --&gt; ShippingAPI
-    ShippingAgent -- "7a. Label Artifact/Tracking" --&gt; OrderAgent
-    OrderAgent -- "8a. Task: Create Invoice" --&gt; BillingAgent
-    BillingAgent -- "Connects" --&gt; ERP
-    BillingAgent -- "9a. Invoice Created" --&gt; OrderAgent
-    OrderAgent -- "10a. Task: Update Order Status" --&gt; CRMUpdateAgent
-    CRMUpdateAgent -- "Connects" --&gt; CRM
-    CRMUpdateAgent -- "11a. Status Updated" --&gt; OrderAgent
-    OrderAgent -- "12a. Notify Fulfillment Complete" --&gt; Ecommerce
+    OrderAgent &lt;--&gt; BillingAgent
+    BillingAgent &lt;--&gt; ERP
 
-    %% Error path - stock unavailable
-    StockDecision -- "No" --&gt; StockUnavailable[Stock Unavailable]:::errorPath
-    StockUnavailable -- "6b. Notify Backorder/Issue" --&gt; OrderAgent
-    OrderAgent -- "7b. Update Status" --&gt; Ecommerce</code></pre>
+    OrderAgent &lt;--&gt; CRMUpdateAgent
+    CRMUpdateAgent &lt;--&gt; CRM
+
+    OrderAgent --&gt; Ecommerce
+
+    style Ecommerce fill:#bbdefb,stroke:#64b5f6,color:black
+    style OrderAgent fill:#ff9e80,stroke:#ff6e40,color:black
+    style Registry fill:#80d8ff,stroke:#40c4ff,color:black
+    style InventoryAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style ShippingAgent fill:#84ffff,stroke:#18ffff,color:black
+    style BillingAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style CRMUpdateAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style ERP fill:#bbdefb,stroke:#64b5f6,color:black
+    style ShippingAPI fill:#bbdefb,stroke:#64b5f6,color:black
+    style CRM fill:#bbdefb,stroke:#64b5f6,color:black</code></pre>
 <p><strong>AgentVault Value:</strong>
 *   <strong>Process Automation:</strong> Connects disparate systems (E-commerce, ERP, Shipping, CRM) via standardized agents.
 *   <strong>Interoperability:</strong> A2A allows communication between custom internal agents (Inventory, Billing) and external service wrappers (Shipping).
@@ -1810,71 +1776,56 @@
 </li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph TD
-    %% Define styles
-    classDef supportGroup fill:#f3e5f5,stroke:#333,stroke-width:1px
-    classDef agentGroup fill:#e8f5e9,stroke:#333,stroke-width:1px
-    classDef registry fill:#ccf2ff,stroke:#333,stroke-width:2px,shape:cylinder
-    classDef agent fill:#e6ffcc,stroke:#333,stroke-width:1px
-    classDef authAgent fill:#ccf,stroke:#333,stroke-width:1px
-    classDef human fill:#f2f2f2,stroke:#333,stroke-width:1px
-    classDef autoPath fill:#c8e6c9,stroke:#4caf50,stroke-width:1px
-    classDef manualPath fill:#fff9c4,stroke:#fbc02d,stroke-width:1px
+<pre class="mermaid"><code>flowchart LR
+    User(("👤 User")) --&gt; Helpdesk[("🎫 HelpdeskSystem")]
+    Helpdesk --&gt; Orchestrator[/"🧠 SupportOrchestrator"/]
 
-    subgraph SupportChannels["🎧 Support Channels"]
-        Helpdesk["🎫 Helpdesk System"]:::agent
-        User["👤 User"]:::human -- "Creates Ticket" --&gt; Helpdesk
+    subgraph AgentNetwork["Agent Ecosystem"]
+        Registry["📚 Registry"]
+
+        subgraph Analysis["Analysis Agents"]
+            direction TB
+            SentimentAgent["😊 SentimentAnalysis"]
+            TopicAgent["🏷️ TopicClassification"]
+            CRMAgent{"👥 CRM Lookup(Auth Required)"}
+        end
+
+        subgraph Resolution["Resolution Path"]
+            direction TB
+            KBAgent["📚 Knowledge BaseAgent"]
+            RoutingAgent["🔀 Routing LogicAgent"]
+            HelpdeskUpdateAgent{"✏️ Helpdesk Update(Auth Required)"}
+        end
     end
 
-    subgraph AgentNetwork["🌐 Agent Network"]
-        Orchestrator["🧠 Support Orchestrator"]:::agent
-        Registry[("📚 AgentVault Registry")]:::registry
-        SentimentAgent["😊 Sentiment Analysis Agent"]:::agent
-        TopicAgent["🏷️ Topic Classification Agent"]:::agent
-        CRMAgent["👥 CRM Lookup Agent (Auth Req)"]:::authAgent
-        KBAgent["📚 Knowledge Base Agent"]:::agent
-        RoutingAgent["🔀 Routing Logic Agent"]:::agent
-        HelpdeskUpdateAgent["✏️ Helpdesk Update Agent (Auth Req)"]:::authAgent
-    end
+    Orchestrator &lt;--&gt; Registry
 
-    %% Fixed missing arrow destination
-    Helpdesk -- "Trigger" --&gt; Orchestrator
-    Orchestrator -- "1. New Ticket Data" --&gt; Orchestrator
+    Orchestrator &lt;--&gt; SentimentAgent
+    Orchestrator &lt;--&gt; TopicAgent
+    Orchestrator &lt;--&gt; CRMAgent
 
-    Orchestrator -- "2. Find Agents" --&gt; Registry
-    Registry -- "3. Agent Cards" --&gt; Orchestrator
+    Orchestrator &lt;--&gt; KBAgent
+    Orchestrator &lt;--&gt; RoutingAgent
+    Orchestrator &lt;--&gt; HelpdeskUpdateAgent
 
-    Orchestrator -- "4. Task: Analyze Sentiment" --&gt; SentimentAgent
-    Orchestrator -- "5. Task: Classify Topic" --&gt; TopicAgent
-    Orchestrator -- "6. Task: Get Customer Info (Auth)" --&gt; CRMAgent
-    SentimentAgent -- "7. Sentiment Score" --&gt; Orchestrator
-    TopicAgent -- "8. Topic Labels" --&gt; Orchestrator
-    CRMAgent -- "9. Customer History/Tier" --&gt; Orchestrator
+    HelpdeskUpdateAgent --&gt; Helpdesk
 
-    Orchestrator -- "10. Task: Search KB (Topic, Content)" --&gt; KBAgent
-    KBAgent -- "11. Potential Answer / No Match" --&gt; Orchestrator
-
-    %% Fixed the alt/else syntax by using a decision node
-    Orchestrator -- "12. Check KB Match" --&gt; KBDecision{Good KB Match?}
-
-    %% Automated reply path
-    KBDecision -- "Yes" --&gt; HighConfidence[High Confidence KB Match]:::autoPath
-    HighConfidence -- "13a. Task: Send Auto-Reply (Auth)" --&gt; HelpdeskUpdateAgent
-    HelpdeskUpdateAgent -- "14a. Updates" --&gt; Helpdesk
-
-    %% Manual routing path
-    KBDecision -- "No" --&gt; LowConfidence[No KB Match / Low Confidence]:::manualPath
-    LowConfidence -- "13b. Task: Determine Route" --&gt; RoutingAgent
-    RoutingAgent -- "14b. Recommended Queue" --&gt; Orchestrator
-    Orchestrator -- "15b. Task: Assign Ticket (Auth)" --&gt; HelpdeskUpdateAgent
-    HelpdeskUpdateAgent -- "16b. Updates" --&gt; Helpdesk</code></pre>
+    style User fill:#fff59d,stroke:#ffee58,color:black
+    style Helpdesk fill:#bbdefb,stroke:#64b5f6,color:black
+    style Orchestrator fill:#ff9e80,stroke:#ff6e40,color:black
+    style Registry fill:#80d8ff,stroke:#40c4ff,color:black
+    style SentimentAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style TopicAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style CRMAgent fill:#84ffff,stroke:#18ffff,color:black
+    style KBAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style RoutingAgent fill:#b9f6ca,stroke:#69f0ae,color:black
+    style HelpdeskUpdateAgent fill:#84ffff,stroke:#18ffff,color:black</code></pre>
 <p><strong>AgentVault Value:</strong>
 *   <strong>Workflow Orchestration:</strong> Enables complex, multi-step support workflows involving analysis, enrichment, and action.
 *   <strong>Specialization:</strong> Allows using best-of-breed agents for sentiment, classification, KB search, etc.
 *   <strong>Secure Data Access:</strong> Protects access to CRM and Helpdesk systems via authenticated agents.
 *   <strong>Efficiency:</strong> Automates common tasks and routes complex issues effectively, reducing manual triage and resolution time.</p>
 <hr />
-<h1 id="_1"><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 
 
 
