@@ -505,6 +505,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Protocols
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       Installation
@@ -1178,6 +1187,29 @@
   
   
     <li class="md-nav__item">
+      <a href="mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MCP Profile (Concept)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="tee_profile/" class="md-nav__link">
         
   
@@ -1470,7 +1502,7 @@
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <p>The AgentVault monorepo contains the following key components:</p>
 <ul>
-<li><strong><code>agentvault_library</code></strong>: (<a href="developer_guide/library/">Developer Guide</a>) Core Python client library for interacting with A2A agents, managing keys, and handling protocols (A2A, MCP).</li>
+<li><strong><code>agentvault_library</code></strong>: (<a href="developer_guide/library/">Developer Guide</a>) Core Python client library for interacting with A2A agents, managing keys, and handling protocols (A2A, <a href="mcp/">MCP</a>).</li>
 <li><strong><code>agentvault_cli</code></strong>: (<a href="user_guide/cli/">User Guide</a>) Command-line interface for users and developers to manage credentials, discover agents, and run tasks.</li>
 <li><strong><code>agentvault_registry</code></strong>: (<a href="developer_guide/registry/">Developer Guide</a>) Backend API server (FastAPI) acting as the central discovery point for registered agents. Also serves a <strong>Web UI</strong> for public discovery (<code>/ui</code>) and developer management (<code>/ui/developer</code>). <em>(Live instance available above)</em></li>
 <li><strong><code>agentvault_server_sdk</code></strong>: (<a href="developer_guide/server_sdk/">Developer Guide</a>) Python SDK to help developers build A2A-compliant agent servers easily, integrating with frameworks like FastAPI. Includes packaging tools.</li>
@@ -1478,6 +1510,11 @@
 <li><strong><code>examples/</code></strong>: Contains practical examples demonstrating how to use the SDK and library (e.g., basic A2A server, LangChain integration). See the <a href="examples/">Examples Overview</a>.</li>
 <li><strong><code>automation_scripts/</code></strong>: Scripts to automate common workflows like agent packaging and deployment.</li>
 <li><strong><code>docs/</code></strong>: Source files for this documentation website (built with MkDocs).</li>
+</ul>
+<h2 id="key-protocols">Key Protocols<a class="headerlink" href="#key-protocols" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="a2a_profile_v0.2/">Agent-to-Agent (A2A) Profile v0.2</a>:</strong> Defines the core communication patterns, task lifecycle, and event streaming via JSON-RPC and SSE.</li>
+<li><strong><a href="mcp/">Model Context Protocol (MCP) Profile (Concept)</a>:</strong> Specifies how to embed richer context (like tool requests or user profiles) within standard A2A messages.</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Please refer to the <a href="installation/">Installation Guide</a>. For development setup, see the <a href="CONTRIBUTING/">Contributing Guide</a>.</p>
