@@ -1503,13 +1503,6 @@
 <li><strong>TODO:</strong> Refine agent template generation (e.g., better <code>.env</code> setup based on selected options).</li>
 </ul>
 </li>
-<li><strong>Testing &amp; Coverage:</strong><ul>
-<li><strong>TODO:</strong> Implement CI workflow for running <code>pytest</code> across all components.</li>
-<li><strong>TODO:</strong> Integrate <code>pytest-cov</code> and add coverage reporting/thresholds to CI.</li>
-<li><strong>TODO:</strong> Increase test coverage, focusing on complex logic (client state machine, registry auth flows, SDK router edge cases, CLI interactions).</li>
-<li><strong>TODO:</strong> Add basic end-to-end tests (e.g., CLI -&gt; Registry -&gt; Mock Agent).</li>
-</ul>
-</li>
 <li><strong>Registry Enhancements:</strong><ul>
 <li><strong>TODO:</strong> Investigate and potentially optimize developer programmatic API key lookup performance if needed for scale.</li>
 <li><strong>TODO:</strong> Implement email-based password reset flow (currently placeholder).</li>
@@ -1522,21 +1515,49 @@
 </ul>
 </li>
 <li><strong>Documentation Polish:</strong><ul>
-<li><strong>TODO:</strong> Fill in remaining placeholders in policy documents (Contact emails).</li>
 <li><strong>TODO:</strong> Add more diagrams where helpful (e.g., auth flows).</li>
 <li><strong>TODO:</strong> Review all guides for clarity and accuracy against latest code.</li>
 </ul>
 </li>
 </ol>
 <h2 id="future-considerations-phase-3-beyond">Future Considerations (Phase 3 &amp; Beyond)<a class="headerlink" href="#future-considerations-phase-3-beyond" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Multimodality (WebRTC):</strong> Integrate <code>aiortc</code> for optional real-time audio/video streaming.</li>
-<li><strong>Deeper MCP Integration:</strong> Align with finalized MCP specifications, provide SDK helpers.</li>
-<li><strong>TEE Attestation Verification:</strong> Implement client-side verification of TEE attestations.</li>
-<li><strong>Registry Features:</strong> Community reviews/ratings, usage analytics (opt-in), advanced search, key rotation.</li>
-<li><strong>Other Language SDKs/Libraries:</strong> Explore SDKs for Node.js, Go, etc.</li>
-<li><strong>Security Audits:</strong> Formal third-party security reviews.</li>
+<p><strong>Objective:</strong> Expand AgentVault into a comprehensive, enterprise-ready platform for secure, scalable, and truly intelligent multi-agent collaboration across diverse environments.</p>
+<p><strong>Key Areas:</strong></p>
+<ol>
+<li><strong>Federated Registry &amp; Discovery:</strong><ul>
+<li>Design and implement protocols for secure, policy-based discovery between independent AgentVault Registry instances (private enterprise, partner, public).</li>
+<li>Develop mechanisms for establishing and managing trust relationships between registries.</li>
+<li>Enhance Agent Cards to support federation metadata and cross-domain policies.</li>
 </ul>
+</li>
+<li><strong>AgentVault Identity Fabric (Zero Trust IAM for Agents):</strong><ul>
+<li><strong>Goal:</strong> Implement a robust, fine-grained Identity and Access Management system specifically for agents, complementing existing user IAM (like Entra ID).</li>
+<li><strong>Agent Identity (SPIFFE/SPIRE):</strong> Integrate SPIFFE/SPIRE for issuing verifiable, short-lived cryptographic identities (SVIDs) to agent workloads, enabling strong mTLS authentication for A2A.</li>
+<li><strong>Capability-Based Authorization (OAuth2 Scopes/Token Exchange):</strong> Define granular permission scopes based on agent capabilities (from Agent Cards). Implement OAuth 2.0 Token Exchange flows to issue delegated, capability-scoped tokens for agent interactions, enforcing the Principle of Least Privilege.</li>
+<li><strong>Policy Engine Integration (OPA):</strong> Integrate Open Policy Agent (OPA) for decoupled, dynamic authorization decisions based on agent identity, user context, requested capabilities, and custom enterprise policies (Rego).</li>
+<li><strong>Secure Context Propagation:</strong> Define standardized methods for securely passing necessary user and call-chain context between agents.</li>
+<li><strong>Synergy:</strong> This Identity Fabric provides the necessary security primitives for secure and scalable Federated Registry interactions.</li>
+</ul>
+</li>
+<li><strong>Enhanced A2A/MCP Capabilities:</strong><ul>
+<li><strong>Multimodality (WebRTC):</strong> Integrate <code>aiortc</code> or similar libraries for optional real-time audio/video streaming capabilities within the A2A framework.</li>
+<li><strong>Deeper MCP Integration:</strong> Fully align with finalized Model Context Protocol specifications, providing robust SDK helpers for standardized tool use and context passing.</li>
+</ul>
+</li>
+<li><strong>Advanced Security &amp; Trust:</strong><ul>
+<li><strong>TEE Attestation Verification:</strong> Implement client-side cryptographic verification of Trusted Execution Environment attestations declared in Agent Cards.</li>
+<li><strong>Key Rotation &amp; Management:</strong> Enhanced features for managing registry API keys and potentially agent-level credentials.</li>
+<li><strong>Formal Security Audits:</strong> Engage third-party experts for comprehensive security reviews of the core framework and protocols.</li>
+</ul>
+</li>
+<li><strong>Ecosystem &amp; Usability:</strong><ul>
+<li><strong>Persistent Task Stores:</strong> Provide robust, production-ready <code>BaseTaskStore</code> implementations (e.g., Redis, SQL database).</li>
+<li><strong>UI Enhancements:</strong> Improve Agent Builder capabilities, add registry analytics/monitoring dashboards.</li>
+<li><strong>Other Language SDKs/Libraries:</strong> Explore SDKs for other popular languages like Node.js, Go, etc., based on community demand.</li>
+<li><strong>Community Features:</strong> Implement features like agent reviews/ratings within the registry.</li>
+</ul>
+</li>
+</ol>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
 <p>We welcome community contributions! Please see our <a href="../CONTRIBUTING/">CONTRIBUTING.md</a> for guidelines.</p>
 

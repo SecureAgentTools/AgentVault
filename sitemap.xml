@@ -2,114 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/CODE_OF_CONDUCT/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/CONTRIBUTING/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/REGISTRY_POLICY/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/ROADMAP/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/TERMS_OF_SERVICE/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/a2a_profile_v0.2/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/architecture/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/concepts/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/examples/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/installation/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/mcp/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/privacy_policy/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/security/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/security_policy/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/tee_profile/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/use_cases/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/vision/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/library/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/registry/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/server_sdk/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/developer_guide/testing/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/examples/basic_a2a_server/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/examples/langchain_integration/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/examples/library_usage_example/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/examples/oauth_agent_example/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/examples/stateful_agent_example/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
     <url>
          <loc>https://SecureAgentTools.github.io/AgentVault/user_guide/cli/</loc>
-         <lastmod>2025-04-22</lastmod>
+         <lastmod>2025-04-28</lastmod>
     </url>
 </urlset>
