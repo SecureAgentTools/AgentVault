@@ -1,0 +1,1718 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://SecureAgentTools.github.io/AgentVault/guides/registry_api/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>Developer Guide: Registry API (agentvault_registry) - AgentVault Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#developer-guide-registry-api-agentvault_registry" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AgentVault Documentation" class="md-header__button md-logo" aria-label="AgentVault Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AgentVault Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Developer Guide: Registry API (agentvault_registry)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SecureAgentTools/AgentVault/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    AgentVault
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../vision/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Vision
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../concepts/" class="md-tabs__link">
+          
+  
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user_guide/cli/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../developer_guide/library/" class="md-tabs__link">
+          
+  
+  
+  Developer Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../a2a_profile_v0.2/" class="md-tabs__link">
+          
+  
+  
+  Protocols
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+  Project & Policies
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AgentVault Documentation" class="md-nav__button md-logo" aria-label="AgentVault Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AgentVault Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SecureAgentTools/AgentVault/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    AgentVault
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vision
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Use Cases
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/basic_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/langchain_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LangChain Tool
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Pipelines (POCs)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Pipelines (POCs)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/poc_research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Research Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/poc_support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Support Ticket Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/poc_dynamics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dynamics 365 Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/poc_ecommerce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    E-commerce Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/poc_etl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ETL Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/poc_mcp_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MCP Test Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user_guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer_guide/library/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Client Library (`agentvault`)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer_guide/server_sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Server SDK (`agentvault-server-sdk`)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer_guide/registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Registry: Setup & API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer_guide/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing Utilities (`agentvault-testing-utils`)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Protocols
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Protocols
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a_profile_v0.2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    A2A Profile v0.2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MCP Profile (Concept)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tee_profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TEE Profile
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project & Policies
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Project & Policies
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code of Conduct
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Policy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../REGISTRY_POLICY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Registry Policy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TERMS_OF_SERVICE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terms of Service
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../privacy_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Privacy Policy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="developer-guide-registry-api-agentvault_registry">Developer Guide: Registry API (<code>agentvault_registry</code>)<a class="headerlink" href="#developer-guide-registry-api-agentvault_registry" title="Permanent link">&para;</a></h1>
+<p>The AgentVault Registry provides a central RESTful API service and Web UI for discovering and managing Agent Cards. Developers interact with it programmatically or via the UI to publish their agents, while clients (like the <code>agentvault_cli</code> or other applications) use it to find agents.</p>
+<ul>
+<li><strong>Public Registry &amp; UI:</strong> <a href="https://agentvault-registry-api.onrender.com"><code>https://agentvault-registry-api.onrender.com</code></a></li>
+<li><strong>Public Discovery UI:</strong> <a href="https://agentvault-registry-api.onrender.com/ui"><code>/ui</code></a></li>
+<li><strong>Developer Portal UI:</strong> <a href="https://agentvault-registry-api.onrender.com/ui/developer"><code>/ui/developer</code></a></li>
+<li><strong>API Base Path:</strong> <code>/api/v1</code></li>
+</ul>
+<p><em>(Note: The public instance runs on a free tier and may experience cold starts taking up to 60 seconds for the first request after inactivity.)</em></p>
+<h2 id="authentication-developer-registration">Authentication &amp; Developer Registration<a class="headerlink" href="#authentication-developer-registration" title="Permanent link">&para;</a></h2>
+<p>Interacting with the registry requires different levels of authentication:</p>
+<ol>
+<li><strong>Public Access:</strong> Discovering agents (<code>GET /api/v1/agent-cards/</code>, <code>GET /api/v1/agent-cards/{card_id}</code>, <code>GET /api/v1/agent-cards/id/{human_readable_id}</code>) and validating card data (<code>POST /api/v1/utils/validate-card</code>) are generally public and do not require authentication.</li>
+<li><strong>Developer Account Authentication (JWT):</strong> Managing your own agent cards (create, update, deactivate), managing programmatic API keys, and using the agent builder requires you to be logged in as a registered developer. This uses <strong>email/password authentication</strong> via the <code>/auth/login</code> endpoint, which returns a <strong>JSON Web Token (JWT)</strong>. Subsequent requests to protected developer endpoints must include this JWT in the <code>Authorization: Bearer &lt;token&gt;</code> HTTP header.</li>
+<li><strong>Programmatic API Key Authentication:</strong> For automated scripts or CI/CD pipelines interacting with the registry API (e.g., to update an agent card automatically), developers can generate <strong>programmatic API keys</strong>. These keys are sent in the <code>X-Api-Key</code> header for specific authenticated endpoints (primarily intended for agent card management, though JWT is preferred for user-driven actions).</li>
+</ol>
+<p><strong>Registration Workflow:</strong></p>
+<ul>
+<li><strong>Self-Registration:</strong> Developers can register via the <code>/ui/register</code> page or the <code>POST /auth/register</code> API endpoint.</li>
+<li><strong>Required Information:</strong> Name, Email, Password.</li>
+<li><strong>Verification:</strong> Upon registration, a verification email is sent to the provided address. The developer must click the link in the email to activate their account (<code>GET /auth/verify-email</code>). Unverified accounts cannot log in.</li>
+<li><strong>Recovery Keys:</strong> During registration, a set of <strong>single-use recovery keys</strong> are generated and displayed <strong>only once</strong>. These keys are essential for regaining account access if the password is lost and email reset is unavailable. <strong>Store these keys securely offline.</strong></li>
+<li><strong>Password Reset:</strong> A password reset can be requested via email (if email sending is configured on the registry instance) using the <code>/ui/forgot-password</code> page or <code>POST /auth/request-password-reset</code> endpoint. Alternatively, account access can be regained using a recovery key via the <code>/ui/recover-with-key</code> page or <code>POST /auth/recover-account</code> endpoint, which provides a temporary token to set a new password via <code>/ui/set-new-password</code> or <code>POST /auth/set-new-password</code>. Using a recovery key invalidates it.</li>
+</ul>
+<h2 id="api-endpoints">API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">&para;</a></h2>
+<p><em>(Refer to the OpenAPI documentation at <code>/docs</code> or <code>/redoc</code> on the running registry instance for full details, request/response schemas, and interactive testing.)</em></p>
+<h3 id="authentication-auth">Authentication (<code>/auth</code>)<a class="headerlink" href="#authentication-auth" title="Permanent link">&para;</a></h3>
+<p>Handles developer registration, login, email verification, and password/account recovery.</p>
+<ul>
+<li><strong><code>POST /register</code></strong>: Creates a new developer account. Requires name, email, password. Returns a success message and <strong>one-time recovery keys</strong>. Triggers verification email.</li>
+<li><strong><code>POST /login</code></strong>: Authenticates using email/password (sent as form data). Returns a JWT <code>access_token</code> (<code>schemas.Token</code>). Requires verified email.</li>
+<li><strong><code>GET /verify-email</code></strong>: Endpoint visited via the link in the verification email. Activates the developer account. Redirects user to success/failure UI pages.</li>
+<li><strong><code>POST /request-password-reset</code></strong>: (Placeholder/Future) Sends a password reset link to the developer's email.</li>
+<li><strong><code>POST /reset-password</code></strong>: (Placeholder/Future) Sets a new password using a token from the reset email.</li>
+<li><strong><code>POST /recover-account</code></strong>: Verifies email and a recovery key. Returns a short-lived JWT (<code>schemas.Token</code>) specifically for setting a new password.</li>
+<li><strong><code>POST /set-new-password</code></strong>: Sets a new password using the temporary token from <code>/recover-account</code>. Requires <code>Authorization: Bearer &lt;temp_token&gt;</code> header and <code>{"new_password": "..."}</code> body. Invalidates the used recovery key hash.</li>
+</ul>
+<h3 id="developers-developers">Developers (<code>/developers</code>)<a class="headerlink" href="#developers-developers" title="Permanent link">&para;</a></h3>
+<p>Endpoints for managing the authenticated developer's own account and resources. <strong>Requires JWT authentication (<code>Authorization: Bearer &lt;token&gt;</code>).</strong></p>
+<ul>
+<li><strong><code>GET /me</code></strong>: Returns the profile information (<code>schemas.DeveloperRead</code>) for the currently authenticated developer.</li>
+<li><strong><code>POST /me/apikeys</code></strong>: Generates a new programmatic API key (prefixed <code>avreg_</code>) associated with the developer. Optionally takes a <code>description</code> in the request body. Returns the <strong>plain text key once</strong> along with key metadata (<code>schemas.NewApiKeyResponse</code>).</li>
+<li><strong><code>GET /me/apikeys</code></strong>: Lists metadata (<code>schemas.ApiKeyRead</code>) for all <em>active</em> programmatic API keys belonging to the developer.</li>
+<li><strong><code>DELETE /me/apikeys/{key_id}</code></strong>: Deactivates (soft deletes) a specific programmatic API key by its integer <code>key_id</code>. Returns <code>204 No Content</code> on success.</li>
+</ul>
+<h3 id="agent-cards-apiv1agent-cards">Agent Cards (<code>/api/v1/agent-cards</code>)<a class="headerlink" href="#agent-cards-apiv1agent-cards" title="Permanent link">&para;</a></h3>
+<p>Endpoints for managing and discovering Agent Cards.</p>
+<ul>
+<li><strong><code>POST /</code></strong>:<ul>
+<li><strong>Summary:</strong> Submit a new Agent Card.</li>
+<li><strong>Auth:</strong> Requires JWT authentication.</li>
+<li><strong>Request Body:</strong> <code>schemas.AgentCardCreate</code> (contains the <code>card_data</code> dictionary).</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardRead</code> (includes generated UUID, timestamps, <code>developer_is_verified</code> status).</li>
+<li><strong>Notes:</strong> Validates <code>card_data</code>. Extracts <code>name</code>/<code>description</code> for indexing.</li>
+</ul>
+</li>
+<li><strong><code>GET /</code></strong>:<ul>
+<li><strong>Summary:</strong> List Agent Cards (Summaries).</li>
+<li><strong>Auth:</strong> Public, <em>unless</em> <code>owned_only=true</code> is used (requires JWT).</li>
+<li><strong>Query Params:</strong> <code>skip</code>, <code>limit</code>, <code>active_only</code>, <code>search</code>, <code>tags</code>, <code>has_tee</code>, <code>tee_type</code>, <code>owned_only</code>.</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardListResponse</code> (contains <code>items: List[AgentCardSummary]</code> and <code>pagination: PaginationInfo</code>).</li>
+</ul>
+</li>
+<li><strong><code>GET /{card_id}</code></strong>:<ul>
+<li><strong>Summary:</strong> Get Agent Card by UUID.</li>
+<li><strong>Auth:</strong> Public.</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardRead</code> (full card details, including <code>developer_is_verified</code>).</li>
+</ul>
+</li>
+<li><strong><code>GET /id/{human_readable_id:path}</code></strong>:<ul>
+<li><strong>Summary:</strong> Get Agent Card by Human-Readable ID.</li>
+<li><strong>Auth:</strong> Public.</li>
+<li><strong>Path Param:</strong> <code>human_readable_id</code> (e.g., <code>my-org/my-agent</code>). The <code>:path</code> allows slashes.</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardRead</code>.</li>
+</ul>
+</li>
+<li><strong><code>GET /by-hri</code></strong>:<ul>
+<li><strong>Summary:</strong> Get Agent Card by Human-Readable ID (Query Parameter).</li>
+<li><strong>Auth:</strong> Public.</li>
+<li><strong>Query Param:</strong> <code>hri</code> (e.g., <code>my-org/my-agent</code>). Use this if the HRI contains characters problematic for path parameters.</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardRead</code>.</li>
+</ul>
+</li>
+<li><strong><code>PUT /{card_id}</code></strong>:<ul>
+<li><strong>Summary:</strong> Update an Agent Card.</li>
+<li><strong>Auth:</strong> Requires JWT authentication; developer must own the card.</li>
+<li><strong>Request Body:</strong> <code>schemas.AgentCardUpdate</code> (can contain <code>card_data</code> and/or <code>is_active</code>). If <code>card_data</code> is present, it replaces the existing card data after validation.</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardRead</code> (updated card details).</li>
+</ul>
+</li>
+<li><strong><code>DELETE /{card_id}</code></strong>:<ul>
+<li><strong>Summary:</strong> Deactivate an Agent Card (Soft Delete).</li>
+<li><strong>Auth:</strong> Requires JWT authentication; developer must own the card.</li>
+<li><strong>Response:</strong> <code>204 No Content</code>.</li>
+</ul>
+</li>
+</ul>
+<h3 id="agent-builder-agent-builder">Agent Builder (<code>/agent-builder</code>)<a class="headerlink" href="#agent-builder-agent-builder" title="Permanent link">&para;</a></h3>
+<p>Endpoint for generating agent boilerplate code.</p>
+<ul>
+<li><strong><code>POST /generate</code></strong>:<ul>
+<li><strong>Summary:</strong> Generate Agent Package.</li>
+<li><strong>Auth:</strong> Requires JWT authentication.</li>
+<li><strong>Request Body:</strong> <code>schemas.AgentBuildConfig</code> (specifies agent name, description, type, backend details, etc.).</li>
+<li><strong>Response:</strong> <code>200 OK</code> with <code>Content-Type: application/zip</code>. The response body is a downloadable ZIP archive containing the generated agent project structure (source code, Dockerfile, config files).</li>
+<li><strong>Errors:</strong> 422 (invalid build config), 500 (generation error).</li>
+</ul>
+</li>
+</ul>
+<h3 id="utilities-apiv1utils">Utilities (<code>/api/v1/utils</code>)<a class="headerlink" href="#utilities-apiv1utils" title="Permanent link">&para;</a></h3>
+<p>Helper endpoints.</p>
+<ul>
+<li><strong><code>POST /validate-card</code></strong>:<ul>
+<li><strong>Summary:</strong> Validate Agent Card Data.</li>
+<li><strong>Auth:</strong> Public.</li>
+<li><strong>Request Body:</strong> <code>schemas.AgentCardValidationRequest</code>.</li>
+<li><strong>Response:</strong> <code>schemas.AgentCardValidationResponse</code> (indicates validity and provides details on errors).</li>
+</ul>
+</li>
+</ul>
+<h2 id="technology-stack">Technology Stack<a class="headerlink" href="#technology-stack" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Framework:</strong> FastAPI</li>
+<li><strong>Database:</strong> PostgreSQL (using SQLAlchemy ORM and asyncpg driver)</li>
+<li><strong>Migrations:</strong> Alembic</li>
+<li><strong>Authentication:</strong> JWT (python-jose), Passlib (bcrypt hashing)</li>
+<li><strong>Validation:</strong> Pydantic</li>
+<li><strong>Configuration:</strong> Pydantic-Settings, python-dotenv</li>
+<li><strong>Rate Limiting:</strong> SlowAPI</li>
+<li><strong>Email:</strong> fastapi-mail (if configured)</li>
+<li><strong>Server:</strong> Uvicorn</li>
+</ul>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Prerequisites:</strong> Python 3.10+, PostgreSQL Database.</li>
+<li><strong>Configuration:</strong> Uses environment variables and/or a <code>.env</code> file (see <code>.env.example</code>). Key variables include <code>DATABASE_URL</code> and <code>API_KEY_SECRET</code>. Optional email configuration (<code>MAIL_...</code>).</li>
+<li><strong>Database Setup:</strong> Run <code>alembic upgrade head</code> to apply migrations.</li>
+<li><strong>Running:</strong> Use <code>uvicorn agentvault_registry.main:app --host 0.0.0.0 --port 8000</code>. For production, run behind a reverse proxy (like Nginx) handling HTTPS and use multiple Uvicorn workers or a process manager.</li>
+<li><strong>Docker:</strong> A <code>Dockerfile</code> and <code>docker-compose.yml</code> are provided for containerized deployment, including a PostgreSQL service. See <code>DOCKER_README.md</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy", "content.code.annotate", "mermaid"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>

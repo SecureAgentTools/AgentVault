@@ -14,7 +14,7 @@
         <link rel="prev" href="../installation/">
       
       
-        <link rel="next" href="basic_a2a_server/">
+        <link rel="next" href="basic_agents/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -731,18 +731,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-examples" class="md-nav__link">
+  <a href="#core-concepts-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      Available Examples
+      Core Concepts Examples
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#running-the-examples" class="md-nav__link">
+  <a href="#integration-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      Running the Examples
+      Integration Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-pipeline-pocs" class="md-nav__link">
+    <span class="md-ellipsis">
+      End-to-End Pipeline POCs
     </span>
   </a>
   
@@ -764,12 +773,12 @@
   
   
     <li class="md-nav__item">
-      <a href="basic_a2a_server/" class="md-nav__link">
+      <a href="basic_agents/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Basic A2A Server
+    Basic Agents
     
   </span>
   
@@ -809,13 +818,59 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Pipelines (POCs)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Pipelines (POCs)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="oauth_agent_example/" class="md-nav__link">
+      <a href="poc_research/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    OAuth Agent
+    Research Pipeline
     
   </span>
   
@@ -833,12 +888,12 @@
   
   
     <li class="md-nav__item">
-      <a href="stateful_agent_example/" class="md-nav__link">
+      <a href="poc_support/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Stateful Agent
+    Support Ticket Pipeline
     
   </span>
   
@@ -856,17 +911,94 @@
   
   
     <li class="md-nav__item">
-      <a href="library_usage_example/" class="md-nav__link">
+      <a href="poc_dynamics/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Direct Library Usage
+    Dynamics 365 Pipeline
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="poc_ecommerce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    E-commerce Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="poc_etl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ETL Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="poc_mcp_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MCP Test Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1053,7 +1185,7 @@
   
   
   <span class="md-ellipsis">
-    Registry API (`agentvault_registry`)
+    Registry: Setup & API
     
   </span>
   
@@ -1464,61 +1596,30 @@
 
 
 <h1 id="agentvault-examples">AgentVault Examples<a class="headerlink" href="#agentvault-examples" title="Permanent link">&para;</a></h1>
-<p>This section provides practical examples demonstrating how to use the various components of the AgentVault ecosystem.</p>
-<p>These examples are designed to help you get started quickly, whether you are building an A2A-compliant agent, using the client library to interact with agents, or utilizing the command-line interface.</p>
-<h2 id="available-examples">Available Examples<a class="headerlink" href="#available-examples" title="Permanent link">&para;</a></h2>
-<p>The source code for these examples can be found in the <code>/examples/</code> directory of the <a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples">AgentVault GitHub repository</a>.</p>
+<p>This section provides practical examples demonstrating how to use AgentVault and its components to build various multi-agent systems and integrations.</p>
+<h2 id="core-concepts-examples">Core Concepts Examples<a class="headerlink" href="#core-concepts-examples" title="Permanent link">&para;</a></h2>
+<p>These examples illustrate specific features of the AgentVault client library (<code>agentvault</code>) and the server SDK (<code>agentvault-server-sdk</code>).</p>
 <ul>
-<li>
-<p><strong><a href="basic_a2a_server/">Basic A2A Server</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/basic_a2a_server">View Code</a>)</p>
+<li><strong><a href="basic_a2a_server/">Basic A2A Server</a>:</strong> Shows the minimal setup for creating an A2A-compliant agent using FastAPI and the Server SDK. Demonstrates handling <code>tasks/send</code>, <code>get</code>, <code>cancel</code>, and <code>subscribe</code>.</li>
+<li><strong><a href="library_usage_example/">Direct Library Usage</a>:</strong> Illustrates how to use the <code>AgentVaultClient</code> directly in Python to interact with an A2A agent, including task initiation and SSE event streaming.</li>
+<li><strong><a href="oauth_agent_example/">OAuth2 Authenticated Agent</a>:</strong> Demonstrates building an agent server that requires OAuth2 Client Credentials flow for authentication, including a mock token endpoint and protecting the A2A endpoint.</li>
+<li><strong><a href="stateful_agent_example/">Stateful Agent</a>:</strong> Shows how to build an agent that maintains state across multiple interactions within a single task lifecycle using the SDK's task store concepts.</li>
+<li><strong><a href="basic_agents/">Simple Communication Agents</a>:</strong> Covers agents like the Task Logger, Registry Query (LLM Test Mode), and Simple Summary Agent, showcasing basic database interaction, LLM integration, and simple agent-to-agent calls.</li>
+</ul>
+<h2 id="integration-examples">Integration Examples<a class="headerlink" href="#integration-examples" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Focus:</strong> Demonstrates the minimal setup required to create an A2A-compliant agent server using the <code>agentvault-server-sdk</code> and FastAPI.</li>
-<li><strong>Features:</strong> Implements a simple "EchoAgent", uses the SDK's router integration (<code>create_a2a_router</code>), includes a basic <code>agent-card.json</code>, and shows how to run the server with Uvicorn.</li>
-<li><strong>Good for:</strong> Developers starting to build their first A2A agent.</li>
+<li><strong><a href="langchain_integration/">LangChain Tool Integration</a>:</strong> Provides a template for wrapping an AgentVault A2A agent as a custom tool within the LangChain framework.</li>
 </ul>
-</li>
-<li>
-<p><strong><a href="langchain_integration/">LangChain Integration</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/langchain_integration">View Code</a>)</p>
+<h2 id="end-to-end-pipeline-pocs">End-to-End Pipeline POCs<a class="headerlink" href="#end-to-end-pipeline-pocs" title="Permanent link">&para;</a></h2>
+<p>These Proof-of-Concept (POC) pipelines demonstrate how multiple specialized agents can collaborate to solve more complex problems using AgentVault orchestration principles.</p>
 <ul>
-<li><strong>Focus:</strong> Shows how to wrap an AgentVault A2A agent as a custom <code>Tool</code> within the LangChain framework.</li>
-<li><strong>Features:</strong> Defines an <code>A2AAgentTool</code> class that uses the <code>agentvault</code> client library internally to communicate with a remote agent based on an agent reference (ID, URL, or file path). Includes example usage.</li>
-<li><strong>Good for:</strong> Developers wanting to integrate existing or new A2A agents into LangChain applications and agentic workflows.</li>
+<li><strong><a href="poc_research/">Research Pipeline</a>:</strong> A sophisticated pipeline orchestrating 7 agents (topic research, crawling, extraction, verification, synthesis, editing, visualization) to generate comprehensive research reports on a given topic. Demonstrates complex workflow, artifact passing, and local artifact storage. (Uses LangGraph for orchestration).</li>
+<li><strong><a href="poc_support/">Support Ticket Pipeline</a>:</strong> Orchestrates 4 agents (ticket analysis, KB search, customer history, response suggestion) to process customer support tickets and suggest responses. Showcases integrating different data sources. (Uses LangGraph for orchestration).</li>
+<li><strong><a href="poc_dynamics/">Dynamics 365 Pipeline</a>:</strong> A pipeline simulating integration with Dynamics 365 data. It involves fetching data, enrichment, health analysis, action recommendation, briefing generation, and task creation/notification execution. Demonstrates rule-based analysis, LLM usage, and executing actions based on insights. (Uses LangGraph for orchestration).</li>
+<li><strong><a href="poc_ecommerce/">E-commerce Pipeline</a>:</strong> Orchestrates agents for user profiling, product catalog lookup, trend analysis, and recommendation generation to provide personalized e-commerce suggestions. (Uses LangGraph for orchestration).</li>
+<li><strong><a href="poc_etl/">ETL Pipeline</a>:</strong> Demonstrates an Extract, Transform, Load workflow using multiple agents and a database for artifact storage between steps. (Uses LangGraph for orchestration).</li>
+<li><strong><a href="poc_mcp_pipeline/">MCP Test Pipeline</a>:</strong> Showcases the Model Context Protocol (MCP) by using a proxy agent to interact with MCP-compliant tool servers (filesystem, code runner) for executing specific operations. (Uses LangGraph for orchestration).</li>
 </ul>
-</li>
-<li>
-<p><strong><a href="oauth_agent_example/">OAuth Agent Example</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/oauth_agent_example">View Code</a>)</p>
-<ul>
-<li><strong>Focus:</strong> Demonstrates implementing the <code>oauth2</code> (Client Credentials) authentication scheme using the Server SDK and FastAPI.</li>
-<li><strong>Features:</strong> Includes a custom <code>/token</code> endpoint, uses environment variables for mock credentials, and protects the <code>/a2a</code> endpoint using a FastAPI dependency.</li>
-<li><strong>Good for:</strong> Developers needing to implement OAuth2 authentication for their agents.</li>
-</ul>
-</li>
-<li>
-<p><strong><a href="stateful_agent_example/">Stateful Agent Example</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/stateful_agent_example">View Code</a>)</p>
-<ul>
-<li><strong>Focus:</strong> Demonstrates managing task state (like chat history) across multiple client interactions within a single task ID using the Server SDK.</li>
-<li><strong>Features:</strong> Uses a custom <code>TaskContext</code> subclass, <code>InMemoryTaskStore</code>, and <code>asyncio.Event</code> to handle multi-turn interactions and background processing.</li>
-<li><strong>Good for:</strong> Developers building conversational agents or agents that require maintaining context over several requests.</li>
-</ul>
-</li>
-<li>
-<p><strong><a href="library_usage_example/">Direct Library Usage</a>:</strong> (<a href="https://github.com/SecureAgentTools/AgentVault/tree/main/examples/library_usage_example">View Code</a>)</p>
-<ul>
-<li><strong>Focus:</strong> Shows how to use the <code>agentvault</code> client library directly in a Python script to interact with an agent.</li>
-<li><strong>Features:</strong> Demonstrates loading agent cards, using <code>KeyManager</code>, calling <code>AgentVaultClient</code> methods (<code>initiate_task</code>, <code>receive_messages</code>), and handling events and errors.</li>
-<li><strong>Good for:</strong> Developers integrating AgentVault client functionality into custom applications or scripts.</li>
-</ul>
-</li>
-</ul>
-<h2 id="running-the-examples">Running the Examples<a class="headerlink" href="#running-the-examples" title="Permanent link">&para;</a></h2>
-<p>Please refer to the <code>README.md</code> file within each specific example directory (linked via "[View Code]" above) for detailed setup and execution instructions. Generally, you will need to:</p>
-<ol>
-<li>Ensure you have the main development environment set up (see <a href="../installation/">Installation Guide</a>).</li>
-<li>Navigate to the specific example directory (e.g., <code>cd examples/basic_a2a_server</code>).</li>
-<li>Install any example-specific requirements (usually via <code>pip install -r requirements.txt</code>).</li>
-<li>Follow the instructions in the example's <code>README.md</code> to run the server or script.</li>
-</ol>
-<p>We encourage you to explore these examples and adapt them for your own use cases!</p>
 
 
 

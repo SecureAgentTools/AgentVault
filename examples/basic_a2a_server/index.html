@@ -11,10 +11,6 @@
         <link rel="canonical" href="https://SecureAgentTools.github.io/AgentVault/examples/basic_a2a_server/">
       
       
-        <link rel="prev" href="../">
-      
-      
-        <link rel="next" href="../langchain_integration/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +18,7 @@
     
     
       
-        <title>Basic A2A Server - AgentVault Documentation</title>
+        <title>AgentVault Server SDK - Basic A2A Server Example - AgentVault Documentation</title>
       
     
     
@@ -108,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Basic A2A Server
+              AgentVault Server SDK - Basic A2A Server Example
             
           </span>
         </div>
@@ -296,12 +292,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../" class="md-tabs__link">
           
   
@@ -630,31 +624,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -667,7 +656,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -701,98 +690,20 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Basic A2A Server
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../basic_agents/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Basic A2A Server
+    Basic Agents
     
   </span>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Setup
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-the-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      Running the Server
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-with-agentvault-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing with AgentVault CLI
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -827,13 +738,56 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Pipelines (POCs)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Pipelines (POCs)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../oauth_agent_example/" class="md-nav__link">
+      <a href="../poc_research/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    OAuth Agent
+    Research Pipeline
     
   </span>
   
@@ -851,12 +805,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../stateful_agent_example/" class="md-nav__link">
+      <a href="../poc_support/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Stateful Agent
+    Support Ticket Pipeline
     
   </span>
   
@@ -874,17 +828,94 @@
   
   
     <li class="md-nav__item">
-      <a href="../library_usage_example/" class="md-nav__link">
+      <a href="../poc_dynamics/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Direct Library Usage
+    Dynamics 365 Pipeline
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poc_ecommerce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    E-commerce Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poc_etl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ETL Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poc_mcp_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MCP Test Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1071,7 +1102,7 @@
   
   
   <span class="md-ellipsis">
-    Registry API (`agentvault_registry`)
+    Registry: Setup & API
     
   </span>
   

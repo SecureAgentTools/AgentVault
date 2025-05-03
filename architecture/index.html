@@ -613,36 +613,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#vision" class="md-nav__link">
+  <a href="#core-components-interactions" class="md-nav__link">
     <span class="md-ellipsis">
-      Vision
+      Core Components &amp; Interactions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#component-overview" class="md-nav__link">
+  <a href="#communication-protocols" class="md-nav__link">
     <span class="md-ellipsis">
-      Component Overview
+      Communication Protocols
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#interaction-flow-diagram" class="md-nav__link">
+  <a href="#high-level-diagram" class="md-nav__link">
     <span class="md-ellipsis">
-      Interaction Flow Diagram
+      High-Level Diagram
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-architectural-principles" class="md-nav__link">
+  <a href="#explanation" class="md-nav__link">
     <span class="md-ellipsis">
-      Key Architectural Principles
+      Explanation
     </span>
   </a>
   
@@ -782,12 +782,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/basic_a2a_server/" class="md-nav__link">
+      <a href="../examples/basic_agents/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Basic A2A Server
+    Basic Agents
     
   </span>
   
@@ -827,13 +827,56 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Pipelines (POCs)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Pipelines (POCs)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../examples/oauth_agent_example/" class="md-nav__link">
+      <a href="../examples/poc_research/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    OAuth Agent
+    Research Pipeline
     
   </span>
   
@@ -851,12 +894,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/stateful_agent_example/" class="md-nav__link">
+      <a href="../examples/poc_support/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Stateful Agent
+    Support Ticket Pipeline
     
   </span>
   
@@ -874,17 +917,94 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/library_usage_example/" class="md-nav__link">
+      <a href="../examples/poc_dynamics/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Direct Library Usage
+    Dynamics 365 Pipeline
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/poc_ecommerce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    E-commerce Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/poc_etl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ETL Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/poc_mcp_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MCP Test Pipeline
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1071,7 +1191,7 @@
   
   
   <span class="md-ellipsis">
-    Registry API (`agentvault_registry`)
+    Registry: Setup & API
     
   </span>
   
@@ -1482,76 +1602,64 @@
 
 
 <h1 id="agentvault-architecture">AgentVault Architecture<a class="headerlink" href="#agentvault-architecture" title="Permanent link">&para;</a></h1>
-<p>This document provides a high-level overview of the AgentVault ecosystem architecture, illustrating how the different components interact to enable secure agent discovery and communication.</p>
-<h2 id="vision">Vision<a class="headerlink" href="#vision" title="Permanent link">&para;</a></h2>
-<p>AgentVault aims to be the open-source backbone for a thriving multi-agent ecosystem. It provides the standards, tools, and infrastructure necessary for agents built by anyone, anywhere, to find each other and collaborate effectively and securely.</p>
-<h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
-<p>The ecosystem consists of several distinct but interconnected Python packages and services:</p>
+<p>This document provides a high-level overview of the AgentVault architecture, illustrating the relationships between key components and communication protocols.</p>
+<h2 id="core-components-interactions">Core Components &amp; Interactions<a class="headerlink" href="#core-components-interactions" title="Permanent link">&para;</a></h2>
+<p>The AgentVault ecosystem revolves around several key entities:</p>
 <ol>
-<li><strong><code>agentvault_library</code> (Core Client Library):</strong> The foundation for client-side interactions. Contains the <code>AgentVaultClient</code> (handles A2A protocol logic), <code>KeyManager</code> (secure credential storage), Pydantic models (AgentCard, A2A messages), and utility functions (card parsing, MCP handling). Used by the CLI and any custom application wanting to interact with agents.</li>
-<li><strong><code>agentvault_cli</code> (Command Line Interface):</strong> The primary tool for end-users and developers to interact with the system from the terminal. Uses the <code>agentvault_library</code> to perform actions like configuring keys, discovering agents via the registry, and running tasks on agents.</li>
-<li><strong><code>agentvault_registry</code> (Registry API &amp; UI):</strong> A central FastAPI web service acting as the discovery hub. It stores Agent Card metadata submitted by developers in a PostgreSQL database. It provides a public REST API (<code>/api/v1</code>) for searching/retrieving cards and an authenticated API for developers to manage their listings. It also serves a basic <strong>Web UI</strong> for public discovery (<code>/ui</code>) and developer management (<code>/ui/developer</code>).</li>
-<li><strong><code>agentvault_server_sdk</code> (Server SDK):</strong> A toolkit for developers <em>building</em> A2A-compliant agents. Provides base classes (<code>BaseA2AAgent</code>), FastAPI integration helpers (<code>create_a2a_router</code>, <code>@a2a_method</code>), task state management abstractions, and packaging utilities (<code>agentvault-sdk package</code>) to simplify agent development and deployment.</li>
-<li><strong><code>agentvault_testing_utils</code> (Testing Utilities):</strong> A shared internal package containing mocks, pytest fixtures, factories, and assertion helpers used across the test suites of the other components to ensure consistency and reduce boilerplate. Not intended for direct use by end-users.</li>
+<li><strong>Agents (A2A Compliant):</strong> Independent services exposing capabilities via the <strong>Agent-to-Agent (A2A) Protocol</strong>. They are described by <strong>Agent Cards</strong>. Examples include specialized agents for research, data processing, or interacting with specific APIs.</li>
+<li><strong>MCP Tool Servers:</strong> Services exposing specific, often low-level capabilities (like filesystem access, code execution, database queries, API interactions) via the <strong>Model Context Protocol (MCP)</strong>, which uses JSON-RPC 2.0 over HTTP. These are <em>not</em> necessarily full A2A agents.</li>
+<li><strong>AgentVault Registry:</strong> A central discovery service where agents publish their <strong>Agent Cards</strong>. Clients and other agents query the registry to find agents based on their capabilities or unique IDs (HRIs).</li>
+<li><strong>Orchestrator:</strong> A component (e.g., a LangGraph workflow, a Python script, another agent) that coordinates tasks across multiple A2A agents and potentially MCP tools to achieve a complex goal.</li>
+<li><strong>MCP Tool Proxy Agent:</strong> A specialized A2A-compliant agent designed to bridge the A2A and MCP domains. Orchestrators send A2A requests to the proxy, specifying a target MCP tool and its arguments. The proxy translates this into an MCP (JSON-RPC) call to the appropriate <strong>MCP Tool Server</strong>, receives the result, and translates it back into an A2A response for the orchestrator. <strong>This is the current recommended pattern for integrating MCP tools into A2A workflows.</strong></li>
+<li><strong>Clients / User Interfaces:</strong> Tools like the <strong>AgentVault CLI</strong> or custom applications that allow users to interact with the system, initiate tasks, query the registry, or manage agents.</li>
 </ol>
-<h2 id="interaction-flow-diagram">Interaction Flow Diagram<a class="headerlink" href="#interaction-flow-diagram" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph User/Client Side
-        User[User / Client App] --&gt;|Uses| CLI(agentvault_cli)
-        CLI --&gt;|Uses| Lib(agentvault_library)
-        User --&gt;|Uses| Lib
-        Lib --&gt;|Manages Keys via KeyManager| KeyStore[Local Credential Store Env/File/Keyring]
-    end
-
-    subgraph Developer Side
-        Dev[Agent Developer] --&gt;|Uses| SDK(agentvault_server_sdk)
-        SDK --&gt;|Builds Agent + Card| AgentServer(A2A Agent Server FastAPI)
-        Dev --&gt;|Creates/Manages Registry Key| DevKeyStore[Developer API Key Stored by Dev]
-        Dev --&gt;|Submits Card via API Uses DevKeyStore| RegistryAPI(Registry API /api/v1)
-    end
-
-    subgraph Central Service
-        RegistryAPI --&gt;|Reads/Writes Hashes| DB[Registry DB Cards Hashed Keys]
-        RegistryAPI --&gt;|Serves UI| RegistryUI(Registry Web UI /ui)
-        User --&gt;|Browses| RegistryUI
-    end
-
-    subgraph Communication Paths
-        Lib --&gt;|Discover Agent Public API| RegistryAPI
-        Lib --&gt;|Get Agent Card Public API| RegistryAPI
-        Lib --&gt;|Run Task A2A Protocol| AgentServer
-        AgentServer --&gt;|Optional: Uses Lib/SDK| ExternalService[External APIs / Services]
-    end
-
-    style Dev fill:#ff99ff,stroke:#333333,stroke-width:2px
-    style User fill:#ccccff,stroke:#333333,stroke-width:2px
-    style KeyStore stroke-dasharray: 5 5
-    style DevKeyStore stroke-dasharray: 5 5</code></pre>
-<p><strong>Explanation of Flows:</strong></p>
-<ol>
-<li><strong>Discovery:</strong> A user or client application (using the Library or CLI) queries the Registry API's public endpoints (<code>/api/v1/...</code>) or browses the public Web UI (<code>/ui</code>) to find agents based on criteria.</li>
-<li><strong>Card Retrieval:</strong> The client retrieves the specific Agent Card for the desired agent from the Registry API (public endpoint).</li>
-<li><strong>Interaction (Client -&gt; Agent):</strong><ul>
-<li>The client application uses the information in the retrieved Agent Card (endpoint <code>url</code>, <code>authSchemes</code>).</li>
-<li>The <code>agentvault_library</code>'s <code>KeyManager</code> component attempts to load the necessary local credentials.</li>
-<li>The <code>AgentVaultClient</code> constructs and sends A2A protocol requests directly to the target Agent Server's endpoint, automatically adding required authentication headers.</li>
-<li>The Agent Server receives the request, authenticates it, processes the task, and sends back responses/events.</li>
-</ul>
-</li>
-<li><strong>Registration (Developer -&gt; Registry):</strong><ul>
-<li>The Agent Developer uses their unique Developer API Key with the authenticated endpoints of the Registry API (<code>/api/v1/...</code>) or potentially the Developer Portal UI (<code>/ui/developer</code>) to submit or manage their Agent Cards.</li>
-<li>The Registry API verifies the key against stored hashes.</li>
-</ul>
-</li>
-</ol>
-<h2 id="key-architectural-principles">Key Architectural Principles<a class="headerlink" href="#key-architectural-principles" title="Permanent link">&para;</a></h2>
+<h2 id="communication-protocols">Communication Protocols<a class="headerlink" href="#communication-protocols" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Decentralized Execution:</strong> Agents run independently. The Registry is only for discovery metadata.</li>
-<li><strong>Standardized Interface:</strong> Communication relies on the defined <a href="../a2a_profile_v0.2/">AgentVault A2A Profile v0.2</a> and the <code>AgentCard</code> schema.</li>
-<li><strong>Component-Based:</strong> Logical components (library, CLI, registry, SDK, testing utils) with distinct responsibilities.</li>
-<li><strong>Security Focus:</strong> Secure credential management, hashed keys, HTTPS enforcement, TEE awareness.</li>
-<li><strong>Developer Experience:</strong> SDK and CLI tools simplify common tasks.</li>
+<li><strong>A2A Protocol:</strong> Used for primary communication between clients, orchestrators, and A2A-compliant agents (including the MCP Tool Proxy Agent). Uses JSON-RPC 2.0 over HTTP(S) with SSE support for streaming.</li>
+<li><strong>MCP (Model Context Protocol):</strong> Used for communication between the MCP Tool Proxy Agent and specific MCP Tool Servers. Uses JSON-RPC 2.0 over HTTP(S).</li>
 </ul>
+<h2 id="high-level-diagram">High-Level Diagram<a class="headerlink" href="#high-level-diagram" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    User([User/Developer]) --&gt; CLI[AgentVault CLI]
+    CLI --&gt; Orchestrator((Orchestrator))
+    CLI --&gt; Registry[(Registry)]
+
+    Orchestrator -- Discover --&gt; Registry
+    Registry -- Card Info --&gt; Orchestrator
+
+    Orchestrator -- A2A Task --&gt; Agent1[A2A Agent 1]
+    Agent1 -- A2A Result --&gt; Orchestrator
+    Orchestrator -- A2A Task --&gt; Agent2[A2A Agent 2]
+    Agent2 -- A2A Result --&gt; Orchestrator
+
+    Orchestrator -- A2A Request --&gt; MCP_Proxy[MCP Tool Proxy Agent]
+    MCP_Proxy -- MCP Call --&gt; MCPServer1[/MCP Tool Server 1/]
+    MCPServer1 -- MCP Response --&gt; MCP_Proxy
+    MCP_Proxy -- MCP Call --&gt; MCPServer2[/MCP Tool Server 2/]
+    MCPServer2 -- MCP Response --&gt; MCP_Proxy
+    MCP_Proxy -- MCP Call --&gt; MCPServerN[/... Other Tools/]
+    MCPServerN -- MCP Response --&gt; MCP_Proxy
+    MCP_Proxy -- A2A Response --&gt; Orchestrator
+
+    User -- Deploys --&gt; Agent1
+    User -- Deploys --&gt; MCP_Proxy
+    User -- Deploys --&gt; MCPServer1
+    User -- Deploys --&gt; MCPServer2
+</code></pre>
+<h2 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>User Interaction:</strong> Users typically interact via the CLI or custom applications, which communicate with the Orchestrator or Registry using the A2A protocol.</li>
+<li><strong>Orchestration:</strong> The Orchestrator uses the Registry to discover agents based on their capabilities (defined in their Agent Cards). It then initiates tasks and receives results/events from these agents using the A2A protocol.</li>
+<li><strong>MCP Tool Usage:</strong> When the Orchestrator needs to execute an external tool (like reading a file, running code, querying a specific API):<ul>
+<li>It sends an A2A request to the <strong>MCP Tool Proxy Agent</strong>. This request includes the logical ID of the target MCP server (e.g., "filesystem", "code-runner", "database-tool"), the specific tool name (e.g., "filesystem.readFile"), and the necessary arguments.</li>
+<li>The <strong>MCP Tool Proxy Agent</strong> looks up the actual URL of the target MCP server (e.g., <code>http://custom-filesystem-mcp:8001/rpc</code>) and sends a standard JSON-RPC 2.0 request over HTTP to it.</li>
+<li>The <strong>MCP Tool Server</strong> executes the requested method and returns a JSON-RPC 2.0 response.</li>
+<li>The Proxy Agent relays the result (or error) back to the Orchestrator within the A2A task's response.</li>
+</ul>
+</li>
+<li><strong>Agent Specialization:</strong> Each component focuses on its core competency. A2A Agents handle complex logic and state, while MCP Tool Servers provide specific, reusable functions via a simple RPC interface. The Proxy pattern decouples the A2A and MCP domains.</li>
+</ol>
+<p>This architecture allows for flexible and scalable multi-agent systems where different components communicate using appropriate protocols, facilitated by the AgentVault framework and demonstrated effectively in the <strong><a href="../examples/poc_mcp_pipeline/">MCP Test Pipeline Example</a></strong>.</p>
 
 
 
