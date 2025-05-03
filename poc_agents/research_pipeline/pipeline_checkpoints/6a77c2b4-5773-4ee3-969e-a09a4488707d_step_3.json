@@ -1,0 +1,147 @@
+{
+  "verified_facts": {
+    "verified_facts": [
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "This is dummy scraped text content",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+        "type": "statement",
+        "relevance_score": 0.2,
+        "verification_status": "verified",
+        "confidence_score": 0.864,
+        "verification_timestamp": "2025-04-23T05:41:59.246310+00:00",
+        "verification_notes": "Dummy verification notes for fact 1."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "It mentions AI",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+        "type": "insight",
+        "relevance_score": 0.8,
+        "verification_status": "verified",
+        "confidence_score": 0.821,
+        "verification_timestamp": "2025-04-23T05:41:59.546283+00:00",
+        "verification_notes": "Dummy verification notes for fact 2."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "AI and edge computing systems raise significant data privacy concerns.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.8,
+        "verification_status": "verified",
+        "confidence_score": 0.733,
+        "verification_timestamp": "2025-04-23T05:41:59.846421+00:00",
+        "verification_notes": "Dummy verification notes for fact 3."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "Blockchain-based solutions can provide secure data ownership in smart cities.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "insight",
+        "relevance_score": 0.9,
+        "verification_status": "uncertain",
+        "confidence_score": 0.377,
+        "verification_timestamp": "2025-04-23T05:42:00.146522+00:00",
+        "verification_notes": "Dummy conflict found for fact 4."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-2",
+        "text": "Data privacy is a pressing issue in integrated AI, IoT, and edge computing systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.8,
+        "verification_status": "verified",
+        "confidence_score": 0.944,
+        "verification_timestamp": "2025-04-23T05:42:00.447617+00:00",
+        "verification_notes": "Dummy verification notes for fact 5."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-3",
+        "text": "Healthcare ethics are closely related to data privacy concerns in integrated systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "insight",
+        "relevance_score": 0.7,
+        "verification_status": "verified",
+        "confidence_score": 0.694,
+        "verification_timestamp": "2025-04-23T05:42:00.747689+00:00",
+        "verification_notes": "Dummy verification notes for fact 6."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-4",
+        "text": "Smart cities require secure and transparent data management solutions to address data privacy challenges.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.9,
+        "verification_status": "verified",
+        "confidence_score": 0.757,
+        "verification_timestamp": "2025-04-23T05:42:01.047886+00:00",
+        "verification_notes": "Dummy verification notes for fact 7."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "AI and edge computing systems raise significant data privacy concerns.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+        "type": "statement",
+        "relevance_score": 0.8,
+        "verification_status": "uncertain",
+        "confidence_score": 0.315,
+        "verification_timestamp": "2025-04-23T05:42:01.348321+00:00",
+        "verification_notes": "Dummy conflict found for fact 8."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "Blockchain-based solutions can provide secure data ownership in smart cities.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+        "type": "insight",
+        "relevance_score": 0.9,
+        "verification_status": "verified",
+        "confidence_score": 0.618,
+        "verification_timestamp": "2025-04-23T05:42:01.648490+00:00",
+        "verification_notes": "Dummy verification notes for fact 9."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "This is dummy scraped text content for item 4 related to query '{'subtopic': 'Predictive Grid Maintenance', 'queries': ['Edge computing for predictive maintenance of electrical grids', 'Machine learning algorithms for grid failure prediction using IoT data']}'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+        "type": "statement",
+        "relevance_score": 0.8,
+        "verification_status": "verified",
+        "confidence_score": 0.919,
+        "verification_timestamp": "2025-04-23T05:42:01.948871+00:00",
+        "verification_notes": "Dummy verification notes for fact 10."
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+        "type": "insight",
+        "relevance_score": 0.2,
+        "verification_status": "verified",
+        "confidence_score": 0.796,
+        "verification_timestamp": "2025-04-23T05:42:02.249109+00:00",
+        "verification_notes": "Dummy verification notes for fact 11."
+      }
+    ]
+  },
+  "verification_report": {
+    "issues_found": [
+      {
+        "fact_id": "fact-information-extraction-agent-task-5456f467-1",
+        "issue_type": "conflicting_information",
+        "details": "Dummy conflict found for fact 4.",
+        "conflicting_sources": [
+          "https://dummy-conflict.com/3"
+        ]
+      },
+      {
+        "fact_id": "fact-information-extraction-agent-task-5456f467-0",
+        "issue_type": "conflicting_information",
+        "details": "Dummy conflict found for fact 8.",
+        "conflicting_sources": [
+          "https://dummy-conflict.com/7"
+        ]
+      }
+    ]
+  }
+}

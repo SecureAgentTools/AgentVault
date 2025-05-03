@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentvault-monorepo"
-version = "0.1.0" # Overall project version
+version = "1.0.0" # Overall project version
 description = "AgentVault Monorepo - Core Libraries, CLI, Registry, SDK, and Testing Utilities"
 authors = ["Raphael Zbigniew Jeziorny <AgentVault@proton.me>"]
 license = "Apache-2.0"

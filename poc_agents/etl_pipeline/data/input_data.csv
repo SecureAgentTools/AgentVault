@@ -1,0 +1,21 @@
+ProductID,ProductName,Category,UnitPrice,UnitsInStock,Discontinued
+1,Chai,Beverages,18,39,FALSE
+2,Chang,Beverages,19,17,FALSE
+3,Aniseed Syrup,Condiments,10,13,FALSE
+4,Chef Anton's Cajun Seasoning,Condiments,22,53,FALSE
+5,Chef Anton's Gumbo Mix,Condiments,21.35,0,TRUE
+6,Grandma's Boysenberry Spread,Condiments,25,120,FALSE
+7,Uncle Bob's Organic Dried Pears,Produce,30,15,FALSE
+8,Northwoods Cranberry Sauce,Condiments,40,6,FALSE
+9,Mishi Kobe Niku,Meat/Poultry,97,29,TRUE
+10,Ikura,Seafood,31,31,FALSE
+11,Queso Cabrales,Dairy Products,21,22,FALSE
+12,Queso Manchego La Pastora,Dairy Products,38,86,FALSE
+13,Konbu,Seafood,6,24,FALSE
+14,Tofu,Produce,23.25,35,FALSE
+15,Genen Shouyu,Condiments,15.5,39,FALSE
+16,Pavlova,Confections,17.45,29,FALSE
+17,Alice Mutton,Meat/Poultry,39,0,TRUE
+18,Carnarvon Tigers,Seafood,62.5,42,FALSE
+19,Teatime Chocolate Biscuits,Confections,9.2,25,FALSE
+20,Sir Rodney's Marmalade,Confections,81,40,FALSE

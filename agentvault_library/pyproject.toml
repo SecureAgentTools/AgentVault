@@ -3,7 +3,7 @@
 [project]
     name = "agentvault"
     # --- USE THE VERSION FROM THE LOCK FILE ---
-    version = "0.2.1"
+    version = "1.0.0"
     # --- END ---
     description = "Core Python client library for A2A protocol, MCP, and secure local key management."
     authors = [{ name = "Raphael Zbigniew Jeziorny", email = "AgentVault@proton.me" }]
@@ -49,7 +49,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "agentvault"
 # --- USE THE VERSION FROM THE LOCK FILE ---
-version = "0.2.1"
+version = "1.0.0"
 # --- END ---
 description = ""
 authors = ["Raphael Zbigniew Jeziorny <AgentVault@proton.me>"]

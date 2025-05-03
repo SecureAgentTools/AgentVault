@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/visualization",
+  "agentVersion": "0.1.0",
+  "name": "Visualization Agent",
+  "description": "Creates data visualizations, charts, and diagrams from extracted data",
+  "url": "http://localhost:8016/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "chart_generation",
+      "name": "Chart Generation",
+      "description": "Creates charts and graphs from data"
+    },
+    {
+      "id": "diagram_creation",
+      "name": "Diagram Creation",
+      "description": "Creates explanatory diagrams"
+    },
+    {
+      "id": "infographic_design",
+      "name": "Infographic Design",
+      "description": "Designs visual information summaries"
+    }
+  ],
+  "tags": ["visualization", "charts", "diagrams", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "data_to_visualize": {
+        "type": "object",
+        "description": "Extracted data requiring visualization"
+      },
+      "article_content": {
+        "type": "string",
+        "description": "Article content for context"
+      },
+      "visualization_types": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["chart", "graph", "diagram", "infographic"]
+        }
+      }
+    },
+    "required": ["data_to_visualize"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "visualizations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {"type": "string"},
+            "url": {"type": "string"},
+            "description": {"type": "string"}
+          }
+        }
+      },
+      "viz_metadata": {
+        "type": "object",
+        "description": "Mapping of visualizations to content"
+      }
+    }
+  }
+}

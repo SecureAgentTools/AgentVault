@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/account-briefing-generator",
+  "agentVersion": "0.1.0",
+  "name": "Account Briefing Generator Agent (LLM)",
+  "description": "Generates a concise account briefing for managers using Dynamics data, external signals, and health analysis via an LLM.",
+  "url": "http://localhost:8053/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "generate_briefing",
+      "name": "Generate Account Briefing",
+      "description": "Synthesizes account data and analysis into a briefing using an LLM.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dynamics_data": {
+            "type": "object",
+            "description": "Structured data from Dynamics Fetcher."
+          },
+          "external_data": {
+            "type": "object",
+            "description": "Structured data from External Enricher."
+          },
+          "account_analysis": {
+            "type": "object",
+            "description": "Analysis results (risk, opportunity, etc.) from Analyzer."
+          }
+        },
+        "required": ["dynamics_data", "external_data", "account_analysis"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "account_briefing": {
+            "type": "string",
+            "description": "The generated textual briefing for the account manager."
+          }
+        },
+        "required": ["account_briefing"]
+      }
+    }
+  ],
+  "tags": ["dynamics", "crm", "briefing", "summary", "llm", "generation", "sales", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

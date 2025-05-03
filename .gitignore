@@ -165,3 +165,16 @@ bootstrap_admin.py
 create_dev.py
 # temp/ # Already covered above, but explicit doesn't hurt
 # --- END ADDED ---
+
+# Docker sensitive files
+.docker.env
+**/docker-compose.yml
+!**/docker-compose.yml.example
+
+# Security and version check utilities
+security_check.py
+security_scan_report.md
+verify_versions.py
+verify_versions_simple.py
+AgentVault.code-workspace
+pyrightconfig.json

@@ -1,0 +1,34 @@
+{
+  "fetcher_agent": {
+    "hri": "local-poc/dynamics-data-fetcher"
+  },
+  "enricher_agent": {
+    "hri": "local-poc/external-data-enricher"
+  },
+  "analyzer_agent": {
+    "hri": "local-poc/account-health-analyzer"
+  },
+  "recommender_agent": {
+    "hri": "local-poc/action-recommender"
+  },
+  "briefing_agent": {
+    "hri": "local-poc/account-briefing-generator"
+  },
+  "task_creator_agent": {
+    "hri": "local-poc/dynamics-task-creator"
+  },
+  "slack_notifier_agent": {
+    "hri": "local-poc/slack-notifier"
+  },
+  "teams_notifier_agent": {
+    "hri": "local-poc/teams-notifier"
+  },
+  "orchestration": {
+    "recursion_limit": 15,
+    "registry_url": "http://host.docker.internal:8000"
+  },
+  "timeouts": {
+    "agent_call_timeout": 120.0,
+    "sse_stream_timeout": 60.0
+  }
+}

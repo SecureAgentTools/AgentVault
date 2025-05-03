@@ -1,0 +1,23 @@
+{
+  "extractor_agent": {
+    "hri": "local-poc/etl-data-extractor"
+  },
+  "transformer_agent": {
+    "hri": "local-poc/etl-data-transformer"
+  },
+  "validator_agent": {
+    "hri": "local-poc/etl-data-validator"
+  },
+  "loader_agent": {
+    "hri": "local-poc/etl-data-loader"
+  },
+  "orchestration": {
+    "recursion_limit": 15,
+    "artifact_base_path": null,
+    "registry_url": "http://host.docker.internal:8000"
+  },
+  "timeouts": {
+    "agent_call_timeout": 180.0,
+    "sse_stream_timeout": 300.0
+  }
+}

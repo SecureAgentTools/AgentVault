@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/topic-research",
+  "agentVersion": "0.1.0",
+  "name": "Topic Research Agent",
+  "description": "Analyzes topics and creates comprehensive research strategies",
+  "url": "http://localhost:8010/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "research_planning",
+      "name": "Research Planning",
+      "description": "Creates structured research plans from topics"
+    },
+    {
+      "id": "topic_decomposition",
+      "name": "Topic Decomposition",
+      "description": "Breaks down complex topics into subtopics"
+    },
+    {
+      "id": "question_generation",
+      "name": "Question Generation",
+      "description": "Generates research questions and search queries"
+    }
+  ],
+  "tags": ["research", "planning", "analysis", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "topic": {
+        "type": "string",
+        "description": "The main topic to research"
+      },
+      "depth": {
+        "type": "string",
+        "enum": ["basic", "comprehensive", "detailed"],
+        "default": "comprehensive"
+      },
+      "focus_areas": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Specific areas to focus on"
+      }
+    },
+    "required": ["topic"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "research_plan": {
+        "type": "object",
+        "description": "Structured research plan with subtopics"
+      },
+      "search_queries": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Generated search queries for content crawler"
+      }
+    }
+  }
+}

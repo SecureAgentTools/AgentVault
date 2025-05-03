@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/fact-verification",
+  "agentVersion": "0.1.0",
+  "name": "Fact Verification Agent",
+  "description": "Cross-references and verifies extracted facts for accuracy",
+  "url": "http://localhost:8013/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "fact_checking",
+      "name": "Fact Checking",
+      "description": "Verifies the accuracy of facts"
+    },
+    {
+      "id": "cross_referencing",
+      "name": "Cross Referencing",
+      "description": "Cross-references information across sources"
+    },
+    {
+      "id": "confidence_scoring",
+      "name": "Confidence Scoring",
+      "description": "Assigns confidence scores to facts"
+    }
+  ],
+  "tags": ["verification", "accuracy", "validation", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "extracted_information": {
+        "type": "object",
+        "description": "Information to verify"
+      },
+      "source_content": {
+        "type": "array",
+        "description": "Original content for reference"
+      }
+    },
+    "required": ["extracted_information"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "verified_facts": {
+        "type": "object",
+        "description": "Facts with confidence scores"
+      },
+      "verification_report": {
+        "type": "object",
+        "description": "Issues found during verification"
+      }
+    }
+  }
+}

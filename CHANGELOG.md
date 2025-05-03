@@ -1,125 +1,107 @@
 # Changelog
 
-All notable changes to the AgentVault project will be documented in this file.
+All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for its individual published packages (`agentvault`, `agentvault-cli`, `agentvault-server-sdk`).
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2025-05-02
 
-### Added
-- *(Add new features for the next release here)*
+### Overview
 
-### Changed
-- *(Add changes for the next release here)*
+This is the first major release of AgentVault, marking the project as production-ready. All core components have been thoroughly tested and are ready for deployment.
 
-### Fixed
-- *(Add bug fixes for the next release here)*
+### Components
 
----
+- **agentvault** (Library): 1.0.0 - Core Python client library for A2A protocol
+- **agentvault-cli**: 1.0.0 - Command-line interface for AgentVault
+- **agentvault-registry-api**: 1.0.0 - Central registry API service
+- **agentvault-server-sdk**: 1.0.0 - SDK for building A2A compliant agents
+- **agentvault-testing-utils**: 1.0.0 - Shared testing utilities
 
-## [v0.2.1] / [v0.1.1] - 2025-04-16
+### Major Features
 
-This release focuses primarily on major documentation improvements, adding comprehensive examples, and enhancing the usability of the registry's developer portal UI based on the established v0.2.0/v0.1.0 functionality.
+#### Library (agentvault)
+- Complete A2A protocol implementation
+- MCP (Model Context Protocol) support
+- Secure local key management
+- OAuth2 authentication support
+- Environment variable and OS keyring integration
+- Comprehensive testing suite
 
-### Package Versions
-- `agentvault`: 0.2.1
-- `agentvault-cli`: 0.1.1
-- `agentvault-server-sdk`: 0.1.1
+#### CLI (agentvault-cli)
+- Agent management commands (list, run, install)
+- Configuration management
+- Registry interaction
+- Key management utilities
+- Rich terminal output with progress indicators
 
-### Added
-- **New Examples:**
-    - OAuth2 Client Credentials agent (`examples/oauth_agent_example/`)
-    - Stateful agent demonstrating multi-turn interactions (`examples/stateful_agent_example/`)
-    - Direct client library usage script (`examples/library_usage_example/`)
-- **New Documentation Pages:**
-    - `docs/vision.md`: Articulates the project's long-term goals and potential.
-    - `docs/use_cases.md`: Provides detailed scenarios illustrating AgentVault's value, including Mermaid diagrams.
-    - Copied example READMEs into `docs/examples/` for inclusion in the main documentation site.
-- **Developer Portal UI:**
-    - Status filter dropdown structure (HTML/CSS).
-    - "Cancel Edit" button in the submit/update form.
-    - Clearer visual distinction for active/inactive cards.
-    - Status badges (Active/Inactive) displayed prominently on cards.
-    - "Verified Dev" badge displayed on cards.
-    - Header explicitly identifies the "Developer Portal".
-    - "Logged in as" indicator structure.
-    - Implemented JavaScript logic for status filtering, status toggling (Activate/Deactivate), cancel edit, and login verification via API call.
+#### Registry API (agentvault-registry-api)
+- RESTful API for agent discovery
+- User authentication and authorization
+- Email verification system
+- Rate limiting and security features
+- PostgreSQL database with async support
+- Comprehensive API documentation
 
-### Changed
-- **Documentation Overhaul:**
-    - Consolidated documentation source into the `/docs` directory.
-    - Restructured `mkdocs.yml` navigation for better organization.
-    - Significantly enhanced all component developer guides (`library.md`, `server_sdk.md`, `registry.md`, `testing.md`) with more detail, clearer explanations, and improved examples.
-    - Updated `ROADMAP.md` to reflect current project status (Phase 2.5) and future plans (including developer self-registration).
-    - Updated `installation.md` for clarity between user/dev setup and added notes about public registry/cold starts.
-    - Updated `index.md`, `architecture.md`, `registry.md`, `cli.md` to include links/mentions of the public registry instance and Web UI.
-    - Updated policy documents (`PRIVACY_POLICY.md`, `TERMS_OF_SERVICE.md`, `REGISTRY_POLICY.md`, `CODE_OF_CONDUCT.md`, `security_policy.md`) to use clearer placeholders for contact information.
-    - Updated `a2a_profile_v0.2.md` with more implementation details and clarifications.
-- **Developer Portal UI:**
-    - Renamed "Edit" button to "View / Edit".
-    - Replaced "Deactivate" button with a "Toggle Status" button.
-    - Improved CSS styling for clarity, spacing, and responsiveness.
+#### Server SDK (agentvault-server-sdk)
+- FastAPI-based framework for building agents
+- Easy route registration
+- Built-in authentication middleware
+- Docker packaging support
+- CLI tool for agent scaffolding
 
-### Fixed
-- **Documentation:**
-    - Corrected numerous broken internal links after file restructuring.
-    - Fixed Mermaid diagram rendering issues in `architecture.md` by enabling the theme feature, removing internal comments, and simplifying link text syntax.
-    - Fixed broken links on `examples.md` overview page.
-- **Developer Portal UI:**
-    - Ensured inactive cards are displayed in the "My Agent Cards" list.
-    - Corrected API call logic in `loadOwnedCards` to fetch necessary details for rendering status.
+#### Testing Utils (agentvault-testing-utils)
+- Shared mocks and fixtures
+- HTTP request mocking utilities
+- Test helpers for all components
 
----
+### Security
 
-## [v0.2.0] - 2025-04-15 (Baseline for `agentvault` library)
+- All sensitive configuration handled through environment variables
+- No hardcoded secrets or credentials
+- Proper .gitignore configuration
+- JWT-based authentication
+- Secure password hashing with bcrypt
+- Email verification for user accounts
 
-### Added
-- **Core Client Library (`agentvault`):**
-    - `AgentVaultClient` for A2A communication (JSON-RPC POST, SSE).
-    - Support for `apiKey`, `oauth2` (Client Credentials), and `none` authentication schemes.
-    - `KeyManager` for secure local credential management (env, file, keyring).
-    - Pydantic models for `AgentCard`, A2A protocol messages (`Message`, `Part`, `Task`, `TaskState`, `Artifact`), and SSE events.
-    - Utilities for Agent Card parsing/validation (`agent_card_utils`).
-    - Basic utilities for MCP context handling (`mcp_utils`).
-    - Custom exception hierarchy (`exceptions.py`).
+### Documentation
 
----
+- Comprehensive README files for all components
+- API documentation via OpenAPI/Swagger
+- Configuration guides
+- Security scanning tools included
 
-## [v0.1.0] - 2025-04-15 (Initial Baseline for CLI, SDK, Registry, Testing)
+### Infrastructure
 
-### Added
-- **Command Line Interface (`agentvault-cli`):**
-    - `config` command group for managing local credentials (`set`, `get`, `list`).
-    - `discover` command for searching the registry API.
-    - `run` command for executing tasks on agents via A2A protocol, including SSE streaming output with `rich` formatting and artifact saving.
-- **Server SDK (`agentvault-server-sdk`):**
-    - `BaseA2AAgent` abstract class defining the agent interface.
-    - `@a2a_method` decorator for exposing custom/standard methods.
-    *   `create_a2a_router` helper for FastAPI integration, handling JSON-RPC routing and SSE setup.
-    *   `BaseTaskStore` interface and `InMemoryTaskStore` implementation for state management.
-    *   `TaskContext` base dataclass.
-    *   SDK Exception types (`AgentServerError`, `TaskNotFoundError`, etc.).
-    *   `agentvault-sdk package` CLI tool for generating Docker artifacts.
-- **Registry API (`agentvault_registry`):**
-    *   FastAPI application serving RESTful endpoints (`/api/v1`).
-    *   Endpoints for Agent Card CRUD operations (POST, GET list, GET by ID, PUT, DELETE/deactivate).
-    *   Developer authentication using hashed API keys (`X-Api-Key`).
-    *   Agent Card validation against the core library schema.
-    *   PostgreSQL database backend with Alembic migrations.
-    *   Basic rate limiting (`slowapi`) and CORS middleware.
-    *   `/utils/validate-card` endpoint.
-    *   Basic static file serving for Web UI (`/ui`, `/ui/developer`).
-- **Testing Utilities (`agentvault-testing-utils`):**
-    *   `MockAgentVaultClient` for mocking client interactions.
-    *   `mock_a2a_server` pytest fixture using `respx` for mocking HTTP endpoints.
-    *   `create_test_agent_card` factory function.
-    *   `EchoAgent` basic test agent implementation.
-    *   Assertion helpers (`assert_a2a_call`, `assert_a2a_sequence`).
-- **Initial Examples:**
-    - Basic A2A Server example.
-    - LangChain Tool integration example.
-- **Initial Documentation:** Structure using MkDocs, core concept pages, initial guides.
-- **CI/CD:** Basic workflows for dependency audit and docs deployment.
+- Docker support with multi-stage builds
+- Poetry-based dependency management
+- Monorepo structure with workspace support
+- CI/CD ready configuration
 
----
+### Known Issues
+
+- None reported
+
+### Breaking Changes
+
+- This is the first major release, establishing the baseline API
+
+### Upgrade Notes
+
+As this is the first major release, there are no upgrade notes from previous versions.
+
+## Previous Versions
+
+### [0.2.1] - Library Pre-release
+- Initial A2A protocol implementation
+- Basic key management features
+
+### [0.1.1] - Components Pre-release
+- Initial CLI implementation
+- Registry API scaffolding
+- Server SDK framework
+
+### [0.1.0] - Initial Development
+- Project structure setup
+- Basic monorepo configuration

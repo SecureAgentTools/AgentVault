@@ -1,75 +1,64 @@
 # AgentVault Architecture
 
-This document provides a high-level overview of the AgentVault ecosystem architecture, illustrating how the different components interact to enable secure agent discovery and communication.
+This document provides a high-level overview of the AgentVault architecture, illustrating the relationships between key components and communication protocols.
 
-## Vision
+## Core Components & Interactions
 
-AgentVault aims to be the open-source backbone for a thriving multi-agent ecosystem. It provides the standards, tools, and infrastructure necessary for agents built by anyone, anywhere, to find each other and collaborate effectively and securely.
+The AgentVault ecosystem revolves around several key entities:
 
-## Component Overview
+1.  **Agents (A2A Compliant):** Independent services exposing capabilities via the **Agent-to-Agent (A2A) Protocol**. They are described by **Agent Cards**. Examples include specialized agents for research, data processing, or interacting with specific APIs.
+2.  **MCP Tool Servers:** Services exposing specific, often low-level capabilities (like filesystem access, code execution, database queries, API interactions) via the **Model Context Protocol (MCP)**, which uses JSON-RPC 2.0 over HTTP. These are *not* necessarily full A2A agents.
+3.  **AgentVault Registry:** A central discovery service where agents publish their **Agent Cards**. Clients and other agents query the registry to find agents based on their capabilities or unique IDs (HRIs).
+4.  **Orchestrator:** A component (e.g., a LangGraph workflow, a Python script, another agent) that coordinates tasks across multiple A2A agents and potentially MCP tools to achieve a complex goal.
+5.  **MCP Tool Proxy Agent:** A specialized A2A-compliant agent designed to bridge the A2A and MCP domains. Orchestrators send A2A requests to the proxy, specifying a target MCP tool and its arguments. The proxy translates this into an MCP (JSON-RPC) call to the appropriate **MCP Tool Server**, receives the result, and translates it back into an A2A response for the orchestrator. **This is the current recommended pattern for integrating MCP tools into A2A workflows.**
+6.  **Clients / User Interfaces:** Tools like the **AgentVault CLI** or custom applications that allow users to interact with the system, initiate tasks, query the registry, or manage agents.
 
-The ecosystem consists of several distinct but interconnected Python packages and services:
+## Communication Protocols
 
-1.  **`agentvault_library` (Core Client Library):** The foundation for client-side interactions. Contains the `AgentVaultClient` (handles A2A protocol logic), `KeyManager` (secure credential storage), Pydantic models (AgentCard, A2A messages), and utility functions (card parsing, MCP handling). Used by the CLI and any custom application wanting to interact with agents.
-2.  **`agentvault_cli` (Command Line Interface):** The primary tool for end-users and developers to interact with the system from the terminal. Uses the `agentvault_library` to perform actions like configuring keys, discovering agents via the registry, and running tasks on agents.
-3.  **`agentvault_registry` (Registry API & UI):** A central FastAPI web service acting as the discovery hub. It stores Agent Card metadata submitted by developers in a PostgreSQL database. It provides a public REST API (`/api/v1`) for searching/retrieving cards and an authenticated API for developers to manage their listings. It also serves a basic **Web UI** for public discovery (`/ui`) and developer management (`/ui/developer`).
-4.  **`agentvault_server_sdk` (Server SDK):** A toolkit for developers *building* A2A-compliant agents. Provides base classes (`BaseA2AAgent`), FastAPI integration helpers (`create_a2a_router`, `@a2a_method`), task state management abstractions, and packaging utilities (`agentvault-sdk package`) to simplify agent development and deployment.
-5.  **`agentvault_testing_utils` (Testing Utilities):** A shared internal package containing mocks, pytest fixtures, factories, and assertion helpers used across the test suites of the other components to ensure consistency and reduce boilerplate. Not intended for direct use by end-users.
+*   **A2A Protocol:** Used for primary communication between clients, orchestrators, and A2A-compliant agents (including the MCP Tool Proxy Agent). Uses JSON-RPC 2.0 over HTTP(S) with SSE support for streaming.
+*   **MCP (Model Context Protocol):** Used for communication between the MCP Tool Proxy Agent and specific MCP Tool Servers. Uses JSON-RPC 2.0 over HTTP(S).
 
-## Interaction Flow Diagram
+## High-Level Diagram
 
 ```mermaid
-graph LR
-    subgraph User/Client Side
-        User[User / Client App] -->|Uses| CLI(agentvault_cli)
-        CLI -->|Uses| Lib(agentvault_library)
-        User -->|Uses| Lib
-        Lib -->|Manages Keys via KeyManager| KeyStore[Local Credential Store Env/File/Keyring]
-    end
+graph TD
+    User([User/Developer]) --> CLI[AgentVault CLI]
+    CLI --> Orchestrator((Orchestrator))
+    CLI --> Registry[(Registry)]
 
-    subgraph Developer Side
-        Dev[Agent Developer] -->|Uses| SDK(agentvault_server_sdk)
-        SDK -->|Builds Agent + Card| AgentServer(A2A Agent Server FastAPI)
-        Dev -->|Creates/Manages Registry Key| DevKeyStore[Developer API Key Stored by Dev]
-        Dev -->|Submits Card via API Uses DevKeyStore| RegistryAPI(Registry API /api/v1)
-    end
+    Orchestrator -- Discover --> Registry
+    Registry -- Card Info --> Orchestrator
 
-    subgraph Central Service
-        RegistryAPI -->|Reads/Writes Hashes| DB[Registry DB Cards Hashed Keys]
-        RegistryAPI -->|Serves UI| RegistryUI(Registry Web UI /ui)
-        User -->|Browses| RegistryUI
-    end
+    Orchestrator -- A2A Task --> Agent1[A2A Agent 1]
+    Agent1 -- A2A Result --> Orchestrator
+    Orchestrator -- A2A Task --> Agent2[A2A Agent 2]
+    Agent2 -- A2A Result --> Orchestrator
 
-    subgraph Communication Paths
-        Lib -->|Discover Agent Public API| RegistryAPI
-        Lib -->|Get Agent Card Public API| RegistryAPI
-        Lib -->|Run Task A2A Protocol| AgentServer
-        AgentServer -->|Optional: Uses Lib/SDK| ExternalService[External APIs / Services]
-    end
+    Orchestrator -- A2A Request --> MCP_Proxy[MCP Tool Proxy Agent]
+    MCP_Proxy -- MCP Call --> MCPServer1[/MCP Tool Server 1/]
+    MCPServer1 -- MCP Response --> MCP_Proxy
+    MCP_Proxy -- MCP Call --> MCPServer2[/MCP Tool Server 2/]
+    MCPServer2 -- MCP Response --> MCP_Proxy
+    MCP_Proxy -- MCP Call --> MCPServerN[/... Other Tools/]
+    MCPServerN -- MCP Response --> MCP_Proxy
+    MCP_Proxy -- A2A Response --> Orchestrator
 
-    style Dev fill:#ff99ff,stroke:#333333,stroke-width:2px
-    style User fill:#ccccff,stroke:#333333,stroke-width:2px
-    style KeyStore stroke-dasharray: 5 5
-    style DevKeyStore stroke-dasharray: 5 5
+    User -- Deploys --> Agent1
+    User -- Deploys --> MCP_Proxy
+    User -- Deploys --> MCPServer1
+    User -- Deploys --> MCPServer2
+
 ```
 
-**Explanation of Flows:**
+## Explanation
 
-1.  **Discovery:** A user or client application (using the Library or CLI) queries the Registry API's public endpoints (`/api/v1/...`) or browses the public Web UI (`/ui`) to find agents based on criteria.
-2.  **Card Retrieval:** The client retrieves the specific Agent Card for the desired agent from the Registry API (public endpoint).
-3.  **Interaction (Client -> Agent):**
-    *   The client application uses the information in the retrieved Agent Card (endpoint `url`, `authSchemes`).
-    *   The `agentvault_library`'s `KeyManager` component attempts to load the necessary local credentials.
-    *   The `AgentVaultClient` constructs and sends A2A protocol requests directly to the target Agent Server's endpoint, automatically adding required authentication headers.
-    *   The Agent Server receives the request, authenticates it, processes the task, and sends back responses/events.
-4.  **Registration (Developer -> Registry):**
-    *   The Agent Developer uses their unique Developer API Key with the authenticated endpoints of the Registry API (`/api/v1/...`) or potentially the Developer Portal UI (`/ui/developer`) to submit or manage their Agent Cards.
-    *   The Registry API verifies the key against stored hashes.
+1.  **User Interaction:** Users typically interact via the CLI or custom applications, which communicate with the Orchestrator or Registry using the A2A protocol.
+2.  **Orchestration:** The Orchestrator uses the Registry to discover agents based on their capabilities (defined in their Agent Cards). It then initiates tasks and receives results/events from these agents using the A2A protocol.
+3.  **MCP Tool Usage:** When the Orchestrator needs to execute an external tool (like reading a file, running code, querying a specific API):
+    *   It sends an A2A request to the **MCP Tool Proxy Agent**. This request includes the logical ID of the target MCP server (e.g., "filesystem", "code-runner", "database-tool"), the specific tool name (e.g., "filesystem.readFile"), and the necessary arguments.
+    *   The **MCP Tool Proxy Agent** looks up the actual URL of the target MCP server (e.g., `http://custom-filesystem-mcp:8001/rpc`) and sends a standard JSON-RPC 2.0 request over HTTP to it.
+    *   The **MCP Tool Server** executes the requested method and returns a JSON-RPC 2.0 response.
+    *   The Proxy Agent relays the result (or error) back to the Orchestrator within the A2A task's response.
+4.  **Agent Specialization:** Each component focuses on its core competency. A2A Agents handle complex logic and state, while MCP Tool Servers provide specific, reusable functions via a simple RPC interface. The Proxy pattern decouples the A2A and MCP domains.
 
-## Key Architectural Principles
-
-*   **Decentralized Execution:** Agents run independently. The Registry is only for discovery metadata.
-*   **Standardized Interface:** Communication relies on the defined [AgentVault A2A Profile v0.2](a2a_profile_v0.2.md) and the `AgentCard` schema.
-*   **Component-Based:** Logical components (library, CLI, registry, SDK, testing utils) with distinct responsibilities.
-*   **Security Focus:** Secure credential management, hashed keys, HTTPS enforcement, TEE awareness.
-*   **Developer Experience:** SDK and CLI tools simplify common tasks.
+This architecture allows for flexible and scalable multi-agent systems where different components communicate using appropriate protocols, facilitated by the AgentVault framework and demonstrated effectively in the **[MCP Test Pipeline Example](./examples/poc_mcp_pipeline.md)**.

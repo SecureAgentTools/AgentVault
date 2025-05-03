@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/editor",
+  "agentVersion": "0.1.0",
+  "name": "Editor Agent",
+  "description": "Refines content for clarity, style, and consistency",
+  "url": "http://localhost:8015/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "content_editing",
+      "name": "Content Editing",
+      "description": "Improves content clarity and flow"
+    },
+    {
+      "id": "style_correction",
+      "name": "Style Correction",
+      "description": "Ensures consistent style and tone"
+    },
+    {
+      "id": "grammar_check",
+      "name": "Grammar Check",
+      "description": "Corrects grammar and punctuation"
+    }
+  ],
+  "tags": ["editing", "refinement", "proofreading", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "draft_article": {
+        "type": "string",
+        "description": "Draft content to edit"
+      },
+      "style_guide": {
+        "type": "object",
+        "description": "Style preferences",
+        "properties": {
+          "tone": {
+            "type": "string",
+            "enum": ["formal", "casual", "academic"]
+          },
+          "voice": {
+            "type": "string",
+            "enum": ["active", "passive"]
+          }
+        }
+      }
+    },
+    "required": ["draft_article"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "edited_article": {
+        "type": "string",
+        "description": "Refined article"
+      },
+      "edit_suggestions": {
+        "type": "array",
+        "description": "Track changes and suggestions"
+      }
+    }
+  }
+}

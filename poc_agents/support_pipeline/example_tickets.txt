@@ -1,0 +1,57 @@
+Ticket 1 (Billing):
+Subject: Question about my recent invoice
+Hi, I just received my invoice (INV-98765) and the charge seems higher than expected. Can you explain the 'Pro Add-on' fee? I thought I was on the standard plan. Thanks, Bill P. - billing_issue@example.net
+
+--------------------------------------------------
+
+Ticket 2 (Technical - Negative):
+Subject: Widget Pro CONSTANTLY disconnecting!! WORST PRODUCT EVER!
+My Widget Pro keeps dropping the Wi-Fi connection every 5 minutes! I've tried restarting everything like your useless website says. It makes the device unusable. I'm incredibly frustrated and considering returning it. Fix this!! My user ID is frustrated_user_xyz
+
+--------------------------------------------------
+
+Ticket 3 (Technical - Neutral):
+Subject: Error E-404 on settings page
+Hello, when I try to access the account settings page for my profile (standard_user_123), I get an E-404 error. The rest of the site seems fine. Can you check if the link is broken?
+
+--------------------------------------------------
+
+Ticket 4 (Sales/General - Positive):
+Subject: Loving the Widget Pro! Question about features.
+Just wanted to say the Widget Pro is fantastic! Really impressed. I was wondering if there's a way to export the analytics data via an API? Is that part of the Pro plan or an enterprise feature? Thanks! - vip_user@example.com
+
+--------------------------------------------------
+
+Ticket 5 (General - New):
+Subject: Info?
+Hi, just signed up (new_customer@sample.org). How do I get started?
+
+--------------------------------------------------
+
+Ticket 6 (Account Management):
+Subject: Change email address
+I need to update the email address on my account (currently jane.doe@email.co) to my new work email. How do I do that?
+
+--------------------------------------------------
+
+Ticket 7 (Technical - Vague):
+Subject: App issue
+My app is slow sometimes.
+
+--------------------------------------------------
+
+Ticket 8 (Billing - Urgent):
+Subject: URGENT - Payment Failed Again!
+My payment failed AGAIN today! I updated my card details yesterday after the first failure (KB-BILL-002 didn't help much). My account (needs_help_asap) might get suspended! Please help immediately!!! Order ref maybe 112233?
+
+--------------------------------------------------
+
+Ticket 9 (Feature Request):
+Subject: Suggestion for Widget Standard
+Hi team, I use Widget Standard (user_id_998877) and it's great, but I really wish it had a basic export function for the daily summary. Any plans to add this? Or is it only in Pro?
+
+--------------------------------------------------
+
+Ticket 10 (Mobile App):
+Subject: Push notifications not working on Android
+I've enabled push notifications in the app settings and my phone settings, but I'm not receiving any alerts from the [App Name] app on my Android phone. My user is tech_support_fan. Any ideas?

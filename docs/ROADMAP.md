@@ -71,3 +71,4 @@ The AgentVault project has established a functional baseline across its core com
 ## Contributing
 
 We welcome community contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+

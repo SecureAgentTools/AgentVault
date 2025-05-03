@@ -1,145 +1,98 @@
-# Installation Guide
+# Installation
 
-This guide covers how to install the different parts of the AgentVault ecosystem, depending on your needs.
+This guide covers how to install the different components of the AgentVault framework.
 
-## 1. Installing for Usage (CLI & Client Library)
+## Prerequisites
 
-If you want to use the AgentVault CLI to interact with agents or use the `agentvault` client library in your own Python projects, install directly from PyPI.
+*   **Python:** Version 3.10 or higher is recommended.
+*   **pip:** Python's package installer.
+*   **Poetry (Recommended):** For development and managing dependencies within individual component repositories (`poetry install`).
+*   **Docker & Docker Compose:** Required for running the AgentVault Registry and containerized agents/POC pipelines.
+*   **Git:** For cloning the repository.
+*   **(Optional) OS Keyring Backend:** If using the `KeyManager` with the OS keyring (`use_keyring=True`), ensure a supported backend is installed (e.g., `keyrings.cryptfile`, `keyrings.osx`, `keyrings.windows`).
 
-**Prerequisites:**
+## Core Library (`agentvault`)
 
-*   Python 3.10 or 3.11 installed.
-*   `pip` (Python's package installer).
-
-**Installation Options:**
-
-*   **CLI Only:**
-    ```bash
-    pip install agentvault-cli
-    ```
-    *To include optional OS Keyring support for secure credential storage:*
-    ```bash
-    pip install "agentvault-cli[os_keyring]"
-    ```
-
-*   **Client Library Only (`agentvault`):**
-    ```bash
-    pip install agentvault
-    ```
-    *To include optional OS Keyring support:*
-    ```bash
-    pip install "agentvault[os_keyring]"
-    ```
-
-*   **Server SDK Only (`agentvault-server-sdk`):**
-    *(Note: This also installs the `agentvault` client library as a dependency)*
-    ```bash
-    pip install agentvault-server-sdk
-    ```
-
-**Verification (CLI):**
-
-After installing the CLI, check that the command is available:
+This library provides the client (`AgentVaultClient`), models, key management (`KeyManager`), and utilities needed to interact with AgentVault agents and potentially the registry.
 
 ```bash
-agentvault_cli --version```
+# Install from PyPI (once published)
+# pip install agentvault
 
-**Connecting to the Public Registry:**
+# Install locally from source (for development)
+cd agentvault_library
+poetry install
+# Or using pip editable mode from the monorepo root:
+# pip install -e agentvault_library
+```
 
-You can use the installed CLI or library with the publicly hosted registry:
-
-*   **URL:** `https://agentvault-registry-api.onrender.com`
-*   **Usage:**
-    *   Set the environment variable: `export AGENTVAULT_REGISTRY_URL=https://agentvault-registry-api.onrender.com` (Linux/macOS) or `set AGENTVAULT_REGISTRY_URL=https://agentvault-registry-api.onrender.com` (Windows Cmd) or `$env:AGENTVAULT_REGISTRY_URL='https://agentvault-registry-api.onrender.com'` (PowerShell).
-    *   Or use the `--registry` flag with CLI commands: `agentvault_cli discover --registry https://agentvault-registry-api.onrender.com`
-*   **Note (Cold Start):** This instance runs on Render's free tier. If it hasn't received traffic recently, it might take **up to 60 seconds** to respond to the first request while it "wakes up". Subsequent requests will be faster. You can send a simple request like `curl https://agentvault-registry-api.onrender.com/health` to wake it up before running commands if needed.
-*   **Developer Registration:** You can register for a developer account on the public registry via the UI at [`https://agentvault-registry-api.onrender.com/ui/register`](https://agentvault-registry-api.onrender.com/ui/register). Follow the email verification steps.
-
-## 2. Setting up for Development (Contributing or Running from Source)
-
-If you want to contribute to AgentVault, run components locally from the source code (like the registry), or use features not yet released on PyPI, follow these steps. This sets up the entire monorepo.
-
-**Prerequisites:**
-
-*   Git
-*   Python 3.10 or 3.11
-*   [Poetry](https://python-poetry.org/docs/#installation) (Python dependency management and packaging tool)
-*   **PostgreSQL Server** (Required *only* if running the `agentvault_registry` locally).
-*   **(Optional) SMTP Server/Service:** Required *only* if running the `agentvault_registry` locally *and* you want email verification/password reset emails to be sent. Configure credentials in the registry's `.env` file.
-
-**Steps:**
-
-1.  **Clone the Repository:**
+*   **Optional Keyring:** To enable storing credentials in the OS keyring:
     ```bash
-    git clone https://github.com/SecureAgentTools/AgentVault.git
-    cd AgentVault
+    # When using pip:
+    pip install agentvault[os_keyring]
+    # When using poetry:
+    poetry install --extras os_keyring
     ```
 
-2.  **Install Dependencies (including Development Tools):** Navigate to the project root (`AgentVault/`) and use Poetry to install all dependencies for all workspace packages:
-    ```bash
-    # Installs production AND development dependencies (pytest, httpx, mkdocs, etc.)
-    poetry install --with dev
+## Server SDK (`agentvault-server-sdk`)
 
-    # To include optional OS Keyring support for development:
-    # poetry install --with dev --extras os_keyring
-    ```
-    *   This command reads the `pyproject.toml` files in each component directory (`agentvault_library`, `agentvault_cli`, etc.).
-    *   It resolves all dependencies across the workspace.
-    *   It installs everything into a single virtual environment located in the project root (usually `.venv/`).
+This SDK helps you build your own A2A-compliant agents.
 
-3.  **Activate Virtual Environment:** Before running any commands or tests from source, activate the environment created by Poetry:
-    *   **Linux/macOS (bash/zsh):**
-        ```bash
-        source .venv/bin/activate
-        ```
-    *   **Windows (PowerShell):**
-        ```powershell
-        .\.venv\Scripts\Activate.ps1
-        ```
-    *   **Windows (Command Prompt):**
-        ```cmd
-        .\.venv\Scripts\activate.bat
-        ```
-    You should see `(.venv)` appear at the beginning of your command prompt line.
+```bash
+# Install from PyPI (once published)
+# pip install agentvault-server-sdk
 
-4.  **Verify Installation:** You can now run commands from different components, e.g.:
-    ```bash
-    # Check CLI version (running from source)
-    agentvault_cli --version
-    # Run library tests
-    pytest agentvault_library/tests/
-    # Check docs tool
-    mkdocs --version
-    ```
+# Install locally from source (for development)
+cd agentvault_server_sdk
+poetry install
+# Or using pip editable mode from the monorepo root:
+# pip install -e agentvault_server_sdk
+```
 
-## 3. Running the Registry (Local Development)
+## Command Line Interface (`agentvault-cli`)
 
-To run the `agentvault_registry` API locally (e.g., for testing agents or the CLI against it):
+The CLI provides commands for discovering agents, running tasks, and managing local configuration.
 
-1.  **Complete Development Setup:** Follow the steps in section 2 above. Ensure you have a running **PostgreSQL** server accessible.
-2.  **Navigate:**
-    ```bash
-    cd agentvault_registry
-    ```
-3.  **Configure Database, Secrets & Email:**
-    *   Copy `.env.example` to `.env` (if it exists) or create a `.env` file in the `agentvault_registry/` directory.
-    *   Set the `DATABASE_URL` environment variable in the `.env` file to point to your local PostgreSQL instance (ensure it uses the `asyncpg` driver, e.g., `postgresql+asyncpg://user:pass@host:port/dbname`).
-    *   Set the `API_KEY_SECRET` environment variable in the `.env` file (generate a strong secret, e.g., `openssl rand -hex 32`). This is used for signing JWTs.
-    *   **(Optional) Configure Email Settings:** If you want email verification and password reset to work, configure the `MAIL_...` variables in your `.env` file (e.g., `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_SERVER`, `MAIL_PORT`, `MAIL_FROM`). If these are not set, registration will still work, but verification/reset emails will not be sent. You can use a local SMTP debugging server (like `python -m smtpd -c DebuggingServer -n localhost:1025`) and configure the `.env` accordingly for testing email content without actually sending.
-4.  **Database Setup:**
-    *   Ensure your PostgreSQL server is running and the specified database exists.
-    *   Run database migrations using Alembic (make sure your virtual environment is activated):
-        ```bash
-        # Run from the agentvault_registry/ directory
-        alembic upgrade head
-        ```
-5.  **Run the Server:** Use Uvicorn (which was installed as part of development dependencies):
-    ```bash
-    # Run from the agentvault_registry/ directory
-    uvicorn agentvault_registry.main:app --reload --host 0.0.0.0 --port 8000
-    ```
-    *   `--reload`: Automatically restarts the server when code changes.
-    *   `--host 0.0.0.0`: Makes the server accessible from other devices on your network (use `127.0.0.1` for localhost only).
-    *   `--port 8000`: The default port.
+```bash
+# Install from PyPI (once published)
+# pip install agentvault-cli
 
-The registry API should now be running at `http://localhost:8000`. You can access the API docs at `http://localhost:8000/docs` and the Developer Portal UI at `http://localhost:8000/ui/developer`. You can register a local developer account via `http://localhost:8000/ui/register`.
+# Install locally from source (for development)
+cd agentvault_cli
+poetry install
+# Or using pip editable mode from the monorepo root:
+# pip install -e agentvault_cli
+
+# Verify installation
+agentvault --version
+```
+
+## AgentVault Registry (`agentvault_registry`)
+
+The registry is a central service for agent discovery. It requires Docker and Docker Compose.
+
+**Setup Instructions:**
+
+Detailed instructions for building the Docker image, configuring the `.env` file (database connection, admin user, secrets), and running the registry service using `docker compose` can be found in the **[Registry Setup & API Guide](../developer_guide/registry/#running-with-docker-recommended)**.
+
+## Testing Utilities (`agentvault-testing-utils`)
+
+This package provides utilities for testing agents and components within the AgentVault ecosystem. It's typically installed as a development dependency.
+
+```bash
+# Install locally from source (for development)
+cd agentvault_testing_utils
+poetry install
+# Or using pip editable mode from the monorepo root:
+# pip install -e agentvault_testing_utils
+```
+
+## Proof-of-Concept (POC) Agents & Pipelines
+
+The various POC pipelines (Research, Support, ETL, etc.) have their own setup instructions within their respective directories under `poc_agents/`. Generally, they involve:
+
+1.  Navigating to the specific POC directory (e.g., `cd poc_agents/research_pipeline`).
+2.  Configuring `.env` files for the agents and orchestrator within that POC.
+3.  Using `docker compose build` and `docker compose up -d` (or specific build/run scripts provided within the POC directory).
+
+Refer to the `README.md` or documentation within each POC directory for specific setup steps.

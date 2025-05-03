@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+# Install dependencies
+RUN apk add --no-cache npm git
+
+# Create app directory
+WORKDIR /app
+
+# Clone the MCP server filesystem repository
+RUN git clone https://github.com/modelcontextprotocol/mcp-server-filesystem.git .
+
+# Install dependencies
+RUN npm install
+
+# Use HTTP transport by default
+ENV MCP_TRANSPORT=http
+ENV MCP_PORT=8001
+
+# Expose the MCP port
+EXPOSE 8001
+
+# The command will be the root directory mounted in the container
+ENTRYPOINT ["node", "index.js"]

@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "support-pipeline-orchestrator"
+version = "0.1.0"
+description = "Orchestrator for the multi-agent support ticket processing pipeline using LangGraph."
+authors = ["AgentVault Support Demo Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md" # Assuming a README will be added later
+packages = [{include = "support_orchestrator", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+
+# LangChain & LangGraph (Match e-commerce versions for consistency)
+langgraph = "^0.1.1"
+langchain-core = "^0.2.23"
+
+# AgentVault Client Library (using path dependency relative to this file)
+agentvault = {path = "../../../agentvault_library", develop = true}
+
+# Communication & Data Handling (Match e-commerce versions)
+httpx = {version = ">=0.26.0,<0.27.0", extras = ["http2", "brotli"]}
+pydantic = "^2.7.1"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.0" # For loading .env settings
+
+# Resilience (Match e-commerce versions)
+tenacity = "^8.2.3"
+
+# LangChain Community for potential LLM integrations later (optional but good to include)
+langchain = ">=0.2.11"
+langchain-community = ">=0.2.10"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.0"
+respx = "^0.21.0" # For mocking httpx calls in tests
+pytest-mock = "^3.12.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

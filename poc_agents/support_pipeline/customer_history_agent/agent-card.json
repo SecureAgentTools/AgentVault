@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/support-customer-history",
+  "agentVersion": "0.1.0",
+  "name": "Customer History Agent",
+  "description": "Retrieves a summary of customer status and recent interactions.",
+  "url": "http://localhost:8032/a2a",
+  "provider": {
+    "name": "AgentVault Support Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "get_customer_summary",
+      "name": "Get Customer Summary",
+      "description": "Fetches customer status and interaction summary based on identifier.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "customer_identifier": {
+            "type": "string",
+            "description": "The unique identifier (e.g., email, user ID) for the customer."
+          }
+        },
+        "required": ["customer_identifier"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/CustomerHistoryArtifact"
+      }
+    }
+  ],
+  "tags": ["support", "customer", "history", "crm", "poc"],
+  "components": {
+    "schemas": {
+      "CustomerHistorySummary": {
+        "type": "object",
+        "properties": {
+          "customer_identifier": {"type": "string"},
+          "status": {"type": "string", "enum": ["VIP", "Standard", "New", "Churn Risk", "Unknown"]},
+          "recent_interaction_summary": {"type": "string", "nullable": true},
+          "open_tickets": {"type": "integer", "nullable": true}
+        },
+        "required": ["customer_identifier", "status"]
+      },
+      "CustomerHistoryArtifact": {
+         "type": "object",
+         "properties": {
+             "customer_history": { "$ref": "#/components/schemas/CustomerHistorySummary" }
+         },
+         "required": ["customer_history"]
+      }
+    }
+  }
+}

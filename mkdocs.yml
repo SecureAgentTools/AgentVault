@@ -40,26 +40,30 @@ nav:
     - Concepts: concepts.md
     - Architecture: architecture.md
     - Use Cases: use_cases.md
-  - Installation: installation.md
+  - Installation: installation.md # Link to Registry Setup will be added here
   - Examples:
-      - Overview: examples.md
-      - Basic A2A Server: examples/basic_a2a_server.md
+      - Overview: examples/index.md # Link to the new overview page
+      - Basic Agents: examples/basic_agents.md # New page for simple examples
       - LangChain Tool: examples/langchain_integration.md
-      - OAuth Agent: examples/oauth_agent_example.md
-      - Stateful Agent: examples/stateful_agent_example.md
-      - Direct Library Usage: examples/library_usage_example.md
+      - Pipelines (POCs):
+          - Research Pipeline: examples/poc_research.md
+          - Support Ticket Pipeline: examples/poc_support.md
+          - Dynamics 365 Pipeline: examples/poc_dynamics.md
+          - E-commerce Pipeline: examples/poc_ecommerce.md
+          - ETL Pipeline: examples/poc_etl.md
+          - MCP Test Pipeline: examples/poc_mcp_pipeline.md
   - User Guide:
     - CLI Usage: user_guide/cli.md
   - Developer Guide:
     - Client Library (`agentvault`): developer_guide/library.md
     - Server SDK (`agentvault-server-sdk`): developer_guide/server_sdk.md
-    - Registry API (`agentvault_registry`): developer_guide/registry.md
+    # --- CORRECTED LINE 60 ---
+    - 'Registry: Setup & API': developer_guide/registry.md # <-- Enclosed title in quotes
+    # --- END CORRECTION ---
     - Testing Utilities (`agentvault-testing-utils`): developer_guide/testing.md
   - Protocols:
     - A2A Profile v0.2: a2a_profile_v0.2.md
-    # --- ADDED MCP LINK ---
     - MCP Profile (Concept): mcp.md
-    # --- END ADDED ---
     - TEE Profile: tee_profile.md
   - Project & Policies:
     - Contributing: CONTRIBUTING.md

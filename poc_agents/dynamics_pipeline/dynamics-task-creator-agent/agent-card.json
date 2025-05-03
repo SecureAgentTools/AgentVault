@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/dynamics-task-creator",
+  "agentVersion": "0.1.0",
+  "name": "Dynamics Task Creator Agent (Mock DB)",
+  "description": "Creates a task record in the mock Dynamics database.",
+  "url": "http://localhost:8056/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "create_dynamics_task",
+      "name": "Create Dynamics Task",
+      "description": "Creates a task record in the mock_tasks table.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "description": "The Account ID the task relates to."
+          },
+          "task_subject": {
+            "type": "string",
+            "description": "The subject or description of the task."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low"],
+            "description": "The priority of the task."
+          },
+          "related_record_id": {
+            "type": ["string", "null"],
+            "description": "Optional ID of a related record (e.g., Opportunity ID, Case ID)."
+          }
+        },
+        "required": ["account_id", "task_subject", "priority"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the task creation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message describing the outcome."
+          },
+          "created_task_id": {
+            "type": ["integer", "null"],
+            "description": "The ID of the newly created task, or null if creation failed."
+          }
+        },
+        "required": ["success", "message"]
+      }
+    }
+  ],
+  "tags": ["dynamics", "crm", "task", "database", "create", "mock", "poc", "execution"],
+  "components": {
+    "schemas": {}
+  }
+}

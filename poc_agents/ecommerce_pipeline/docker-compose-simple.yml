@@ -1,0 +1,88 @@
+services:
+  user-profile-agent:
+    build:
+      context: ../.. # Build from the monorepo root
+      dockerfile: ./poc_agents/ecommerce_pipeline/ecommerce_user_profile_agent/Dockerfile
+    container_name: ecommerce-user-profile-agent
+    ports:
+      - "8020:8020"
+    env_file:
+      - ./ecommerce_user_profile_agent/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - agentvault_network
+    restart: unless-stopped
+
+  product-catalog-agent:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/ecommerce_pipeline/ecommerce_product_catalog_agent/Dockerfile
+    container_name: ecommerce-product-catalog-agent
+    ports:
+      - "8021:8021"
+    env_file:
+      - ./ecommerce_product_catalog_agent/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - agentvault_network
+    restart: unless-stopped
+
+  trend-analysis-agent:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/ecommerce_pipeline/ecommerce_trend_analysis_agent/Dockerfile
+    container_name: ecommerce-trend-analysis-agent
+    ports:
+      - "8022:8022"
+    env_file:
+      - ./ecommerce_trend_analysis_agent/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - agentvault_network
+    restart: unless-stopped
+
+  recommendation-engine-agent:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/ecommerce_pipeline/ecommerce_recommendation_engine_agent/Dockerfile
+    container_name: ecommerce-recommendation-engine-agent
+    ports:
+      - "8023:8023"
+    env_file:
+      - ./ecommerce_recommendation_engine_agent/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - agentvault_network
+    restart: unless-stopped
+
+  ecommerce-orchestrator:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/ecommerce_pipeline/ecommerce_pipeline_orchestrator/Dockerfile
+    container_name: ecommerce-pipeline-orchestrator
+    ports:
+      - "8024:8024"
+    env_file:
+      - ./ecommerce_pipeline_orchestrator/.env
+    environment:
+      - AGENTVAULT_REGISTRY_URL=http://host.docker.internal:8000
+    volumes:
+      - ./ecommerce_pipeline_orchestrator/pipeline_artifacts:/app/pipeline_artifacts/ecommerce
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - agentvault_network
+    depends_on:
+      - user-profile-agent
+      - product-catalog-agent
+      - trend-analysis-agent
+      - recommendation-engine-agent
+    restart: unless-stopped
+
+networks:
+  agentvault_network:
+    external: true

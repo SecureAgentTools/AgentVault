@@ -1,0 +1,146 @@
+{
+  "Billing": [
+    {
+      "article_id": "KB-BILL-001",
+      "title": "How to View Your Invoice Online",
+      "summary": "Log in to your account portal at account.example.com. Navigate to the 'Billing History' section to view and download past invoices in PDF format. Invoices are generated on the 1st of each month.",
+      "keywords": ["invoice", "view", "download", "billing", "history", "pdf", "statement", "account"]
+    },
+    {
+      "article_id": "KB-BILL-002",
+      "title": "Updating Your Payment Method",
+      "summary": "To update your credit card or other payment details, go to 'Account Settings' > 'Payment Methods'. Click 'Add New Method' or 'Edit' next to an existing one. Changes take effect on the next billing cycle.",
+      "keywords": ["payment", "credit card", "update", "billing", "settings", "card", "change", "method", "paypal"]
+    },
+    {
+      "article_id": "KB-BILL-003",
+      "title": "Understanding Prorated Charges",
+      "summary": "If you upgrade or downgrade your plan mid-cycle, charges are prorated. You'll see a credit for unused time on the old plan and a charge for the new plan starting from the change date.",
+      "keywords": ["prorated", "charge", "billing", "upgrade", "downgrade", "plan", "cost", "partial"]
+    },
+    {
+      "article_id": "KB-BILL-004",
+      "title": "Requesting a Refund",
+      "summary": "Refund eligibility depends on our terms of service (example.com/terms). Generally, refunds are considered within 14 days of purchase for annual plans. Contact support with your order ID.",
+      "keywords": ["refund", "money back", "cancel", "policy", "billing", "request"]
+    },
+    {
+      "article_id": "KB-BILL-005",
+      "title": "Applying a Discount Code",
+      "summary": "Discount codes can be applied during the checkout process before confirming payment. Look for the 'Promo Code' or 'Discount Code' field.",
+      "keywords": ["discount", "coupon", "promo code", "apply", "checkout", "billing", "save"]
+    }
+  ],
+  "Technical": [
+    {
+      "article_id": "KB-TECH-001",
+      "title": "Troubleshooting 'Widget Pro' Connectivity Issues",
+      "summary": "Ensure your Widget Pro is within 15 feet of your Wi-Fi router. Try restarting the Widget Pro (unplug for 30s), your router, and your modem. Check for firmware updates in the companion app under Settings > Device Info.",
+      "keywords": ["widget pro", "connect", "wifi", "internet", "troubleshoot", "restart", "firmware", "offline", "disconnect", "network"]
+    },
+    {
+      "article_id": "KB-TECH-002",
+      "title": "Resetting Your Account Password",
+      "summary": "On the login screen (app or website), click the 'Forgot Password?' or 'Reset Password' link. Enter your registered email address. Check your inbox (and spam folder) for a password reset email.",
+      "keywords": ["password", "reset", "forgot", "login", "account", "security", "sign in", "access"]
+    },
+    {
+      "article_id": "KB-TECH-003",
+      "title": "Clearing Application Cache (Mobile App)",
+      "summary": "Clearing the cache can resolve performance issues. On Android: Settings > Apps > [App Name] > Storage > Clear Cache. On iOS: Settings > General > iPhone Storage > [App Name] > Offload App (then reinstall).",
+      "keywords": ["cache", "clear", "mobile app", "android", "ios", "performance", "slow", "lag", "frozen"]
+    },
+    {
+      "article_id": "KB-TECH-004",
+      "title": "Error Code E-404: Resource Not Found",
+      "summary": "This error usually indicates a temporary issue or a broken link within the application or website. Please try refreshing the page or navigating back. If persistent, report the exact URL or screen.",
+      "keywords": ["error", "e-404", "404", "not found", "link", "broken", "page", "technical"]
+    },
+    {
+      "article_id": "KB-TECH-005",
+      "title": "'Sync Failed' Error Message",
+      "summary": "The 'Sync Failed' error can occur due to network issues or server maintenance. Check your internet connection. Verify our service status at status.example.com. Try syncing again in a few minutes.",
+      "keywords": ["sync failed", "error", "syncing", "update", "data", "network", "server", "status"]
+    },
+     {
+      "article_id": "KB-TECH-006",
+      "title": "Enabling Two-Factor Authentication (2FA)",
+      "summary": "Enhance your account security by enabling 2FA. Go to Account Settings > Security > Two-Factor Authentication. You can use an authenticator app (recommended) or SMS.",
+      "keywords": ["2fa", "two factor", "authentication", "security", "login", "code", "authenticator", "sms"]
+    }
+  ],
+  "Account Management": [
+    {
+        "article_id": "KB-ACCT-001",
+        "title": "Changing Your Registered Email Address",
+        "summary": "To change the email address associated with your account, go to Account Settings > Profile > Edit Email. You will need to verify the new email address.",
+        "keywords": ["email", "change", "update", "account", "profile", "settings", "address"]
+    },
+    {
+        "article_id": "KB-ACCT-002",
+        "title": "Closing Your Account",
+        "summary": "To permanently close your account and delete your data, please navigate to Account Settings > Account Status > Close Account. Note that this action is irreversible.",
+        "keywords": ["close", "delete", "cancel", "account", "remove", "terminate", "settings"]
+    },
+    {
+        "article_id": "KB-ACCT-003",
+        "title": "Managing Notification Preferences",
+        "summary": "Control which email or push notifications you receive under Account Settings > Notifications. You can toggle preferences for product updates, billing alerts, and newsletters.",
+        "keywords": ["notification", "email", "push", "preference", "settings", "unsubscribe", "manage"]
+    }
+  ],
+  "Sales": [
+    {
+      "article_id": "KB-SALE-001",
+      "title": "Widget Pro vs. Widget Standard: Feature Comparison",
+      "summary": "Widget Pro offers advanced analytics, multi-user support, priority email support, API access, and early access to beta features, which are not available in the Standard plan.",
+      "keywords": ["widget pro", "widget standard", "compare", "features", "plan", "pricing", "sales", "difference", "pro", "standard"]
+    },
+    {
+      "article_id": "KB-SALE-002",
+      "title": "Enterprise Licensing Options",
+      "summary": "For teams larger than 50 users or those needing SSO integration and dedicated support, we offer custom Enterprise plans. Please contact our sales team via the 'Contact Sales' form on our website for a personalized quote.",
+      "keywords": ["enterprise", "license", "sales", "quote", "large team", "volume", "sso", "dedicated support"]
+    },
+    {
+      "article_id": "KB-SALE-003",
+      "title": "Free Trial Information",
+      "summary": "We offer a 14-day free trial of the Widget Pro plan with no credit card required. Sign up on our homepage to get started instantly.",
+      "keywords": ["free trial", "trial", "demo", "test", "sales", "sign up", "pro plan"]
+    }
+  ],
+  "General Inquiry": [
+    {
+      "article_id": "KB-GEN-001",
+      "title": "Contacting Customer Support",
+      "summary": "Support is available via live chat (9am-5pm Mon-Fri PST), email (support@example.com - 24hr response target), or phone (limited hours). Check example.com/support for details.",
+      "keywords": ["support", "contact", "chat", "email", "phone", "help", "hours", "customer service"]
+    },
+    {
+      "article_id": "KB-GEN-002",
+      "title": "Our Data Privacy Policy",
+      "summary": "We are committed to protecting your data privacy according to GDPR and CCPA regulations. You can review our full privacy policy at example.com/privacy for details on data collection, usage, and your rights.",
+      "keywords": ["privacy", "policy", "data", "gdpr", "ccpa", "security", "terms", "legal"]
+    },
+    {
+        "article_id": "KB-GEN-003",
+        "title": "Service Status Page",
+        "summary": "Check for current outages or scheduled maintenance on our services by visiting our status page at status.example.com.",
+        "keywords": ["status", "outage", "maintenance", "down", "service", "system status"]
+    }
+  ],
+   "Mobile App": [
+    {
+      "article_id": "KB-MOB-001",
+      "title": "Downloading the Mobile App",
+      "summary": "Our mobile app is available for iOS on the App Store and for Android on the Google Play Store. Search for '[App Name]'.",
+      "keywords": ["mobile app", "download", "install", "ios", "android", "app store", "google play"]
+    },
+    {
+      "article_id": "KB-MOB-002",
+      "title": "Enabling Push Notifications",
+      "summary": "To receive push notifications, ensure they are enabled both within the app's settings (Settings > Notifications) and in your device's system settings for the app.",
+      "keywords": ["push notification", "mobile app", "alert", "enable", "settings", "ios", "android"]
+    }
+  ]
+}

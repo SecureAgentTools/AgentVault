@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "mcp-test-pipeline-orchestrator"
+version = "0.1.0"
+description = "Orchestrator for the MCP Test pipeline."
+authors = ["AgentVault Test Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "mcp_test_orchestrator", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+
+# LangChain & LangGraph
+langgraph = "^0.1.1"
+langchain-core = "^0.2.23"
+
+# AgentVault Client Library
+agentvault = {path = "../../../agentvault_library", develop = true}
+
+# Communication & Data Handling
+httpx = {version = ">=0.26.0,<0.27.0", extras = ["http2", "brotli"]}
+pydantic = "^2.7.1"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.0"
+
+# Resilience
+tenacity = "^8.2.3"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.0"
+respx = "^0.21.0"
+pytest-mock = "^3.12.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/ecommerce-recommendation-engine",
+  "agentVersion": "0.1.0",
+  "name": "Recommendation Engine Agent",
+  "description": "Generates personalized product recommendations based on user profile, product data, and trends.",
+  "url": "http://localhost:8023/a2a",
+  "provider": {
+    "name": "AgentVault E-commerce Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "recommendation_generation",
+      "name": "Generate Recommendations",
+      "description": "Generates a list of product recommendations based on provided context.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_profile": {
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "product_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductDetail"
+            },
+            "description": "Contextual product details (e.g., viewed items, related items)."
+          },
+          "trending_data": {
+            "$ref": "#/components/schemas/TrendingData"
+          },
+          "max_recommendations": {
+            "type": "integer",
+            "default": 10
+          }
+        },
+        "required": ["user_profile"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/RecommendationsArtifact"
+      }
+    }
+  ],
+  "tags": ["ecommerce", "recommendation", "personalization", "engine", "poc"],
+  "components": {
+    "schemas": {
+      "UserPreferences": {
+        "type": "object",
+        "properties": {
+          "categories": {"type": "array", "items": {"type": "string"}},
+          "brands": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "user_id": {"type": "string"},
+          "purchase_history": {"type": "array", "items": {"type": "string"}},
+          "browsing_history": {"type": "array", "items": {"type": "string"}},
+          "preferences": {"$ref": "#/components/schemas/UserPreferences"},
+          "last_active": {"type": "string", "format": "date-time", "nullable": true}
+        },
+        "required": ["user_id"]
+      },
+      "ProductDetail": {
+        "type": "object",
+        "properties": {
+          "product_id": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string", "nullable": true},
+          "price": {"type": "number", "format": "float", "nullable": true},
+          "category": {"type": "string", "nullable": true},
+          "tags": {"type": "array", "items": {"type": "string"}},
+          "image_url": {"type": "string", "format": "uri", "nullable": true},
+          "stock_level": {"type": "integer", "nullable": true},
+          "attributes": {"type": "object", "additionalProperties": {}}
+        },
+        "required": ["product_id", "name"]
+      },
+      "TrendingData": {
+        "type": "object",
+        "properties": {
+          "timeframe": {"type": "string"},
+          "trending_products": {"type": "array", "items": {"type": "string"}},
+          "trending_categories": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["timeframe"]
+      },
+      "ProductRecommendation": {
+        "type": "object",
+        "properties": {
+          "product_id": {"type": "string"},
+          "recommendation_score": {"type": "number", "format": "float"},
+          "reasoning": {"type": "string", "nullable": true},
+          "details": { "$ref": "#/components/schemas/ProductDetail", "nullable": true }
+        },
+        "required": ["product_id", "recommendation_score"]
+      },
+      "RecommendationsArtifact": {
+         "type": "object",
+         "properties": {
+             "recommendations": {
+                 "type": "array",
+                 "items": { "$ref": "#/components/schemas/ProductRecommendation" }
+             }
+         },
+         "required": ["recommendations"]
+      }
+    }
+  }
+}

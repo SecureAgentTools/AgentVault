@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/account-health-analyzer",
+  "agentVersion": "0.1.0",
+  "name": "Account Health Analyzer Agent",
+  "description": "Analyzes combined Dynamics and external data to assess account health (risk, opportunity).",
+  "url": "http://localhost:8052/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "analyze_health",
+      "name": "Analyze Account Health",
+      "description": "Calculates risk, opportunity, and engagement levels based on input data.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dynamics_data": {
+            "type": "object",
+            "description": "The structured data fetched by the Dynamics Data Fetcher."
+          },
+          "external_data": {
+            "type": "object",
+            "description": "The structured data fetched by the External Data Enricher."
+          }
+        },
+        "required": ["dynamics_data", "external_data"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "account_analysis": {
+            "type": "object",
+            "description": "A dictionary containing the calculated health scores/levels.",
+            "properties": {
+               "risk_level": {"type": "string", "enum": ["Low", "Medium", "High"]},
+               "opportunity_level": {"type": "string", "enum": ["Low", "Medium", "High"]},
+               "engagement_level": {"type": "string", "enum": ["Low", "Medium", "High"]},
+               "analysis_summary": {"type": "string", "description": "Brief text summary of the analysis."}
+            },
+             "required": ["risk_level", "opportunity_level", "engagement_level", "analysis_summary"]
+          }
+        },
+        "required": ["account_analysis"]
+      }
+    }
+  ],
+  "tags": ["dynamics", "crm", "analysis", "health score", "risk", "opportunity", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

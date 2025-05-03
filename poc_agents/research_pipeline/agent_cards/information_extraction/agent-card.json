@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/information-extraction",
+  "agentVersion": "0.1.0",
+  "name": "Information Extraction Agent",
+  "description": "Extracts key facts, statistics, and quotes from raw content",
+  "url": "http://localhost:8012/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "fact_extraction",
+      "name": "Fact Extraction",
+      "description": "Extracts key facts from text"
+    },
+    {
+      "id": "quote_extraction",
+      "name": "Quote Extraction",
+      "description": "Identifies and extracts quotes"
+    },
+    {
+      "id": "data_extraction",
+      "name": "Data Extraction",
+      "description": "Extracts statistical data and figures"
+    }
+  ],
+  "tags": ["extraction", "analysis", "nlp", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "raw_content": {
+        "type": "array",
+        "description": "Array of content to extract from"
+      },
+      "topics": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Topics to focus extraction on"
+      }
+    },
+    "required": ["raw_content"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "extracted_information": {
+        "type": "object",
+        "description": "Structured facts, figures, quotes"
+      },
+      "info_by_subtopic": {
+        "type": "object",
+        "description": "Information organized by research subtopics"
+      }
+    }
+  }
+}

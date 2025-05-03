@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/content-crawler",
+  "agentVersion": "0.1.0",
+  "name": "Content Crawler Agent",
+  "description": "Searches and downloads relevant web content using embeddings for relevance scoring",
+  "url": "http://localhost:8011/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "web_search",
+      "name": "Web Search",
+      "description": "Searches the web for relevant content"
+    },
+    {
+      "id": "content_scraping",
+      "name": "Content Scraping",
+      "description": "Scrapes content from web pages"
+    },
+    {
+      "id": "relevance_scoring",
+      "name": "Relevance Scoring",
+      "description": "Scores content relevance using embeddings"
+    }
+  ],
+  "tags": ["crawler", "search", "scraping", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "search_queries": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Search queries to crawl for"
+      },
+      "relevance_threshold": {
+        "type": "number",
+        "default": 0.7
+      },
+      "max_results_per_query": {
+        "type": "integer",
+        "default": 10
+      }
+    },
+    "required": ["search_queries"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "raw_content": {
+        "type": "array",
+        "description": "Array of scraped content with metadata"
+      },
+      "content_embeddings": {
+        "type": "string",
+        "description": "Base64 encoded numpy array"
+      }
+    }
+  }
+}

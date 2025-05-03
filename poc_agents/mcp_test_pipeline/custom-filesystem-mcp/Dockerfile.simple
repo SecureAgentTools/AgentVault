@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy our custom MCP server implementation
+COPY ./server.js /app/server.js
+
+# Create data directory for file operations
+RUN mkdir -p /data \
+    && chmod 777 /data
+
+# Expose the MCP port
+EXPOSE 8001
+
+# Start the server with the data directory as an argument
+ENTRYPOINT ["node", "server.js", "/data"]

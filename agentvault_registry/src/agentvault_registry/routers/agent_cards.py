@@ -5,7 +5,7 @@ import datetime
 import os
 from typing import Optional, List, Dict, Any, Tuple, Annotated
 
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, func, or_, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import cast, Text
 from sqlalchemy.exc import IntegrityError
@@ -212,6 +212,77 @@ async def get_agent_card(
     return schemas.AgentCardRead.model_validate(response_dict)
 
 
+# --- NEW: Alternative endpoint that uses query parameter instead of path parameter ---
+@router.get(
+    "/by-hri",
+    response_model=schemas.AgentCardRead,
+    summary="Get Agent Card by Human-Readable ID (Query Parameter)",
+    description="Alternative endpoint to retrieve an agent card by HRI using a query parameter.",
+    tags=["Agent Cards"]
+)
+async def get_agent_card_by_hri_query(
+    hri: str = Query(..., description="The humanReadableId of the agent to retrieve"),
+    db: AsyncSession = Depends(database.get_db),
+) -> schemas.AgentCardRead:
+    """
+    Alternative endpoint to retrieve a specific Agent Card by its humanReadableId using a query parameter.
+    This avoids potential issues with URL path parameters containing slashes.
+    """
+    logger.info(f"=== ENDPOINT CALLED: get_agent_card_by_hri_query with HRI: '{hri}' ===")
+    
+    # This HRI comes directly as a query parameter, so no URL decoding needed
+    # But we'll log what we received for debugging
+    logger.info(f"Received HRI query parameter: '{hri}'")
+    
+    # Try a direct database lookup to verify if the card exists
+    try:
+        # Use parameterized query for safety
+        raw_query = text("SELECT COUNT(*) FROM agent_cards WHERE card_data->>'humanReadableId' = :hri")
+        result = await db.execute(raw_query, {"hri": hri})
+        count = result.scalar_one()
+        logger.info(f"Direct DB check: Found {count} cards with humanReadableId '{hri}'")
+        
+        if count > 0:
+            # Also show a sample of what's in the database
+            sample_query = text("SELECT id, name, card_data->>'humanReadableId' AS hri FROM agent_cards LIMIT 3")
+            sample_result = await db.execute(sample_query)
+            sample_rows = sample_result.all()
+            logger.info(f"Sample rows in database: {sample_rows}")
+            
+            # Try a direct retrieval since we know it exists
+            direct_query = text("SELECT * FROM agent_cards WHERE card_data->>'humanReadableId' = :hri")
+            direct_result = await db.execute(direct_query, {"hri": hri})
+            row = direct_result.first()
+            
+            if row:
+                # Use SQLAlchemy's get method to load as proper ORM object
+                card_id = row[0]  # Assuming first column is id
+                orm_query = select(models.AgentCard).options(selectinload(models.AgentCard.developer)).where(models.AgentCard.id == card_id)
+                orm_result = await db.execute(orm_query)
+                card = orm_result.scalar_one_or_none()
+                
+                if card:
+                    response_dict = _build_agent_card_read_dict(card)
+                    return schemas.AgentCardRead.model_validate(response_dict)
+    except Exception as e:
+        logger.warning(f"Error during direct DB check: {e}")
+    
+    # If direct approach didn't work, try the CRUD method  
+    db_card = await agent_card.get_agent_card_by_human_readable_id(db=db, human_readable_id=hri)
+    
+    if db_card is None:
+        logger.error(f"⚠️ Agent card with humanReadableId '{hri}' not found.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Agent Card with humanReadableId '{hri}' not found"
+        )
+    
+    logger.info(f"✓ Successfully found agent card: {db_card.name} (ID: {db_card.id})")
+    
+    response_dict = _build_agent_card_read_dict(db_card) # Helper handles potential missing dev
+    return schemas.AgentCardRead.model_validate(response_dict)
+
+
 # --- PUT /agent-cards/{card_id} ---
 @router.put(
     "/{card_id}",
@@ -333,12 +404,64 @@ async def get_agent_card_by_human_id(
     """
     Public endpoint to retrieve a specific Agent Card by its humanReadableId.
     """
-    logger.info(f"Fetching agent card with humanReadableId: {human_readable_id}")
-    # This CRUD function uses selectinload, which should be fine now
-    db_card = await agent_card.get_agent_card_by_human_readable_id(db=db, human_readable_id=human_readable_id)
+    logger.info(f"=== ENDPOINT CALLED: get_agent_card_by_human_id with HRI: '{human_readable_id}' ===")
+    
+    # URL decoding for human_readable_id which might be sent URL-encoded
+    import urllib.parse
+    # Decode the human_readable_id in case it was URL-encoded by the client
+    try:
+        # Try to decode in case it was sent encoded with %2F for /, etc.
+        decoded_id = urllib.parse.unquote(human_readable_id)
+        logger.info(f"URL-decoded HRI: '{decoded_id}' (original input: '{human_readable_id}')")
+    except Exception as e:
+        logger.warning(f"Error decoding humanReadableId '{human_readable_id}': {e}, proceeding with original value")
+        decoded_id = human_readable_id
+    
+    # Try a direct database lookup to verify if the card exists
+    from sqlalchemy import text
+    try:
+        raw_query = text("SELECT COUNT(*) FROM agent_cards WHERE card_data->>'humanReadableId' = :decoded_id")
+        result = await db.execute(raw_query, {"decoded_id": decoded_id})
+        count = result.scalar_one()
+        logger.info(f"Direct DB check: Found {count} cards with humanReadableId '{decoded_id}'")
+        
+        if count > 0:
+            # Also show a sample of what's in the database
+            sample_query = text("SELECT id, name, card_data->>'humanReadableId' AS hri FROM agent_cards LIMIT 3")
+            sample_result = await db.execute(sample_query)
+            sample_rows = sample_result.all()
+            logger.info(f"Sample rows in database: {sample_rows}")
+            
+            # Since we confirmed it exists, retrieve it directly
+            direct_query = text("SELECT * FROM agent_cards WHERE card_data->>'humanReadableId' = :hri")
+            direct_result = await db.execute(direct_query, {"hri": decoded_id})
+            row = direct_result.first()
+            
+            if row:
+                # Get the UUID from the row (assuming it's the first column)
+                card_id = row[0]
+                
+                # Use regular get_agent_card which we know works
+                card = await agent_card.get_agent_card(db, card_id)
+                
+                if card:
+                    response_dict = _build_agent_card_read_dict(card)
+                    return schemas.AgentCardRead.model_validate(response_dict)
+    except Exception as e:
+        logger.warning(f"Error during direct DB check: {e}")
+        
+    # This CRUD function uses our enhanced query approaches
+    logger.info(f"Calling CRUD function with humanReadableId: '{decoded_id}'")
+    db_card = await agent_card.get_agent_card_by_human_readable_id(db=db, human_readable_id=decoded_id)
+    
     if db_card is None:
-        logger.warning(f"Agent card with humanReadableId '{human_readable_id}' not found.")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Agent Card not found")
+        logger.warning(f"⚠️ Agent card with humanReadableId '{decoded_id}' not found via CRUD function.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Agent Card with humanReadableId '{decoded_id}' not found"
+        )
+    
+    logger.info(f"✓ Successfully found agent card: {db_card.name} (ID: {db_card.id})")
 
     response_dict = _build_agent_card_read_dict(db_card) # Helper handles potential missing dev
     return schemas.AgentCardRead.model_validate(response_dict)
