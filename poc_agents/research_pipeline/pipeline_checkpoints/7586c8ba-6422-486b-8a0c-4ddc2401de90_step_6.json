@@ -1,0 +1,16 @@
+{
+  "line_graph": "<svg width=\"100\" height=\"50\"><text x=\"5\" y=\"15\">Dummy line_graph 1</text></svg>",
+  "viz_metadata": {
+    "visualizations": [
+      {
+        "visualization_id": "viz-visualization-agent-task-9568a222-0",
+        "chart_type": "line_graph",
+        "related_content_ids": [
+          "fact-information-extraction-agent-task-9629d6ce-2",
+          "fact-information-extraction-agent-task-9629d6ce-0",
+          "fact-information-extraction-agent-task-9629d6ce-0"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/dynamics-data-fetcher",
+  "agentVersion": "0.1.0",
+  "name": "Dynamics Data Fetcher Agent (Mock DB)",
+  "description": "Fetches mock Account, Contact, Opportunity, and Case data for a given Account ID from a PostgreSQL database.",
+  "url": "http://localhost:8050/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "get_dynamics_account_data",
+      "name": "Get Dynamics Account Data",
+      "description": "Retrieves related Account, Contact, Opportunity, and Case records from the mock database.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "description": "The Account GUID (e.g., ACC-GUID-001) to fetch data for."
+          }
+        },
+        "required": ["account_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "dynamics_data": {
+            "type": "object",
+            "description": "A dictionary containing fetched account, contacts, opportunities, and cases.",
+            "properties": {
+               "account": {"type": "object", "nullable": true},
+               "contacts": {"type": "array", "items": {"type": "object"}},
+               "opportunities": {"type": "array", "items": {"type": "object"}},
+               "cases": {"type": "array", "items": {"type": "object"}}
+            }
+          }
+        },
+        "required": ["dynamics_data"]
+      }
+    }
+  ],
+  "tags": ["dynamics", "crm", "database", "fetch", "mock", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

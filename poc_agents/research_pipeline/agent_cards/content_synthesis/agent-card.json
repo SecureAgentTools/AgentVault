@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/content-synthesis",
+  "agentVersion": "0.1.0",
+  "name": "Content Synthesis Agent",
+  "description": "Generates coherent article structure and content from verified facts",
+  "url": "http://localhost:8014/a2a",
+  "provider": {
+    "name": "AgentVault Research Pipeline"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["text"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "content_generation",
+      "name": "Content Generation",
+      "description": "Generates article content from facts"
+    },
+    {
+      "id": "structure_creation",
+      "name": "Structure Creation",
+      "description": "Creates logical article structure"
+    },
+    {
+      "id": "citation_management",
+      "name": "Citation Management",
+      "description": "Manages references and citations"
+    }
+  ],
+  "tags": ["synthesis", "writing", "generation", "poc"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "verified_facts": {
+        "type": "object",
+        "description": "Verified facts to synthesize"
+      },
+      "research_plan": {
+        "type": "object",
+        "description": "Original research structure"
+      },
+      "output_format": {
+        "type": "string",
+        "enum": ["markdown", "html"],
+        "default": "markdown"
+      }
+    },
+    "required": ["verified_facts", "research_plan"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "draft_article": {
+        "type": "string",
+        "description": "Markdown formatted article"
+      },
+      "bibliography": {
+        "type": "object",
+        "description": "Structured references"
+      }
+    }
+  }
+}

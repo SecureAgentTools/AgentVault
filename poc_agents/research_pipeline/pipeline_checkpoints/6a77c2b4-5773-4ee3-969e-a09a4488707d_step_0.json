@@ -1,0 +1,50 @@
+{
+  "research_plan": {
+    "main_topic": "The Convergence of AI, IoT, and Edge Computing for Future Smart City Infrastructure",
+    "depth": "comprehensive",
+    "subtopics": [
+      "Real-time Traffic Management",
+      "Predictive Grid Maintenance",
+      "Edge-Based Public Safety Analytics",
+      "Data Privacy Challenges in Integrated Systems"
+    ],
+    "research_questions": [
+      "What is the impact of Real-time Traffic Management?",
+      "What is the impact of Predictive Grid Maintenance?",
+      "What is the impact of Edge-Based Public Safety Analytics?",
+      "What is the impact of Data Privacy Challenges in Integrated Systems?"
+    ]
+  },
+  "search_queries": {
+    "search_queries": [
+      {
+        "subtopic": "Real-time Traffic Management",
+        "queries": [
+          "AI-powered edge computing for real-time traffic management pdf",
+          "IoT-based smart traffic system architecture"
+        ]
+      },
+      {
+        "subtopic": "Predictive Grid Maintenance",
+        "queries": [
+          "Edge computing for predictive maintenance of electrical grids",
+          "Machine learning algorithms for grid failure prediction using IoT data"
+        ]
+      },
+      {
+        "subtopic": "Edge-Based Public Safety Analytics",
+        "queries": [
+          "Edge-based analytics for public safety in smart cities pdf",
+          "Real-time threat detection and response systems for urban areas"
+        ]
+      },
+      {
+        "subtopic": "Data Privacy Challenges in Integrated Systems",
+        "queries": [
+          "Data privacy concerns in integrated AI, IoT, and edge computing systems",
+          "Blockchain-based data ownership and security solutions for smart cities"
+        ]
+      }
+    ]
+  }
+}

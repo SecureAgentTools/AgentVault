@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/ecommerce-user-profile",
+  "agentVersion": "0.1.0",
+  "name": "User Profile Agent",
+  "description": "Retrieves user purchase history, browsing data, and preferences.",
+  "url": "http://localhost:8020/a2a",
+  "provider": {
+    "name": "AgentVault E-commerce Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "profile_retrieval",
+      "name": "User Profile Retrieval",
+      "description": "Fetches user profile data based on user ID.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "The unique identifier for the user."
+          }
+        },
+        "required": ["user_id"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/UserProfileArtifact"
+      }
+    }
+  ],
+  "tags": ["ecommerce", "user", "profile", "database", "poc"],
+  "components": {
+    "schemas": {
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "user_id": {"type": "string"},
+          "purchase_history": {"type": "array", "items": {"type": "string"}},
+          "browsing_history": {"type": "array", "items": {"type": "string"}},
+          "preferences": {
+            "type": "object",
+            "properties": {
+              "categories": {"type": "array", "items": {"type": "string"}},
+              "brands": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "last_active": {"type": "string", "format": "date-time"}
+        },
+        "required": ["user_id"]
+      },
+      "UserProfileArtifact": {
+         "type": "object",
+         "properties": {
+             "user_profile": { "$ref": "#/components/schemas/UserProfile" }
+         },
+         "required": ["user_profile"]
+      }
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "extracted_information": {
+    "extracted_facts": [
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "This is dummy scraped text content for item 1 related to query '{'subtopic': 'Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing', 'queries': ['Edge computing for real-time traffic management', 'AI-driven predictive models for smart traffic systems']}'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/0",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/0",
+        "type": "insight",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "AI-driven predictive models can be used for smart traffic systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/1",
+        "type": "insight",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "This content mentions AI and healthcare ethics, but it does not provide any specific information about real-time traffic management in smart cities using AI, IoT, and edge computing.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/1",
+        "type": "statement",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "This is dummy scraped text content",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/2",
+        "type": "statement",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/2",
+        "type": "insight",
+        "relevance_score": 0.4
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "AI and healthcare ethics are mentioned.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "statement",
+        "relevance_score": 0.6
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "This content is related to query 'Smart city data collection and individual privacy rights'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "insight",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-2",
+        "text": "It mentions AI and IoT.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "statement",
+        "relevance_score": 0.7
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-3",
+        "text": "The content is related to query 'Edge computing implications on data protection and security in smart cities'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "insight",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-4",
+        "text": "There is no explicit mention of edge computing, but it's implied as part of the topic.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "statement",
+        "relevance_score": 0.5
+      }
+    ]
+  },
+  "info_by_subtopic": {
+    "Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing": [
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "This is dummy scraped text content for item 1 related to query '{'subtopic': 'Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing', 'queries': ['Edge computing for real-time traffic management', 'AI-driven predictive models for smart traffic systems']}'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/0",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/0",
+        "type": "insight",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "AI-driven predictive models can be used for smart traffic systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/1",
+        "type": "insight",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "This content mentions AI and healthcare ethics, but it does not provide any specific information about real-time traffic management in smart cities using AI, IoT, and edge computing.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/1",
+        "type": "statement",
+        "relevance_score": 0.2
+      }
+    ],
+    "Edge-Based Public Safety Analytics for Efficient Emergency Response": [
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "This is dummy scraped text content",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/2",
+        "type": "statement",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/2",
+        "type": "insight",
+        "relevance_score": 0.4
+      }
+    ],
+    "Data Privacy Challenges in the Convergence of AI, IoT, and Edge Computing": [
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-0",
+        "text": "AI and healthcare ethics are mentioned.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "statement",
+        "relevance_score": 0.6
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-1",
+        "text": "This content is related to query 'Smart city data collection and individual privacy rights'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "insight",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-2",
+        "text": "It mentions AI and IoT.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "statement",
+        "relevance_score": 0.7
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-3",
+        "text": "The content is related to query 'Edge computing implications on data protection and security in smart cities'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "insight",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-9629d6ce-4",
+        "text": "There is no explicit mention of edge computing, but it's implied as part of the topic.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+        "type": "statement",
+        "relevance_score": 0.5
+      }
+    ]
+  }
+}

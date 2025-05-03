@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/etl-data-extractor",
+  "agentVersion": "0.1.0",
+  "name": "ETL Data Extractor Agent",
+  "description": "Extracts data from a source (e.g., CSV) and stores it as a raw artifact in the database.",
+  "url": "http://localhost:8040/a2a",
+  "provider": {
+    "name": "AgentVault ETL Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "extract_csv_data",
+      "name": "Extract CSV Data",
+      "description": "Reads data from a CSV file and saves it to the artifact database.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "description": "Path to the source CSV file within the agent's container (e.g., /data/input.csv)."
+          },
+          "run_id": {
+            "type": "string",
+            "description": "The unique ID for the current pipeline run."
+          }
+        },
+        "required": ["source_path", "run_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "artifact_db_id": {
+            "type": "integer",
+            "description": "The database ID of the created raw_data artifact."
+          },
+          "rows_extracted": {
+             "type": "integer",
+             "description": "Number of data rows extracted (excluding header)."
+          }
+        },
+        "required": ["artifact_db_id", "rows_extracted"]
+      }
+    }
+  ],
+  "tags": ["etl", "extract", "csv", "database", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

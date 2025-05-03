@@ -16,6 +16,9 @@ import pydantic
 from pydantic_core import ValidationError as PydanticCoreValidationError
 # --- END ADDED ---
 import time
+# --- ADDED: Import urlparse ---
+from urllib.parse import urlparse, urlunparse
+# --- END ADDED ---
 from typing import Optional, Dict, Any, Union, AsyncGenerator, Tuple, List
 
 # Import local models
@@ -23,9 +26,7 @@ from agentvault.models import (
     AgentCard, AgentAuthentication, Message, Task, TaskState, TaskStatusUpdateEvent,
     TaskArtifactUpdateEvent, TaskMessageEvent, TaskSendParams, TaskSendResult,
     TaskGetParams, GetTaskResult, TaskCancelParams, TaskCancelResult, A2AEvent,
-    # --- ADDED: Import TextPart ---
-    TextPart
-    # --- END ADDED ---
+    TextPart, DataPart # Added DataPart
 )
 # Import local exceptions
 from agentvault.exceptions import (
@@ -75,7 +76,7 @@ class AgentVaultClient:
             self._http_client = httpx.AsyncClient(
                 timeout=default_timeout,
                 http2=True,
-                follow_redirects=True
+                follow_redirects=True # Ensure redirects are followed by default
             )
             self._should_close_client = True
         self._token_cache: Dict[str, Tuple[str, Optional[float]]] = {}
@@ -103,7 +104,6 @@ class AgentVaultClient:
         mcp_context: Optional[Dict[str, Any]] = None,
         webhook_url: Optional[str] = None
     ) -> str:
-        # ... (method unchanged) ...
         logger.info(f"Initiating task with agent: {agent_card.human_readable_id}")
         if webhook_url: logger.info(f"Webhook URL provided for push notifications: {webhook_url}")
         try:
@@ -114,8 +114,11 @@ class AgentVaultClient:
                 if formatted_mcp is not None:
                     current_metadata = message_to_send.metadata or {}
                     updated_metadata = {**current_metadata, "mcp_context": formatted_mcp}
-                    try: message_to_send = message_to_send.model_copy(update={'metadata': updated_metadata})
-                    except AttributeError: message_to_send.metadata = updated_metadata
+                    # Use model_copy for immutable models if available
+                    if hasattr(message_to_send, 'model_copy'):
+                        message_to_send = message_to_send.model_copy(update={'metadata': updated_metadata})
+                    else: # Fallback for mutable or older Pydantic
+                         message_to_send.metadata = updated_metadata # type: ignore
                     logger.debug("Successfully formatted and embedded MCP context into message metadata.")
                 else: logger.warning("Failed to format provided MCP context data. Proceeding without embedding it.")
 
@@ -125,7 +128,8 @@ class AgentVaultClient:
             if webhook_url: request_params_dict['webhookUrl'] = webhook_url; logger.debug(f"Adding webhookUrl='{webhook_url}' to initiate task params.")
             request_payload = {"jsonrpc": "2.0", "method": "tasks/send", "params": request_params_dict, "id": request_id}
             logger.debug(f"Initiate task request payload (id: {request_id})")
-            response_data = await self._make_request('POST', str(agent_card.url), headers=auth_headers, json_payload=request_payload, stream=False)
+            # Pass the original agent_card, _make_request handles URL conversion
+            response_data = await self._make_request('POST', agent_card.url, headers=auth_headers, json_payload=request_payload, stream=False)
             try: result_obj = TaskSendResult.model_validate(response_data)
             except pydantic.ValidationError as e: raise A2AMessageError(f"Failed to validate task initiation result structure: {e}") from e
             task_id = result_obj.id
@@ -140,7 +144,6 @@ class AgentVaultClient:
         self, agent_card: AgentCard, task_id: str, message: Message, key_manager: KeyManager,
         mcp_context: Optional[Dict[str, Any]] = None
     ) -> bool:
-        # ... (method unchanged) ...
         logger.info(f"Sending message to task {task_id} on agent: {agent_card.human_readable_id}")
         if not task_id or not isinstance(task_id, str): raise ValueError("Invalid task_id provided for send_message.")
         try:
@@ -150,15 +153,18 @@ class AgentVaultClient:
                 formatted_mcp = format_mcp_context(mcp_context)
                 if formatted_mcp is not None:
                     current_metadata = message_to_send.metadata or {}; updated_metadata = {**current_metadata, "mcp_context": formatted_mcp}
-                    try: message_to_send = message_to_send.model_copy(update={'metadata': updated_metadata})
-                    except AttributeError: message_to_send.metadata = updated_metadata
+                    if hasattr(message_to_send, 'model_copy'):
+                        message_to_send = message_to_send.model_copy(update={'metadata': updated_metadata})
+                    else:
+                         message_to_send.metadata = updated_metadata # type: ignore
                     logger.debug("Successfully formatted and embedded MCP context into message metadata.")
                 else: logger.warning("Failed to format provided MCP context data. Proceeding without embedding it.")
             task_send_params = TaskSendParams(message=message_to_send, id=task_id)
             request_id = f"req-send-{uuid.uuid4()}"; request_params_dict = task_send_params.model_dump(mode='json', exclude_none=True, by_alias=True)
             request_payload = {"jsonrpc": "2.0", "method": "tasks/send", "params": request_params_dict, "id": request_id}
             logger.debug(f"Send message request payload (id: {request_id})")
-            response_data = await self._make_request('POST', str(agent_card.url), headers=auth_headers, json_payload=request_payload, stream=False)
+            # Pass the original agent_card
+            response_data = await self._make_request('POST', agent_card.url, headers=auth_headers, json_payload=request_payload, stream=False)
             try: TaskSendResult.model_validate(response_data)
             except pydantic.ValidationError as e: raise A2AMessageError(f"Failed to validate send message result structure: {e}") from e
             logger.info(f"Message successfully sent to task {task_id} on agent {agent_card.human_readable_id}.")
@@ -170,7 +176,6 @@ class AgentVaultClient:
     async def get_task_status(
         self, agent_card: AgentCard, task_id: str, key_manager: KeyManager
     ) -> Task:
-        # ... (method unchanged) ...
         logger.info(f"Getting status for task {task_id} on agent: {agent_card.human_readable_id}")
         if not task_id or not isinstance(task_id, str): raise ValueError("Invalid task_id provided for get_task_status.")
         try:
@@ -179,7 +184,8 @@ class AgentVaultClient:
             request_id = f"req-get-{uuid.uuid4()}"; request_params_dict = task_get_params.model_dump(mode='json', by_alias=True)
             request_payload = {"jsonrpc": "2.0", "method": "tasks/get", "params": request_params_dict, "id": request_id}
             logger.debug(f"Get task status request payload (id: {request_id})")
-            response_data = await self._make_request('POST', str(agent_card.url), headers=auth_headers, json_payload=request_payload, stream=False)
+            # Pass the original agent_card
+            response_data = await self._make_request('POST', agent_card.url, headers=auth_headers, json_payload=request_payload, stream=False)
             try:
                 task_object = GetTaskResult.model_validate(response_data)
                 logger.info(f"Successfully retrieved status for task {task_id}. State: {task_object.state}")
@@ -193,7 +199,6 @@ class AgentVaultClient:
     async def terminate_task(
         self, agent_card: AgentCard, task_id: str, key_manager: KeyManager
     ) -> bool:
-        # ... (method unchanged) ...
         logger.info(f"Requesting termination for task {task_id} on agent: {agent_card.human_readable_id}")
         if not task_id or not isinstance(task_id, str): raise ValueError("Invalid task_id provided for terminate_task.")
         try:
@@ -202,7 +207,8 @@ class AgentVaultClient:
             request_id = f"req-cancel-{uuid.uuid4()}"; request_params_dict = task_cancel_params.model_dump(mode='json', by_alias=True)
             request_payload = {"jsonrpc": "2.0", "method": "tasks/cancel", "params": request_params_dict, "id": request_id}
             logger.debug(f"Terminate task request payload (id: {request_id})")
-            response_data = await self._make_request('POST', str(agent_card.url), headers=auth_headers, json_payload=request_payload, stream=False)
+            # Pass the original agent_card
+            response_data = await self._make_request('POST', agent_card.url, headers=auth_headers, json_payload=request_payload, stream=False)
             try:
                 result_obj = TaskCancelResult.model_validate(response_data)
                 if not result_obj.success: logger.warning(f"Agent acknowledged termination request for task {task_id} but indicated failure (success=false). Message: {result_obj.message}")
@@ -222,7 +228,15 @@ class AgentVaultClient:
         if not task_id or not isinstance(task_id, str):
              raise ValueError("Invalid task_id provided for receive_messages.")
 
-        url_str = str(agent_card.url)
+        # --- MODIFIED: Ensure trailing slash for SSE URL ---
+        url_obj = urlparse(str(agent_card.url))
+        path = url_obj.path
+        if not path.endswith('/'):
+            path += '/'
+        url_str = urlunparse(url_obj._replace(path=path))
+        logger.debug(f"Ensured SSE URL ends with slash: {url_str}")
+        # --- END MODIFIED ---
+
         request_id = f"req-sub-{uuid.uuid4()}"
         request_payload = {
             "jsonrpc": "2.0",
@@ -242,13 +256,9 @@ class AgentVaultClient:
             async with self._http_client.stream(
                 'POST', url_str, headers=auth_headers, json=request_payload, timeout=None # Use longer/no timeout for streams
             ) as response:
-                # Check initial response status *before* processing stream
-                # Let HTTPStatusError propagate if raised by httpx/respx
                 response.raise_for_status()
-
                 logger.info(f"SSE stream connection successful ({response.status_code}) for {log_context}. Reading lines...")
 
-                # Process the stream line by line using the helper
                 async for event_dict in self._process_sse_stream_lines(response, log_context):
                     event_type = event_dict.get("event_type")
                     event_data = event_dict.get("data")
@@ -263,60 +273,47 @@ class AgentVaultClient:
                         raise A2ARemoteAgentError(message=f"SSE error event received: {err_msg}", response_body=event_data)
 
                     event_model = SSE_EVENT_TYPE_MAP.get(event_type)
-                    # --- MODIFIED: Add continue if event_model is None ---
                     if not event_model:
                         logger.warning(f"Received unknown SSE event type: '{event_type}'. Data: {event_data}")
-                        continue # Skip unknown event types
-                    # --- END MODIFIED ---
+                        continue
 
                     try:
                         validated_event = event_model.model_validate(event_data)
                         logger.debug(f"Yielding validated event: {validated_event!r}")
                         yield validated_event
-                    except (pydantic.ValidationError, PydanticCoreValidationError) as e: # Catch both Pydantic errors
+                    except (pydantic.ValidationError, PydanticCoreValidationError) as e:
                         logger.error(f"Failed to validate SSE event type '{event_type}': {e}. Data: {event_data}")
-                        # Optionally raise or yield an error event here? For now, just log and continue.
                         continue
-                    # --- ADDED: Catch other errors during yield ---
                     except Exception as yield_err:
                         logger.error(f"Unexpected error yielding event type '{event_type}': {yield_err}", exc_info=True)
-                        # Re-raise as A2AError to signal stream failure
                         raise A2AError(f"Error processing received event: {yield_err}") from yield_err
-                    # --- END ADDED ---
 
-        # --- REVISED Exception Handling Order ---
-        except httpx.HTTPStatusError as e: # Catch errors from initial stream connection or raise_for_status
+        except httpx.HTTPStatusError as e:
             logger.error(f"HTTP error establishing or during SSE stream {log_context}: {e.response.status_code}")
             try: error_body = e.response.json()
             except json.JSONDecodeError: error_body = e.response.text
             raise A2ARemoteAgentError(message=f"HTTP error {e.response.status_code} for {log_context}: {e.response.text}", status_code=e.response.status_code, response_body=error_body) from e
-        except httpx.RequestError as e: # Catch network errors during connection or streaming
+        except httpx.RequestError as e:
             logger.error(f"Network error during SSE stream {log_context}: {e}")
             raise A2AConnectionError(f"Network error during SSE stream: {e}") from e
-        # --- MODIFIED: Catch specific A2AError subclasses first ---
-        # --- MODIFIED: Just raise 'e' to preserve cause ---
-        except (A2AAuthenticationError, A2ARemoteAgentError, A2AMessageError, A2ATimeoutError, A2AConnectionError) as e: # Re-raise specific A2A errors
+        except (A2AAuthenticationError, A2ARemoteAgentError, A2AMessageError, A2ATimeoutError, A2AConnectionError) as e:
             logger.error(f"A2A error during event subscription or processing for task {task_id}: {type(e).__name__}: {e}")
-            raise e # Re-raise the original exception to preserve cause
-        # --- END MODIFIED ---
+            raise e
         except KeyManagementError as e:
              logger.error(f"Key management error during event subscription for task {task_id}: {e}")
              raise A2AAuthenticationError(f"Authentication failed due to key management error: {e}") from e
-        # --- MODIFIED: Catch generic A2AError before Exception ---
-        except A2AError as e: # Catch A2AError raised by _process_sse_stream_lines
+        except A2AError as e:
              logger.error(f"A2AError during event subscription processing for task {task_id}: {e}", exc_info=True)
-             raise e # Re-raise the original A2AError
-        except Exception as e: # Catch truly unexpected errors
+             raise e
+        except Exception as e:
             logger.exception(f"Unexpected error during event subscription for task {task_id} on agent {agent_card.human_readable_id}: {e}")
             raise A2AError(f"An unexpected error occurred during event subscription: {e}") from e
-        # --- END MODIFIED ---
         finally:
              logger.debug(f"Finished receiving messages for task {task_id}.")
 
 
     # --- Private Helper Methods ---
     async def _get_auth_headers(self, agent_card: AgentCard, key_manager: KeyManager) -> Dict[str, str]:
-        # ... (method unchanged) ...
         agent_schemes = agent_card.auth_schemes; supported_schemes_str = [s.scheme for s in agent_schemes]; logger.debug(f"Agent supports auth schemes: {supported_schemes_str}")
         api_key_scheme = next((s for s in agent_schemes if s.scheme == 'apiKey'), None)
         if api_key_scheme:
@@ -370,21 +367,32 @@ class AgentVaultClient:
 
 
     async def _make_request(
-        self, method: str, url: str, headers: Optional[Dict[str, str]] = None,
+        self, method: str, url: Union[str, httpx.URL], headers: Optional[Dict[str, str]] = None,
         json_payload: Optional[Dict[str, Any]] = None, stream: bool = False
     ) -> Union[Dict[str, Any], AsyncGenerator[Dict[str, Any], None]]: # Return type hint changed
-        # ... (method unchanged) ...
         if stream:
             raise NotImplementedError("_make_request should not be called with stream=True")
 
+        # --- MODIFIED: Ensure URL ends with slash if it's a base path ---
         url_str = str(url)
+        parsed_url = urlparse(url_str)
+        # Add trailing slash only if path is non-empty, has no extension, and no query/fragment
+        if parsed_url.path and not parsed_url.path.endswith('/') and '.' not in parsed_url.path.split('/')[-1] and not parsed_url.query and not parsed_url.fragment:
+             original_path = parsed_url.path
+             new_path = original_path + '/'
+             url_str = urlunparse(parsed_url._replace(path=new_path))
+             logger.debug(f"Ensured URL path ends with slash: {original_path} -> {new_path}")
+        # --- END MODIFIED ---
+
         request_kwargs = {"method": method, "url": url_str, "headers": headers or {}, "json": json_payload}
         log_context = f"{method} {url_str}"
 
         logger.debug(f"Making non-stream request: {log_context}");
         if json_payload: logger.debug(f"Request payload keys: {list(json_payload.keys())}")
         try:
-            response = await self._http_client.request(**request_kwargs) # Can raise httpx.RequestError
+            # --- MODIFIED: Explicitly follow redirects here ---
+            response = await self._http_client.request(**request_kwargs, follow_redirects=True)
+            # --- END MODIFIED ---
             response.raise_for_status() # Can raise httpx.HTTPStatusError
             try:
                 response_data = response.json() # Can raise json.JSONDecodeError
@@ -398,20 +406,15 @@ class AgentVaultClient:
                 else: raise A2AMessageError(f"Invalid JSON-RPC response from {url_str}: Missing 'result' or 'error' key. Body: {response.text[:200]}...")
             except json.JSONDecodeError as e: logger.error(f"Failed to decode JSON response from {log_context}. Status: {response.status_code}. Response text: {response.text[:200]}..."); raise A2AMessageError(f"Failed to decode JSON response from {url_str}. Status: {response.status_code}. Body: {response.text[:200]}...") from e
 
-        # --- REVISED Exception Handling Order ---
         except httpx.TimeoutException as e: logger.error(f"Request timeout for {log_context}: {e}"); raise A2ATimeoutError(f"Request timed out for {url_str}: {e}") from e
         except httpx.ConnectError as e: logger.error(f"Connection error for {log_context}: {e}"); raise A2AConnectionError(f"Connection failed for {url_str}: {e}") from e
         except httpx.HTTPStatusError as e: logger.error(f"HTTP error on request {log_context}: {e.response.status_code}"); raise A2ARemoteAgentError(message=f"HTTP error {e.response.status_code} for {url_str}: {e.response.text}", status_code=e.response.status_code, response_body=e.response.text) from e
         except httpx.RequestError as e: logger.error(f"HTTP request error for {log_context}: {e}"); raise A2AConnectionError(f"HTTP request failed for {url_str}: {e}") from e
-        except (A2AMessageError, A2AAuthenticationError, A2ARemoteAgentError) as e: logger.error(f"A2A error during request processing for {log_context}: {e}"); raise # Re-raise specific A2A errors
-        # --- ADDED: Catch respx errors specifically if respx is available ---
-        except respx.mock.MockError as e: # Use qualified name
-             # Let respx errors propagate during testing
+        except (A2AMessageError, A2AAuthenticationError, A2ARemoteAgentError) as e: logger.error(f"A2A error during request processing for {log_context}: {e}"); raise
+        except respx.mock.MockError as e: # Use qualified name if respx is imported
              logger.warning(f"Respx mock error caught: {e}") # Log for debugging
              raise e
-        # --- END ADDED ---
         except Exception as e: logger.exception(f"Unexpected error during request {log_context}: {e}"); raise A2AError(f"An unexpected error occurred during the request for {url_str}: {e}") from e
-        # --- END REVISED ---
 
     async def _process_sse_stream_lines(self, response: httpx.Response, log_context: str) -> AsyncGenerator[Dict[str, Any], None]:
         """ Processes a Server-Sent Event line stream from an HTTP response. """
@@ -421,7 +424,6 @@ class AgentVaultClient:
         logger.info(f"Starting SSE stream line processing for: {log_context}")
 
         try:
-            # --- ADDED: Wrap the iteration in try/except ---
             try:
                 async for line in response.aiter_lines():
                     logger.debug(f"SSE Line Received: {line!r}")
@@ -435,28 +437,20 @@ class AgentVaultClient:
                             try:
                                 parsed_data = json.loads(full_data_str) # Parse here
                                 logger.debug(f"Yielding parsed data: {parsed_data}")
-                                # --- ADDED: Try/Except around yield ---
                                 try:
-                                    # --- MODIFIED: Check event type BEFORE yielding ---
                                     if event_type == "error":
                                         logger.error(f"Received SSE error event from agent: {parsed_data}")
-                                        # Optionally raise A2ARemoteAgentError here, or just yield the error dict
                                         yield {"event_type": event_type, "data": parsed_data}
                                     elif event_type in SSE_EVENT_TYPE_MAP:
                                         yield {"event_type": event_type, "data": parsed_data} # Yield parsed data
                                     else:
                                         logger.warning(f"Ignoring unknown SSE event type before yield: '{event_type}'. Data: {parsed_data}")
-                                        # Do not yield unknown types
-                                    # --- END MODIFIED ---
-                                # --- MODIFIED: Correctly re-raise as A2AError ---
                                 except Exception as yield_err:
                                     logger.error(f"Error yielding parsed SSE event (type: {event_type}, data: {parsed_data}): {yield_err}", exc_info=True)
                                     raise A2AError(f"Error processing received event: {yield_err}") from yield_err
-                                # --- END MODIFIED ---
                                 processed_event_count += 1
                             except json.JSONDecodeError as e:
                                 logger.error(f"Failed to decode JSON data for SSE event type '{event_type}': {e}. Data: {full_data_str[:200]}...")
-                                # Raise specific error to be caught by outer A2AError handler
                                 raise A2AMessageError(f"Invalid JSON in SSE data for event '{event_type}'") from e
 
                         data_lines = []
@@ -482,14 +476,11 @@ class AgentVaultClient:
                         logger.warning(f"Error processing SSE line '{line!r}': {line_err}")
 
             except httpx.RemoteProtocolError as e:
-                 # Catch errors specifically related to reading the stream (e.g., connection closed prematurely)
                  logger.error(f"Remote protocol error during SSE stream reading {log_context}: {e}")
                  raise A2AConnectionError(f"Stream connection error: {e}") from e
             except httpx.DecodingError as e:
-                 # Catch errors related to decoding the stream content
                  logger.error(f"Decoding error during SSE stream reading {log_context}: {e}")
                  raise A2AMessageError(f"Stream decoding error: {e}") from e
-            # --- END ADDED ---
 
             logger.debug("Finished iterating through SSE lines.")
 
@@ -498,7 +489,6 @@ class AgentVaultClient:
                  event_type = current_event_type or "message"; full_data_str = '\n'.join(data_lines)
                  try:
                      parsed_data = json.loads(full_data_str)
-                     # --- MODIFIED: Check event type BEFORE yielding ---
                      if event_type == "error":
                          logger.error(f"Received final SSE error event from agent: {parsed_data}")
                          yield {"event_type": event_type, "data": parsed_data}
@@ -506,33 +496,26 @@ class AgentVaultClient:
                          yield {"event_type": event_type, "data": parsed_data};
                      else:
                           logger.warning(f"Ignoring unknown final SSE event type: '{event_type}'. Data: {parsed_data}")
-                     # --- END MODIFIED ---
                      processed_event_count += 1
                  except json.JSONDecodeError as e: logger.error(f"Failed to decode JSON data for final SSE event type '{event_type}': {e}. Data: {full_data_str[:200]}...")
 
-        except httpx.RequestError as e: # Catch errors during stream reading
+        except httpx.RequestError as e:
             logger.error(f"Network error during SSE stream reading {log_context}: {e}")
             raise A2AConnectionError(f"Network error during SSE stream: {e}") from e
-        # --- MODIFIED: Catch specific exceptions first ---
-        except json.JSONDecodeError as e: # Catch potential errors if the overall stream is invalid JSON (less likely for SSE)
+        except json.JSONDecodeError as e:
              logger.error(f"Fatal JSON decode error processing SSE stream {log_context}: {e}", exc_info=True)
              raise A2AMessageError(f"Invalid JSON structure in SSE stream: {e}") from e
-        # --- END MODIFIED ---
-        # --- ADDED: Catch Pydantic validation errors during event processing ---
         except (pydantic.ValidationError, PydanticCoreValidationError) as e:
             logger.error(f"Pydantic validation error processing SSE stream {log_context}: {e}", exc_info=True)
             raise A2AMessageError(f"Invalid event data structure received in SSE stream: {e}") from e
-        # --- END ADDED ---
         except Exception as e:
             logger.error(f"Unexpected error processing SSE stream lines {log_context}: {e}", exc_info=True)
-            # Yield an error event if possible
             try:
                 error_data = {"error": "stream_processing_error", "message": f"Error processing stream: {type(e).__name__}"}
                 yield {"event_type": "error", "data": error_data}
                 processed_event_count += 1
             except Exception as format_err:
                  logger.error(f"Failed to yield SSE processing error event: {format_err}")
-            # Re-raise the original error to signal failure to the caller
             if isinstance(e, A2AError): raise e
             else: raise A2AError(f"An unexpected error occurred during SSE stream processing: {e}") from e
         finally:

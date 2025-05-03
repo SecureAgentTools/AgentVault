@@ -8,6 +8,11 @@ class AgentVaultError(Exception):
     """Base exception for all AgentVault specific errors."""
     pass
 
+# --- Configuration Error ---
+class ConfigurationError(AgentVaultError):
+    """Exception raised for configuration-related errors (e.g., missing settings, invalid setup)."""
+    pass
+
 # --- Agent Card Errors ---
 
 class AgentCardError(AgentVaultError):
@@ -20,7 +25,6 @@ class AgentCardValidationError(AgentCardError):
 
 class AgentCardFetchError(AgentCardError):
     """Exception raised when fetching an Agent Card fails."""
-    # --- ADDED __init__ ---
     def __init__(
         self,
         message: str,
@@ -56,7 +60,6 @@ class AgentCardFetchError(AgentCardError):
             return f"{base_str} ({', '.join(details)})"
         else:
             return base_str
-    # --- END ADDED __init__ ---
 
 
 # --- A2A Protocol Errors ---
@@ -128,5 +131,3 @@ class A2AMessageError(A2AError):
 class KeyManagementError(AgentVaultError):
     """Base exception for errors related to local key management."""
     pass
-
-#

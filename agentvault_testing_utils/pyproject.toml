@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentvault-testing-utils"
-version = "0.1.0"
+version = "1.0.0"
 description = "Shared testing utilities (mocks, fixtures, helpers) for the AgentVault ecosystem."
 authors = ["Raphael Zbigniew Jeziorny <AgentVault@proton.me>"]
 license = "Apache-2.0"

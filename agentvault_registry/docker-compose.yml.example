@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: agentvault_registry_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-agentvault_dev}
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agentvault_registry_db_init
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-agentvault_dev}
+      - API_KEY_SECRET=${API_KEY_SECRET}
+    command: ["/bin/bash", "/app/init-db.sh"]
+
+  registry:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agentvault_registry
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-agentvault_dev}
+      - API_KEY_SECRET=${API_KEY_SECRET}
+    ports:
+      - "${REGISTRY_PORT:-8000}:8000"
+    volumes:
+      - ./:/app/registry_data
+
+volumes:
+  postgres_data:

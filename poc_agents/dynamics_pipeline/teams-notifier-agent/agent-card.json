@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/teams-notifier",
+  "agentVersion": "0.1.0",
+  "name": "Teams Notifier Agent (Mock)",
+  "description": "Mocks sending a Microsoft Teams notification by logging the target and message.",
+  "url": "http://localhost:8058/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "send_teams_notification",
+      "name": "Send Teams Notification (Mock)",
+      "description": "Logs the intended Teams target (webhook/chat ID) and message.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "The target Teams webhook URL or chat ID."
+          },
+          "message_text": {
+            "type": "string",
+            "description": "The text content of the message to send."
+          }
+        },
+        "required": ["target", "message_text"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the mock notification was logged successfully (always true for mock)."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message describing the outcome."
+          }
+        },
+        "required": ["success", "message"]
+      }
+    }
+  ],
+  "tags": ["teams", "notification", "mock", "poc", "execution"],
+  "components": {
+    "schemas": {}
+  }
+}

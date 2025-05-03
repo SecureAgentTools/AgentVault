@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/etl-data-validator",
+  "agentVersion": "0.1.0",
+  "name": "ETL Data Validator Agent",
+  "description": "Validates transformed data fetched from the artifact database based on predefined rules.",
+  "url": "http://localhost:8042/a2a",
+  "provider": {
+    "name": "AgentVault ETL Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "validate_transformed_data",
+      "name": "Validate Transformed Data",
+      "description": "Loads transformed data artifact from DB, validates it, and saves a report artifact to DB.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "transformed_data_artifact_id": {
+            "type": "integer",
+            "description": "The database ID of the 'transformed_data' artifact to validate."
+          },
+          "run_id": {
+            "type": "string",
+            "description": "The unique ID for the current pipeline run."
+          }
+        },
+        "required": ["transformed_data_artifact_id", "run_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "artifact_db_id": {
+            "type": "integer",
+            "description": "The database ID of the created 'validation_report' artifact."
+          },
+          "validation_status": {
+             "type": "string",
+             "enum": ["Success", "Warnings", "Failed"],
+             "description": "Overall validation status based on errors found."
+          },
+          "invalid_rows": {
+              "type": "integer",
+              "description": "Number of rows failing validation."
+          }
+        },
+        "required": ["artifact_db_id", "validation_status", "invalid_rows"]
+      }
+    }
+  ],
+  "tags": ["etl", "validate", "data quality", "database", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/support-kb-search",
+  "agentVersion": "0.1.0",
+  "name": "Knowledge Base Search Agent",
+  "description": "Searches a knowledge base for articles relevant to a support ticket category or keywords.",
+  "url": "http://localhost:8031/a2a",
+  "provider": {
+    "name": "AgentVault Support Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "search_kb",
+      "name": "Search Knowledge Base",
+      "description": "Searches for KB articles based on category and optional keywords.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "The category determined from the ticket analysis (e.g., Billing, Technical)."
+          },
+          "keywords": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Optional list of keywords extracted from the ticket.",
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "default": 5,
+            "description": "Maximum number of articles to return."
+          }
+        },
+        "required": ["category"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/KBSearchResultsArtifact"
+      }
+    }
+  ],
+  "tags": ["support", "kb", "search", "knowledge base", "poc"],
+  "components": {
+    "schemas": {
+      "KnowledgeBaseArticle": {
+        "type": "object",
+        "properties": {
+          "article_id": {"type": "string"},
+          "title": {"type": "string"},
+          "summary": {"type": "string"},
+          "relevance_score": {"type": "number", "format": "float", "nullable": true}
+        },
+        "required": ["article_id", "title", "summary"]
+      },
+      "KBSearchResultsArtifact": {
+         "type": "object",
+         "properties": {
+             "kb_results": {
+                 "type": "array",
+                 "items": { "$ref": "#/components/schemas/KnowledgeBaseArticle" }
+             }
+         },
+         "required": ["kb_results"]
+      }
+    }
+  }
+}

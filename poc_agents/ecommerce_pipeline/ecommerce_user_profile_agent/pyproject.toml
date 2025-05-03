@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "ecommerce-user-profile-agent"
+version = "0.1.0"
+description = "Retrieves user profile data for e-commerce recommendations."
+authors = ["AgentVault E-commerce Demo Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "ecommerce_user_profile_agent", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+fastapi = ">=0.111,<0.112"
+uvicorn = {extras = ["standard"], version = ">=0.29,<0.35"}
+agentvault-server-sdk = {path = "../../../agentvault_server_sdk", develop = true}
+asyncpg = "^0.29.0" # For database access
+python-dotenv = "^1.0.0" # To load .env file
+
+# Base agent dependency (assuming it's not packaged separately)
+# No direct dependency needed if copied into Docker image
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.0,<9.0"
+pytest-asyncio = ">=0.23,<0.24"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

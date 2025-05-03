@@ -1,0 +1,168 @@
+{
+  "extracted_information": {
+    "extracted_facts": [
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "This is dummy scraped text content",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+        "type": "statement",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "It mentions AI",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+        "type": "insight",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "AI and edge computing systems raise significant data privacy concerns.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "Blockchain-based solutions can provide secure data ownership in smart cities.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "insight",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-2",
+        "text": "Data privacy is a pressing issue in integrated AI, IoT, and edge computing systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-3",
+        "text": "Healthcare ethics are closely related to data privacy concerns in integrated systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "insight",
+        "relevance_score": 0.7
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-4",
+        "text": "Smart cities require secure and transparent data management solutions to address data privacy challenges.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "AI and edge computing systems raise significant data privacy concerns.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "Blockchain-based solutions can provide secure data ownership in smart cities.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+        "type": "insight",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "This is dummy scraped text content for item 4 related to query '{'subtopic': 'Predictive Grid Maintenance', 'queries': ['Edge computing for predictive maintenance of electrical grids', 'Machine learning algorithms for grid failure prediction using IoT data']}'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+        "type": "insight",
+        "relevance_score": 0.2
+      }
+    ]
+  },
+  "info_by_subtopic": {
+    "Edge-Based Public Safety Analytics": [
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "This is dummy scraped text content",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+        "type": "statement",
+        "relevance_score": 0.2
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "It mentions AI",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+        "type": "insight",
+        "relevance_score": 0.8
+      }
+    ],
+    "Data Privacy Challenges in Integrated Systems": [
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "AI and edge computing systems raise significant data privacy concerns.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "Blockchain-based solutions can provide secure data ownership in smart cities.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "insight",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-2",
+        "text": "Data privacy is a pressing issue in integrated AI, IoT, and edge computing systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-3",
+        "text": "Healthcare ethics are closely related to data privacy concerns in integrated systems.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "insight",
+        "relevance_score": 0.7
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-4",
+        "text": "Smart cities require secure and transparent data management solutions to address data privacy challenges.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+        "type": "statement",
+        "relevance_score": 0.9
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "AI and edge computing systems raise significant data privacy concerns.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "Blockchain-based solutions can provide secure data ownership in smart cities.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+        "type": "insight",
+        "relevance_score": 0.9
+      }
+    ],
+    "Predictive Grid Maintenance": [
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-0",
+        "text": "This is dummy scraped text content for item 4 related to query '{'subtopic': 'Predictive Grid Maintenance', 'queries': ['Edge computing for predictive maintenance of electrical grids', 'Machine learning algorithms for grid failure prediction using IoT data']}'.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+        "type": "statement",
+        "relevance_score": 0.8
+      },
+      {
+        "id": "fact-information-extraction-agent-task-5456f467-1",
+        "text": "It mentions AI and healthcare ethics.",
+        "source_url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+        "type": "insight",
+        "relevance_score": 0.2
+      }
+    ]
+  }
+}

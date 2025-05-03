@@ -1,0 +1,7 @@
+fastapi>=0.111,<0.112
+uvicorn[standard]>=0.29,<0.35
+python-dotenv>=1.0.0
+# MCP SDK (Optional for this implementation as we handle JSON-RPC manually,
+# but could be useful for standard types or future tool registration)
+# mcp>=0.5.0
+pydantic>=2.0,<3.0 # For potential request/response validation models

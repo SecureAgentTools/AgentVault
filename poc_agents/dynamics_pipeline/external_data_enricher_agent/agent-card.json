@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/external-data-enricher",
+  "agentVersion": "0.1.0",
+  "name": "External Data Enrichment Agent (Mock DB)",
+  "description": "Fetches mock external signals (news, intent, tech) for a given company website from a PostgreSQL database.",
+  "url": "http://localhost:8051/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "get_external_data",
+      "name": "Get External Data",
+      "description": "Retrieves mock external signals for a company based on its website.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "website": {
+            "type": "string",
+            "description": "The company website (e.g., acme.com) used as a lookup key."
+          }
+        },
+        "required": ["website"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "external_data": {
+            "type": "object",
+            "description": "A dictionary containing fetched news, intent signals, and technologies.",
+            "properties": {
+               "news": {"type": "array", "items": {"type": "string"}},
+               "intent_signals": {"type": "array", "items": {"type": "string"}},
+               "technologies": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "required": ["external_data"]
+      }
+    }
+  ],
+  "tags": ["enrichment", "external data", "news", "intent", "technographics", "database", "mock", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

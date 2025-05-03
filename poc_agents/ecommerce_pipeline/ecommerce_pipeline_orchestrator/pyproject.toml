@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "ecommerce-pipeline-orchestrator"
+version = "0.1.0"
+description = "Orchestrator for the multi-agent e-commerce recommendation pipeline using LangGraph."
+authors = ["AgentVault E-commerce Demo Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "ecommerce_orchestrator", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+
+# LangChain & LangGraph
+langgraph = "^0.1.1" # Match langgraph_scrapepipe
+langchain-core = "^0.2.23" # Match langgraph_scrapepipe
+
+# AgentVault Client Library (using path dependency)
+agentvault = {path = "../../../agentvault_library", develop = true}
+
+# Communication & Data Handling
+httpx = {version = ">=0.26.0,<0.27.0", extras = ["http2", "brotli"]} # Match langgraph_scrapepipe
+pydantic = "^2.7.1" # Match langgraph_scrapepipe
+python-dotenv = "^1.0.1" # Match langgraph_scrapepipe
+pydantic-settings = "^2.0" # For loading .env settings
+
+# Resilience
+tenacity = "^8.2.3" # Match langgraph_scrapepipe
+
+# Observability (Optional - for LangSmith)
+# langsmith = "^0.1.88"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.0"
+respx = "^0.21.0"
+pytest-mock = "^3.12.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

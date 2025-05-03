@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/etl-data-loader",
+  "agentVersion": "0.1.0",
+  "name": "ETL Data Loader Agent",
+  "description": "Loads validated data into a target system (mock load for PoC) and stores a confirmation artifact.",
+  "url": "http://localhost:8043/a2a",
+  "provider": {
+    "name": "AgentVault ETL Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "load_validated_data",
+      "name": "Load Validated Data",
+      "description": "Loads transformed data based on validation report and saves confirmation to DB.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "transformed_data_artifact_id": {
+            "type": "integer",
+            "description": "The database ID of the 'transformed_data' artifact."
+          },
+          "validation_report_artifact_id": {
+            "type": "integer",
+            "description": "The database ID of the 'validation_report' artifact."
+          },
+          "run_id": {
+            "type": "string",
+            "description": "The unique ID for the current pipeline run."
+          }
+        },
+        "required": [
+          "transformed_data_artifact_id",
+          "validation_report_artifact_id",
+          "run_id"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "artifact_db_id": {
+            "type": "integer",
+            "description": "The database ID of the created 'load_confirmation' artifact."
+          },
+          "load_status": {
+             "type": "string",
+             "enum": ["Success", "Aborted", "Failed"],
+             "description": "Status of the mock load operation."
+          },
+          "rows_processed": {
+              "type": "integer",
+              "description": "Number of rows considered for loading."
+          },
+          "rows_loaded": {
+              "type": "integer",
+              "description": "Number of rows actually 'loaded' (0 if aborted/failed)."
+          }
+        },
+        "required": ["artifact_db_id", "load_status", "rows_processed", "rows_loaded"]
+      }
+    }
+  ],
+  "tags": ["etl", "load", "database", "poc"],
+  "components": {
+    "schemas": {}
+  }
+}

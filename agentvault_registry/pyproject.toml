@@ -1,7 +1,7 @@
 # Using standard PEP 621 [project] table primarily
 [project]
     name = "agentvault-registry-api"
-    version = "0.1.1"
+    version = "1.0.0"
     description = "Backend API for the AgentVault Central Registry"
     authors = [{ name = "Raphael Zbigniew Jeziorny", email = "AgentVault@proton.me" }]
     license = { text = "Apache-2.0" }
@@ -64,7 +64,7 @@ build-backend = "poetry.core.masonry.api"
 # or specific commands if they rely solely on this section.
 [tool.poetry]
 name = "agentvault-registry-api" # Keep consistent
-version = "0.1.1" # Keep consistent
+version = "1.0.0" # Keep consistent
 description = "" # Can be empty if defined in [project]
 authors = ["Raphael Zbiniew Jeziorny <AgentVault@proton.me>"] # Keep consistent
 packages = [{include = "agentvault_registry", from = "src"}] # Essential for finding the package

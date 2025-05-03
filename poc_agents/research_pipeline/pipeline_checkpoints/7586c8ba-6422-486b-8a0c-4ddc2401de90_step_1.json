@@ -1,0 +1,56 @@
+{
+  "raw_content": [
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/0",
+      "title": "Dummy Article 1 for '{'subtopic': 'Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing', 'queries': ['Edge computing for real-time traffic management', 'AI-driven predictive models for smart traffic systems']}'",
+      "content": "This is dummy scraped text content for item 1 related to query '{'subtopic': 'Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing', 'queries': ['Edge computing for real-time traffic management', 'AI-driven predictive models for smart traffic systems']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing",
+        "queries": [
+          "Edge computing for real-time traffic management",
+          "AI-driven predictive models for smart traffic systems"
+        ]
+      },
+      "timestamp": "2025-04-23T05:28:59.767117+00:00"
+    },
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/1",
+      "title": "Dummy Article 2 for '{'subtopic': 'Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing', 'queries': ['Edge computing for real-time traffic management', 'AI-driven predictive models for smart traffic systems']}'",
+      "content": "This is dummy scraped text content for item 2 related to query '{'subtopic': 'Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing', 'queries': ['Edge computing for real-time traffic management', 'AI-driven predictive models for smart traffic systems']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Real-time Traffic Management in Smart Cities using AI, IoT, and Edge Computing",
+        "queries": [
+          "Edge computing for real-time traffic management",
+          "AI-driven predictive models for smart traffic systems"
+        ]
+      },
+      "timestamp": "2025-04-23T05:28:59.767143+00:00"
+    },
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/2",
+      "title": "Dummy Article 3 for '{'subtopic': 'Edge-Based Public Safety Analytics for Efficient Emergency Response', 'queries': ['Edge computing for real-time public safety analytics', 'AI-driven crime prediction and prevention strategies using IoT sensors']}'",
+      "content": "This is dummy scraped text content for item 3 related to query '{'subtopic': 'Edge-Based Public Safety Analytics for Efficient Emergency Response', 'queries': ['Edge computing for real-time public safety analytics', 'AI-driven crime prediction and prevention strategies using IoT sensors']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Edge-Based Public Safety Analytics for Efficient Emergency Response",
+        "queries": [
+          "Edge computing for real-time public safety analytics",
+          "AI-driven crime prediction and prevention strategies using IoT sensors"
+        ]
+      },
+      "timestamp": "2025-04-23T05:28:59.767152+00:00"
+    },
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-eba400ca/3",
+      "title": "Dummy Article 4 for '{'subtopic': 'Data Privacy Challenges in the Convergence of AI, IoT, and Edge Computing', 'queries': ['Smart city data collection and individual privacy rights', 'Edge computing implications on data protection and security in smart cities']}'",
+      "content": "This is dummy scraped text content for item 4 related to query '{'subtopic': 'Data Privacy Challenges in the Convergence of AI, IoT, and Edge Computing', 'queries': ['Smart city data collection and individual privacy rights', 'Edge computing implications on data protection and security in smart cities']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Data Privacy Challenges in the Convergence of AI, IoT, and Edge Computing",
+        "queries": [
+          "Smart city data collection and individual privacy rights",
+          "Edge computing implications on data protection and security in smart cities"
+        ]
+      },
+      "timestamp": "2025-04-23T05:28:59.767160+00:00"
+    }
+  ]
+}

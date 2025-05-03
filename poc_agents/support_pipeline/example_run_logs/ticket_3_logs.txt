@@ -1,0 +1,62 @@
+Waiting for AgentVault Registry at http://host.docker.internal:8000 to be available...
+AgentVault Registry is available!
+Waiting for support agents to potentially be available (15s)...
+Starting Support Ticket Pipeline Orchestrator via python -m support_orchestrator.run...
+Arguments passed to run.py: Default ticket text default-customer-id
+DEBUG - .env file found at /app/.env
+DEBUG - Config file found at /app/support_config.json
+
+--- FINAL STATE ---
+{
+  "ticket_text": "Default ticket text",
+  "customer_identifier": "default-customer-id",
+  "project_id": "supp-proj-b7cc7f5a",
+  "current_step": "suggest_response",
+  "error_message": null,
+  "ticket_analysis": {
+    "summary": "Summary for ticket from default-customer-id: default ticket text...",
+    "category": "General Inquiry",
+    "sentiment": "Neutral",
+    "extracted_entities": {
+      "product_names": [
+        "MockProduct"
+      ],
+      "order_ids": []
+    }
+  },
+  "kb_results": [
+    {
+      "article_id": "KB-GEN-003",
+      "title": "Service Status Page",
+      "summary": "Check for current outages or scheduled maintenance on our services by visiting our status page at status.example.com.",
+      "relevance_score": 0.61
+    },
+    {
+      "article_id": "KB-GEN-001",
+      "title": "Contacting Customer Support",
+      "summary": "Support is available via live chat (9am-5pm Mon-Fri PST), email (support@example.com - 24hr response target), or phone (limited hours). Check example.com/support for details.",
+      "relevance_score": 0.59
+    },
+    {
+      "article_id": "KB-GEN-002",
+      "title": "Our Data Privacy Policy",
+      "summary": "We are committed to protecting your data privacy according to GDPR and CCPA regulations. You can review our full privacy policy at example.com/privacy for details on data collection, usage, and your rights.",
+      "relevance_score": 0.58
+    }
+  ],
+  "customer_history": {
+    "customer_identifier": "default-customer-id",
+    "status": "Standard",
+    "recent_interaction_summary": "No specific interaction history available for default ID.",
+    "open_tickets": 0
+  },
+  "suggested_response": "Dear default-customer-id,\n\nThank you for reaching out to us about your general inquiry regarding MockProduct. We appreciate your interest in our product and are here to help.\n\nWe noticed that there's no specific interaction history available for you, but please be assured that we're here to assist you with any questions or concerns you may have. \n\nIf you're experiencing an issue with MockProduct or need assistance with a related inquiry, I recommend checking out our service status page at [status page URL] (refer to KB-GEN-003). This will help you stay updated on current outages or scheduled maintenance that might be affecting your experience.\n\nFor any further questions or concerns outside of service status, feel free to reply to this chat, and we'll do our best to provide a solution. \n\nBest regards,\n[Your Name]",
+  "local_artifact_references": {
+    "ticket_analysis": "/app/pipeline_artifacts/support/supp-proj-b7cc7f5a/analyze_ticket/ticket_analysis.json",
+    "kb_results": "/app/pipeline_artifacts/support/supp-proj-b7cc7f5a/fetch_kb_articles/kb_results.json",
+    "customer_history": "/app/pipeline_artifacts/support/supp-proj-b7cc7f5a/fetch_customer_history/customer_history.json",
+    "suggested_response": "/app/pipeline_artifacts/support/supp-proj-b7cc7f5a/suggest_response/suggested_response.txt"
+  },
+  "status": "COMPLETED"
+}
+-------------------

@@ -1,0 +1,56 @@
+{
+  "raw_content": [
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/0",
+      "title": "Dummy Article 1 for '{'subtopic': 'Edge-Based Public Safety Analytics', 'queries': ['Edge-based analytics for public safety in smart cities pdf', 'Real-time threat detection and response systems for urban areas']}'",
+      "content": "This is dummy scraped text content for item 1 related to query '{'subtopic': 'Edge-Based Public Safety Analytics', 'queries': ['Edge-based analytics for public safety in smart cities pdf', 'Real-time threat detection and response systems for urban areas']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Edge-Based Public Safety Analytics",
+        "queries": [
+          "Edge-based analytics for public safety in smart cities pdf",
+          "Real-time threat detection and response systems for urban areas"
+        ]
+      },
+      "timestamp": "2025-04-23T05:41:34.127810+00:00"
+    },
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/1",
+      "title": "Dummy Article 2 for '{'subtopic': 'Data Privacy Challenges in Integrated Systems', 'queries': ['Data privacy concerns in integrated AI, IoT, and edge computing systems', 'Blockchain-based data ownership and security solutions for smart cities']}'",
+      "content": "This is dummy scraped text content for item 2 related to query '{'subtopic': 'Data Privacy Challenges in Integrated Systems', 'queries': ['Data privacy concerns in integrated AI, IoT, and edge computing systems', 'Blockchain-based data ownership and security solutions for smart cities']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Data Privacy Challenges in Integrated Systems",
+        "queries": [
+          "Data privacy concerns in integrated AI, IoT, and edge computing systems",
+          "Blockchain-based data ownership and security solutions for smart cities"
+        ]
+      },
+      "timestamp": "2025-04-23T05:41:34.127834+00:00"
+    },
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/2",
+      "title": "Dummy Article 3 for '{'subtopic': 'Data Privacy Challenges in Integrated Systems', 'queries': ['Data privacy concerns in integrated AI, IoT, and edge computing systems', 'Blockchain-based data ownership and security solutions for smart cities']}'",
+      "content": "This is dummy scraped text content for item 3 related to query '{'subtopic': 'Data Privacy Challenges in Integrated Systems', 'queries': ['Data privacy concerns in integrated AI, IoT, and edge computing systems', 'Blockchain-based data ownership and security solutions for smart cities']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Data Privacy Challenges in Integrated Systems",
+        "queries": [
+          "Data privacy concerns in integrated AI, IoT, and edge computing systems",
+          "Blockchain-based data ownership and security solutions for smart cities"
+        ]
+      },
+      "timestamp": "2025-04-23T05:41:34.127841+00:00"
+    },
+    {
+      "url": "https://dummy-source.com/content-crawler-agent-task-d8c3d806/3",
+      "title": "Dummy Article 4 for '{'subtopic': 'Predictive Grid Maintenance', 'queries': ['Edge computing for predictive maintenance of electrical grids', 'Machine learning algorithms for grid failure prediction using IoT data']}'",
+      "content": "This is dummy scraped text content for item 4 related to query '{'subtopic': 'Predictive Grid Maintenance', 'queries': ['Edge computing for predictive maintenance of electrical grids', 'Machine learning algorithms for grid failure prediction using IoT data']}'. It mentions AI and healthcare ethics.",
+      "query_source": {
+        "subtopic": "Predictive Grid Maintenance",
+        "queries": [
+          "Edge computing for predictive maintenance of electrical grids",
+          "Machine learning algorithms for grid failure prediction using IoT data"
+        ]
+      },
+      "timestamp": "2025-04-23T05:41:34.127849+00:00"
+    }
+  ]
+}

@@ -3,14 +3,12 @@ import uuid
 import math
 import datetime
 import os
+import json # Keep json import for cast
 from typing import Optional, List, Dict, Any, Tuple
 
-# --- MODIFIED: Import func ---
-from sqlalchemy import select, func, or_, cast, Text, and_
-# --- END MODIFIED ---
-# Use ->> operator for JSONB text extraction
+from sqlalchemy import select, func, or_, cast, Text, and_, text
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError # Import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -29,7 +27,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-# --- Placeholder Data Generation ---
+# --- Placeholder Data Generation (Keep as is) ---
 _placeholder_data_cache = {}
 def _get_placeholder_items():
     global _placeholder_data_cache
@@ -89,7 +87,6 @@ def _get_placeholder_items():
 async def create_agent_card(
     db: AsyncSession, developer_id: int, card_create: schemas.AgentCardCreate
 ) -> Optional[models.AgentCard]:
-    """Create a new Agent Card."""
     logger.info(f"Attempting to create Agent Card for developer ID: {developer_id}")
     if not _agentvault_lib_available or AgentCardModel is None:
         logger.warning("Skipping Agent Card validation as 'agentvault' library is not available.")
@@ -133,36 +130,23 @@ async def create_agent_card(
         raise ValueError(f"Unexpected database error: {e}") from e
 
 async def get_agent_card(db: AsyncSession, card_id: uuid.UUID) -> Optional[models.AgentCard]:
-    """Get an Agent Card by its ID."""
-    logger.debug(f"Fetching Agent Card with ID: {card_id}, eagerly loading developer.")
-    if os.environ.get("AGENTVAULT_USE_PLACEHOLDERS", "false").lower() == "true":
-        logger.warning(f"!!! RETURNING PLACEHOLDER DATA FOR get_agent_card ID: {card_id} !!!")
-        placeholder_items = _get_placeholder_items()
-        item = placeholder_items.get(card_id)
-        if item: logger.debug(f"Found placeholder Agent Card: {item.name}")
-        else: logger.debug(f"Placeholder Agent Card with ID {card_id} not found.")
-        return item
-    try:
-        stmt = (
-            select(models.AgentCard)
-            .where(models.AgentCard.id == card_id)
-            .options(selectinload(models.AgentCard.developer))
-        )
-        result = await db.execute(stmt)
-        db_card = result.scalar_one_or_none()
-        if db_card:
-            if db_card.developer: logger.debug(f"Found Agent Card: {db_card.name} (Developer: {db_card.developer.name})")
-            else: logger.warning(f"Found Agent Card {db_card.name} but developer relationship was not loaded/found.")
-        else:
-            logger.debug(f"Agent Card with ID {card_id} not found.")
-        return db_card
-    except Exception as e:
-        logger.error(f"Error fetching Agent Card {card_id}: {e}", exc_info=True)
-        return None
+    logger.info(f"Fetching Agent Card by UUID: {card_id}")
+    stmt = (
+        select(models.AgentCard)
+        .options(selectinload(models.AgentCard.developer)) # Eager load developer
+        .where(models.AgentCard.id == card_id)
+    )
+    result = await db.execute(stmt)
+    card = result.scalar_one_or_none()
+    if card:
+        logger.info(f"Found Agent Card: {card.name} (Developer ID: {card.developer_id})")
+    else:
+        logger.warning(f"Agent Card with UUID {card_id} not found.")
+    return card
 
 async def get_agent_card_by_human_readable_id(db: AsyncSession, human_readable_id: str) -> Optional[models.AgentCard]:
-    """Get an Agent Card by its humanReadableId field in card_data."""
-    logger.debug(f"Fetching Agent Card by humanReadableId: {human_readable_id}")
+    """Retrieves an Agent Card by its humanReadableId field in card_data."""
+    logger.info(f"Fetching Agent Card by humanReadableId: {human_readable_id}")
     if os.environ.get("AGENTVAULT_USE_PLACEHOLDERS", "false").lower() == "true":
         logger.warning(f"!!! RETURNING PLACEHOLDER DATA FOR get_agent_card_by_human_readable_id: {human_readable_id} !!!")
         placeholder_items = _get_placeholder_items()
@@ -170,39 +154,52 @@ async def get_agent_card_by_human_readable_id(db: AsyncSession, human_readable_i
         if item: logger.debug(f"Found placeholder Agent Card by human ID: {item.name}")
         else: logger.debug(f"Placeholder Agent Card with human ID {human_readable_id} not found.")
         return item
+    
     try:
-        # --- MODIFIED QUERY: Use func.lower for case-insensitive comparison ---
-        stmt = (
-            select(models.AgentCard)
-            .where(func.lower(models.AgentCard.card_data['humanReadableId'].cast(Text)) == human_readable_id.lower())
-            .options(selectinload(models.AgentCard.developer))
-        )
-        # --- END MODIFIED QUERY ---
-        result = await db.execute(stmt)
-        db_card = result.scalar_one_or_none()
-        if db_card:
-            logger.debug(f"Found Agent Card by humanReadableId: {db_card.name} (ID: {db_card.id})")
+        # First try to find the card ID using raw SQL
+        find_id_query = text("""
+        SELECT id FROM agent_cards 
+        WHERE LOWER(card_data->>'humanReadableId') = LOWER(:hri)
+        LIMIT 1
+        """)
+        
+        id_result = await db.execute(find_id_query, {"hri": human_readable_id})
+        card_id = id_result.scalar_one_or_none()
+        
+        if card_id:
+            # Now use get_agent_card which properly loads the ORM object
+            return await get_agent_card(db, card_id)
         else:
-            logger.debug(f"Agent Card with humanReadableId '{human_readable_id}' not found.")
-        return db_card
+            # Try to find all agent cards to debug
+            all_cards_sql = text("""
+            SELECT id, name, card_data->>'humanReadableId' as hri 
+            FROM agent_cards 
+            LIMIT 5
+            """)
+            all_cards_result = await db.execute(all_cards_sql)
+            all_cards = all_cards_result.fetchall()
+            logger.info(f"Found {len(all_cards)} total cards in database. Sample: {all_cards}")
+            
+            logger.warning(f"Agent Card with humanReadableId '{human_readable_id}' not found.")
+            return None
     except Exception as e:
         logger.error(f"Error fetching Agent Card by humanReadableId '{human_readable_id}': {e}", exc_info=True)
         return None
 
 async def list_agent_cards(
-    db: AsyncSession, skip: int = 0, limit: int = 100, active_only: bool = True,
-    search: Optional[str] = None, tags: Optional[List[str]] = None,
+    db: AsyncSession,
+    skip: int = 0,
+    limit: int = 100,
+    active_only: bool = True,
+    search: Optional[str] = None,
+    tags: Optional[List[str]] = None,
     developer_id: Optional[int] = None,
     has_tee: Optional[bool] = None,
-    tee_type: Optional[str] = None
+    tee_type: Optional[str] = None,
 ) -> Tuple[List[models.AgentCard], int]:
-    """
-    Retrieves a list of Agent Cards with pagination and optional filtering.
-    """
-    logger.debug(f"Listing Agent Cards: skip={skip}, limit={limit}, active_only={active_only}, search='{search}', tags={tags}, developer_id={developer_id}, has_tee={has_tee}, tee_type='{tee_type}'")
+    logger.info(f"Listing agent cards: skip={skip}, limit={limit}, active={active_only}, search='{search}', tags={tags}, owner={developer_id}, has_tee={has_tee}, tee_type='{tee_type}'")
 
     if os.environ.get("AGENTVAULT_USE_PLACEHOLDERS", "false").lower() == "true":
-        # ... (Placeholder logic - unchanged) ...
         logger.warning("!!! RETURNING PLACEHOLDER DATA FOR list_agent_cards !!!")
         placeholder_items_dict = _get_placeholder_items()
         valid_placeholders = [item for item in placeholder_items_dict.values() if item is not None]
@@ -228,42 +225,57 @@ async def list_agent_cards(
         paginated_items = filtered_items[skip : skip + limit]
         return paginated_items, total_items
 
-    # Base statement
-    base_stmt = select(models.AgentCard)
+    # Base query
+    base_stmt = select(models.AgentCard).options(selectinload(models.AgentCard.developer))
+
+    # Count query (applies filters before counting)
     count_stmt_base = select(func.count(models.AgentCard.id)).select_from(models.AgentCard)
 
-    # Apply filters to both statements
+    # Apply filters to both queries
     filters = []
-    if active_only: filters.append(models.AgentCard.is_active == True)
+    if active_only:
+        filters.append(models.AgentCard.is_active == True)
+    if developer_id is not None:
+        filters.append(models.AgentCard.developer_id == developer_id)
     if search:
-        search_term = f"%{search}%"
-        filters.append(or_(models.AgentCard.name.ilike(search_term), models.AgentCard.description.ilike(search_term)))
-    if tags:
-        if isinstance(tags, list) and tags:
-            try:
-                # Use contains operator for JSONB array
-                filters.append(models.AgentCard.card_data['tags'].contains(tags))
-                logger.debug(f"Applied tag filter using JSONB contains: {tags}")
-            except Exception as json_err:
-                logger.warning(f"Could not apply JSONB contains operator for tag filtering: {json_err}. Skipping tag filter.")
-
-    if developer_id is not None: filters.append(models.AgentCard.developer_id == developer_id)
-
-    # Corrected TEE Filtering
-    if has_tee is True:
-        filters.append(models.AgentCard.card_data['capabilities']['teeDetails'].is_not(None))
-    elif has_tee is False:
-        filters.append(or_(
-            models.AgentCard.card_data['capabilities'].is_(None),
-            models.AgentCard.card_data['capabilities']['teeDetails'].is_(None)
-        ))
-
-    if tee_type:
-        # Fix for tee_type filtering
+        search_term = f"%{search.lower()}%"
         filters.append(
-            func.lower(models.AgentCard.card_data['capabilities']['teeDetails']['type'].cast(Text)) == tee_type.lower()
+            or_(
+                func.lower(models.AgentCard.name).like(search_term),
+                func.lower(models.AgentCard.description).like(search_term),
+            )
         )
+    if tags:
+        filters.append(models.AgentCard.card_data['tags'].cast(JSONB).contains(tags))
 
+    # TEE Filters
+    if has_tee is not None:
+        if has_tee:
+            filters.append(models.AgentCard.card_data['capabilities']['teeDetails'] != None)
+            filters.append(models.AgentCard.card_data['capabilities']['teeDetails'].cast(JSONB) != cast(json.dumps(None), JSONB))
+        else:
+            filters.append(or_(
+                 models.AgentCard.card_data['capabilities']['teeDetails'] == None,
+                 models.AgentCard.card_data['capabilities']['teeDetails'].cast(JSONB) == cast(json.dumps(None), JSONB)
+            ))
+    
+    # For TEE type, use sub-query with raw SQL for reliable behavior
+    if tee_type:
+        # Find IDs of cards with matching TEE type first
+        tee_sql = text("""
+        SELECT id FROM agent_cards 
+        WHERE LOWER(card_data->'capabilities'->'teeDetails'->>'type') = LOWER(:tee_type)
+        """)
+        tee_result = await db.execute(tee_sql, {"tee_type": tee_type})
+        tee_card_ids = [row[0] for row in tee_result.fetchall()]
+        
+        if tee_card_ids:
+            filters.append(models.AgentCard.id.in_(tee_card_ids))
+        else:
+            # If no matches, return empty result
+            return [], 0
+
+    # Apply collected filters
     if filters:
         base_stmt = base_stmt.where(and_(*filters))
         count_stmt_base = count_stmt_base.where(and_(*filters))
@@ -282,7 +294,7 @@ async def list_agent_cards(
     final_stmt = (
         base_stmt
         .options(selectinload(models.AgentCard.developer))
-        .order_by(models.AgentCard.updated_at.desc())
+        .order_by(models.AgentCard.updated_at.desc()) # Example ordering
         .offset(skip)
         .limit(limit)
     )
@@ -290,17 +302,17 @@ async def list_agent_cards(
     try:
         result = await db.execute(final_stmt)
         scalars_result = result.scalars()
-        items = list(scalars_result.all())
-        logger.debug(f"Returning {len(items)} agent cards for the current page.")
+        items = list(scalars_result.all()) # Use list() for safety
+        logger.info(f"Retrieved {len(items)} agent cards for the current page.")
         return items, total_items
     except Exception as e:
         logger.error(f"Error executing agent card list query: {e}", exc_info=True)
-        return [], total_items
+        return [], 0
+
 
 async def update_agent_card(
     db: AsyncSession, db_card: models.AgentCard, card_update: schemas.AgentCardUpdate
 ) -> Optional[models.AgentCard]:
-    """Update an existing Agent Card."""
     logger.info(f"Attempting to update Agent Card ID: {db_card.id}")
     update_data_provided = False
     if card_update.card_data is not None:
@@ -341,7 +353,7 @@ async def update_agent_card(
             db.add(db_card)
             await db.commit()
             await db.refresh(db_card)
-            logger.info(f"Successfully updated Agent Card ID: {db_card.id}")
+            logger.info(f"Successfully updated Agent Card ID: {db_card.id}.")
             return db_card
         except Exception as e:
             await db.rollback()
@@ -352,8 +364,7 @@ async def update_agent_card(
         return db_card
 
 async def delete_agent_card(db: AsyncSession, card_id: uuid.UUID) -> bool:
-    """Soft delete (deactivate) an Agent Card by its ID."""
-    logger.info(f"Attempting to soft delete (deactivate) Agent Card ID: {card_id}")
+    logger.info(f"Attempting to soft delete (deactivate) agent card ID: {card_id}")
     db_card = await get_agent_card(db, card_id)
     if db_card:
         if not db_card.is_active:
@@ -364,13 +375,12 @@ async def delete_agent_card(db: AsyncSession, card_id: uuid.UUID) -> bool:
             db.add(db_card)
             await db.commit()
             await db.refresh(db_card)
-            logger.info(f"Successfully deactivated Agent Card ID: {card_id}")
+            logger.info(f"Successfully deactivated Agent Card ID: {card_id}.")
             return True
         except Exception as e:
             await db.rollback()
-            logger.error(f"Database error deactivating agent card {card_id}: {e}", exc_info=True)
+            logger.error(f"Error deactivating agent card {card_id}: {e}", exc_info=True)
             return False
     else:
         logger.warning(f"Agent Card {card_id} not found for deactivation.")
         return False
-#

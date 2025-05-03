@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/ecommerce-product-catalog",
+  "agentVersion": "0.1.0",
+  "name": "Product Catalog Agent",
+  "description": "Retrieves detailed information about products based on IDs or search terms.",
+  "url": "http://localhost:8021/a2a",
+  "provider": {
+    "name": "AgentVault E-commerce Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "catalog_lookup",
+      "name": "Product Lookup by ID",
+      "description": "Fetches product details for a list of product IDs.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "product_ids": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "A list of product IDs to retrieve."
+          }
+        },
+        "required": ["product_ids"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/ProductDetailsArtifact"
+      }
+    },
+    {
+      "id": "product_search",
+      "name": "Product Search by Term",
+      "description": "Searches for products based on a text query.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "search_term": {
+            "type": "string",
+            "description": "The search term to query the catalog with."
+          },
+           "limit": {
+             "type": "integer",
+             "default": 20
+           }
+        },
+        "required": ["search_term"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/ProductDetailsArtifact"
+      }
+    }
+  ],
+  "tags": ["ecommerce", "product", "catalog", "database", "api", "poc"],
+  "components": {
+    "schemas": {
+      "ProductDetail": {
+        "type": "object",
+        "properties": {
+          "product_id": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string", "nullable": true},
+          "price": {"type": "number", "format": "float", "nullable": true},
+          "category": {"type": "string", "nullable": true},
+          "tags": {"type": "array", "items": {"type": "string"}},
+          "image_url": {"type": "string", "format": "uri", "nullable": true},
+          "stock_level": {"type": "integer", "nullable": true},
+          "attributes": {"type": "object", "additionalProperties": {}}
+        },
+        "required": ["product_id", "name"]
+      },
+      "ProductDetailsArtifact": {
+         "type": "object",
+         "properties": {
+             "product_details": {
+                 "type": "array",
+                 "items": { "$ref": "#/components/schemas/ProductDetail" }
+             }
+         },
+         "required": ["product_details"]
+      }
+    }
+  }
+}

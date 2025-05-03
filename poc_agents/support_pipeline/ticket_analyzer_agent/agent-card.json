@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/support-ticket-analyzer",
+  "agentVersion": "0.1.0",
+  "name": "Support Ticket Analyzer Agent",
+  "description": "Analyzes customer support tickets to determine category, sentiment, and extract key entities.",
+  "url": "http://localhost:8030/a2a",
+  "provider": {
+    "name": "AgentVault Support Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "analyze_ticket_details",
+      "name": "Analyze Ticket Details",
+      "description": "Analyzes ticket text and customer ID to extract insights.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "ticket_text": {
+            "type": "string",
+            "description": "The full text content of the support ticket."
+          },
+          "customer_identifier": {
+            "type": "string",
+            "description": "The unique identifier (e.g., email, user ID) for the customer."
+          }
+        },
+        "required": ["ticket_text", "customer_identifier"]
+      },
+      "output_schema": {
+        "$ref": "#/components/schemas/TicketAnalysisArtifact"
+      }
+    }
+  ],
+  "tags": ["support", "ticket", "analysis", "nlp", "classification", "sentiment", "poc"],
+  "components": {
+    "schemas": {
+      "TicketAnalysis": {
+        "type": "object",
+        "properties": {
+          "summary": {"type": "string"},
+          "category": {"type": "string", "enum": ["Billing", "Technical", "Sales", "General Inquiry", "Unknown"]},
+          "sentiment": {"type": "string", "enum": ["Positive", "Negative", "Neutral"]},
+          "extracted_entities": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "description": "Dictionary mapping entity types (e.g., 'product_names') to lists of found entities."
+          }
+        },
+        "required": ["summary", "category", "sentiment", "extracted_entities"]
+      },
+      "TicketAnalysisArtifact": {
+         "type": "object",
+         "properties": {
+             "ticket_analysis": { "$ref": "#/components/schemas/TicketAnalysis" }
+         },
+         "required": ["ticket_analysis"]
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "search": {
+    "active_engines": [
+      "DuckDuckGo Lite",
+      "Ecosia",
+      "Mojeek"
+    ],
+    "use_fallback_urls": false,
+    "add_fallback_results": false
+  },
+  "scraper": {
+    "max_urls_per_query": 5,
+    "max_total_urls": 20,
+    "scrape_timeout": 20.0,
+    "request_delay_min": 1.0,
+    "request_delay_max": 3.0,
+    "max_content_length": 20000,
+    "max_retries": 3
+  },
+  "orchestration": {
+    "recursion_limit": 15,
+    "artifact_base_path": "D:/AgentVault/poc_agents/langgraph_scrapepipe/pipeline_artifacts"
+  }
+}

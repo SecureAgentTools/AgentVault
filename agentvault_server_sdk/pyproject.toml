@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentvault-server-sdk"
-version = "0.1.1"
+version = "1.0.0"
 description = "Server SDK for building AgentVault A2A compliant agents."
 authors = ["Raphael Zbigniew Jeziorny <AgentVault@proton.me>"]
 license = "Apache-2.0"
@@ -31,7 +31,7 @@ build-backend = "poetry.core.masonry.api"
 # Using standard PEP 621 [project] table primarily
 [project]
     name = "agentvault-server-sdk"
-    version = "0.1.1"
+    version = "1.0.0"
     description = "Server SDK for building AgentVault A2A compliant agents."
     authors = [{ name = "Raphael Zbigniew Jeziorny", email = "AgentVault@proton.me" }]
     license = { text = "Apache-2.0" }
@@ -41,7 +41,7 @@ build-backend = "poetry.core.masonry.api"
         "fastapi>=0.111,<0.112",
         "typer>=0.9.0",
         # Specify library dependency for distribution
-        "agentvault>=0.2.0,<0.3.0"
+        "agentvault>=1.0.0,<2.0.0"
     ]
     # Define console scripts using standard syntax
     [project.scripts]

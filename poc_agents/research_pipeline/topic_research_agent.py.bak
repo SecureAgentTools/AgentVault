@@ -1,0 +1,318 @@
+import logging
+import asyncio
+import json
+# --- ADDED: Import List ---
+from typing import Dict, Any, Union, List
+# --- END ADDED ---
+
+# Import base class and SDK components
+from base_agent import ResearchAgent
+from agentvault_server_sdk.state import TaskState
+from agentvault_server_sdk.exceptions import AgentProcessingError
+
+# Import core library models with fallback
+try:
+    from agentvault.models import Message, TextPart, Artifact
+    _MODELS_AVAILABLE = True
+except ImportError:
+    logging.getLogger(__name__).warning("Core agentvault models not found in topic_research_agent.py. Using placeholders.")
+    class Message: pass # type: ignore
+    class TextPart: pass # type: ignore
+    class Artifact: pass # type: ignore
+    _MODELS_AVAILABLE = False
+
+logger = logging.getLogger(__name__)
+
+AGENT_ID = "topic-research-agent"
+
+class TopicResearchAgent(ResearchAgent):
+    """
+    Analyzes topics, breaks them down, and creates research strategies.
+    """
+    def __init__(self):
+        super().__init__(agent_id=AGENT_ID, agent_metadata={"name": "Topic Research Agent"})
+
+    async def process_task(self, task_id: str, content: Union[str, Dict[str, Any]]):
+        """
+        Processes the topic input to generate a research plan and search queries.
+        """
+        # --- ADDED Logging ---
+        self.logger.info(f"Task {task_id}: ENTERING process_task.")
+        # --- END ADDED ---
+        try:
+            await self.task_store.update_task_state(task_id, TaskState.WORKING)
+            self.logger.info(f"Task {task_id}: State set to WORKING.")
+        except Exception as e:
+            self.logger.exception(f"Task {task_id}: Failed to set state to WORKING: {e}")
+            try:
+                await self.task_store.update_task_state(task_id, TaskState.FAILED, message=f"Initial state update failed: {e}")
+            except Exception as final_err:
+                 self.logger.error(f"Task {task_id}: CRITICAL - Failed to set FAILED state after initial update error: {final_err}")
+            # --- ADDED Logging ---
+            self.logger.info(f"Task {task_id}: EXITING process_task due to initial state update failure.")
+            # --- END ADDED ---
+            return
+
+        try:
+            # --- MODIFIED: Removed redundant check, kept defensive check ---
+            if not isinstance(content, dict):
+                self.logger.error(f"Task {task_id}: Received content is not a dictionary (type: {type(content)}). Content: {content!r}")
+                raise AgentProcessingError(f"Expected dictionary input, but received {type(content)}.")
+            # --- END MODIFIED ---
+
+            topic = content.get("topic")
+            depth = content.get("depth", "standard")
+            focus_areas = content.get("focus_areas", [])
+
+            if not topic:
+                raise AgentProcessingError("Missing 'topic' in input content.")
+
+            self.logger.info(f"Task {task_id}: Topic='{topic}', Depth='{depth}', FocusAreas={focus_areas}")
+
+                        # --- LLM Integration Logic ---
+            self.logger.info(f"Task {task_id}: Calling LLM API for research planning...")
+            
+            # Get LLM settings from environment variables
+            import os
+            llm_api_url = os.getenv("LLM_API_URL", "http://host.docker.internal:1234/v1")
+            llm_api_key = os.getenv("LLM_API_KEY", "not-needed")
+            llm_model = os.getenv("LLM_MODEL", "local-model")
+            llm_temp = float(os.getenv("LLM_TEMPERATURE", "0.7"))
+            enable_llm = os.getenv("ENABLE_LLM", "true").lower() == "true"
+            
+            if enable_llm:
+                try:
+                    # Prepare the prompt
+                    prompt = f"""
+                    You are a research planning assistant.
+                    Create a research plan for the topic: {topic}
+                    Depth of research required: {depth}
+                    Focus areas: {', '.join(focus_areas) if focus_areas else 'General overview'}
+                    
+                    Your task:
+                    1. Break down the main topic into relevant subtopics
+                    2. For each subtopic, generate 1-2 specific research questions
+                    3. For each subtopic, create 1-2 search queries that would yield useful information
+                    
+                    Format your response as JSON:
+                    {{
+                        "main_topic": "The main topic",
+                        "depth": "The research depth",
+                        "subtopics": ["Subtopic 1", "Subtopic 2", ...],
+                        "research_questions": ["Question 1", "Question 2", ...],
+                        "search_queries": ["Query 1", "Query 2", ...]
+                    }}
+                    
+                    Provide ONLY the JSON with no explanation or other text.
+                    """
+                    
+                    # Import HTTP client
+                    import httpx
+                    
+                    # Call LLM API (OpenAI-compatible format for LM-Studio)
+                    self.logger.info(f"Task {task_id}: Sending request to LLM API at {llm_api_url}")
+                    
+                    async with httpx.AsyncClient(timeout=60.0) as client:
+                        response = await client.post(
+                            f"{llm_api_url}/chat/completions",
+                            headers={
+                                "Content-Type": "application/json",
+                                "Authorization": f"Bearer {llm_api_key}"
+                            },
+                            json={
+                                "model": llm_model,
+                                "messages": [
+                                    {"role": "system", "content": "You are a helpful research planning assistant."},
+                                    {"role": "user", "content": prompt}
+                                ],
+                                "temperature": llm_temp
+                            }
+                        )
+                        
+                        # Log the response status
+                        self.logger.info(f"Task {task_id}: LLM API response status: {response.status_code}")
+                        
+                        if response.status_code == 200:
+                            result = response.json()
+                            llm_response = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+                            self.logger.info(f"Task {task_id}: Received response from LLM API")
+                            
+                            # Parse the JSON response from LLM
+                            try:
+                                import json
+                                research_plan = json.loads(llm_response)
+                                self.logger.info(f"Task {task_id}: Successfully parsed LLM response as JSON")
+                                
+                                # Extract components
+                                subtopics = research_plan.get("subtopics", [])
+                                search_queries = research_plan.get("search_queries", [])
+                            except json.JSONDecodeError as e:
+                                self.logger.error(f"Task {task_id}: Failed to parse LLM response as JSON: {e}")
+                                self.logger.debug(f"Raw LLM response: {llm_response}")
+                                # Fall back to placeholder logic
+                                subtopics = [f"{topic} - {area}" for area in focus_areas] if focus_areas else [f"{topic} - Overview", f"{topic} - Details"]
+                                search_queries = [f"{st} current trends" for st in subtopics]
+                        else:
+                            self.logger.error(f"Task {task_id}: LLM API returned error {response.status_code}: {response.text}")
+                            # Fall back to placeholder logic
+                            subtopics = [f"{topic} - {area}" for area in focus_areas] if focus_areas else [f"{topic} - Overview", f"{topic} - Details"]
+                            search_queries = [f"{st} current trends" for st in subtopics]
+                except Exception as llm_err:
+                    self.logger.exception(f"Task {task_id}: Failed to call LLM API: {llm_err}")
+                    # Fall back to placeholder logic
+                    subtopics = [f"{topic} - {area}" for area in focus_areas] if focus_areas else [f"{topic} - Overview", f"{topic} - Details"]
+                    search_queries = [f"{st} current trends" for st in subtopics]
+            else:
+                # LLM is disabled, use placeholder logic
+                self.logger.info(f"Task {task_id}: LLM is disabled, using placeholder logic")
+                subtopics = [f"{topic} - {area}" for area in focus_areas] if focus_areas else [f"{topic} - Overview", f"{topic} - Details"]
+                search_queries = [f"{st} current trends" for st in subtopics]
+            
+            # Construct the research plan
+            research_plan = {
+                "main_topic": topic,
+                "depth": depth,
+                "subtopics": subtopics,
+                "research_questions": [f"What is the impact of {st}?" for st in subtopics]
+            }
+            self.logger.info(f"Task {task_id}: Research plan generated with {len(subtopics)} subtopics and {len(search_queries)} search queries")
+            # --- End LLM Integration Logic ---
+
+            # Notify artifacts
+            if _MODELS_AVAILABLE:
+                try:
+                    self.logger.debug(f"Task {task_id}: Attempting to create and notify plan artifact.")
+                    plan_artifact = Artifact(
+                        id=f"{task_id}-plan", type="research_plan",
+                        content=research_plan,
+                        media_type="application/json"
+                    )
+                    await self.task_store.notify_artifact_event(task_id, plan_artifact)
+                    self.logger.debug(f"Task {task_id}: Plan artifact notification attempt finished.")
+
+                    self.logger.debug(f"Task {task_id}: Attempting to create and notify query artifact.")
+                    query_artifact = Artifact(
+                        id=f"{task_id}-queries", type="search_queries",
+                        content={"search_queries": search_queries},
+                        media_type="application/json"
+                    )
+                    await self.task_store.notify_artifact_event(task_id, query_artifact)
+                    self.logger.debug(f"Task {task_id}: Query artifact notification attempt finished.")
+                except Exception as notify_err:
+                    self.logger.error(f"Task {task_id}: Error during artifact notification: {notify_err}", exc_info=True)
+                    # --- ADDED: Raise error to ensure task fails ---
+                    raise AgentProcessingError(f"Failed during artifact notification: {notify_err}") from notify_err
+                    # --- END ADDED ---
+            else:
+                logger.warning(f"Task {task_id}: Cannot notify artifacts: Core models not available.")
+
+
+            # Notify completion message
+            completion_message = f"Generated research plan and {len(search_queries)} search queries for topic: {topic}"
+            if _MODELS_AVAILABLE:
+                 try:
+                     self.logger.debug(f"Task {task_id}: Attempting to create and notify completion message.")
+                     response_msg = Message(role="assistant", parts=[TextPart(content=completion_message)])
+                     await self.task_store.notify_message_event(task_id, response_msg)
+                     self.logger.debug(f"Task {task_id}: Completion message notification attempt finished.")
+                 except Exception as notify_err:
+                     self.logger.error(f"Task {task_id}: Error during completion message notification: {notify_err}", exc_info=True)
+                     # --- ADDED: Raise error to ensure task fails ---
+                     raise AgentProcessingError(f"Failed during completion message notification: {notify_err}") from notify_err
+                     # --- END ADDED ---
+            else:
+                 logger.info(f"Task {task_id}: {completion_message}")
+
+            self.logger.info(f"Task {task_id}: Attempting to set final state to COMPLETED.")
+            await self.task_store.update_task_state(task_id, TaskState.COMPLETED)
+            self.logger.info(f"Successfully processed research topic for task {task_id}")
+
+        except Exception as e:
+            # --- MODIFIED: Log the exception *before* trying to update state ---
+            self.logger.exception(f"Error processing research topic for task {task_id}: {e}")
+            error_message = f"Failed to process research topic: {e}"
+            # --- END MODIFIED ---
+            try:
+                self.logger.error(f"Task {task_id}: Setting state to FAILED due to error: {e}")
+                await self.task_store.update_task_state(task_id, TaskState.FAILED, message=error_message)
+            except Exception as final_state_err:
+                 self.logger.error(f"Task {task_id}: CRITICAL - Failed to set final FAILED state after error: {final_state_err}")
+            if _MODELS_AVAILABLE:
+                 try:
+                     error_msg_obj = Message(role="assistant", parts=[TextPart(content=error_message)])
+                     await self.task_store.notify_message_event(task_id, error_msg_obj)
+                 except Exception as notify_err:
+                      self.logger.error(f"Task {task_id}: Failed to notify final error message: {notify_err}")
+        finally:
+            # --- ADDED Logging ---
+            self.logger.info(f"Task {task_id}: EXITING process_task.")
+            # --- END ADDED ---
+
+
+# FastAPI app setup
+from fastapi import FastAPI, Depends, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from agentvault_server_sdk import create_a2a_router
+from agentvault_server_sdk.endpoint_adapter import create_injection_router
+import os
+
+# Create agent instance
+agent = TopicResearchAgent()
+
+# Create FastAPI app
+app = FastAPI(title="TopicResearchAgent")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Create both routers with correct configuration
+# 1. The dedicated injection router for BackgroundTasks handling
+injection_router = create_injection_router(agent)
+app.include_router(injection_router, prefix="/a2a")
+
+# 2. The standard A2A router with BackgroundTasks dependency
+standard_router = create_a2a_router(
+    agent,
+    dependencies=[Depends(lambda: BackgroundTasks())]
+)
+app.include_router(standard_router, prefix="/a2a")
+
+# Add a simple debug endpoint to verify routing
+@app.get("/debug/routes")
+async def debug_routes():
+    routes = []
+    for route in app.routes:
+        routes.append({
+            "path": route.path,
+            "methods": getattr(route, "methods", None),
+            "name": route.name
+        })
+    return {"routes": routes}
+
+# Serve agent card
+@app.get("/agent-card.json")
+async def get_agent_card():
+    card_path = os.getenv("AGENT_CARD_PATH", "/app/agent-card.json")
+    try:
+        with open(card_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error(f"Failed to read agent card from {card_path}: {e}")
+        # Fallback - try to read from mounted location
+        try:
+            with open("/app/agent-card.json", "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e2:
+            logger.error(f"Failed to read fallback agent card: {e2}")
+            return {"error": "Agent card not found"}
+
+# Health check
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}

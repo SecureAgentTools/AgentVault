@@ -1,0 +1,68 @@
+{
+  "vip_user@example.com": {
+    "customer_identifier": "vip_user@example.com",
+    "status": "VIP",
+    "recent_interaction_summary": "Resolved issue with Widget Pro firmware update last week via priority chat. Positive feedback received.",
+    "open_tickets": 0
+  },
+  "standard_user_123": {
+    "customer_identifier": "standard_user_123",
+    "status": "Standard",
+    "recent_interaction_summary": "Asked about feature availability 2 months ago. No recent activity.",
+    "open_tickets": 0
+  },
+  "billing_issue@example.net": {
+    "customer_identifier": "billing_issue@example.net",
+    "status": "Standard",
+    "recent_interaction_summary": "Previous ticket regarding invoice INV-98765 discrepancy closed 3 weeks ago.",
+    "open_tickets": 1
+  },
+  "new_customer@sample.org": {
+    "customer_identifier": "new_customer@sample.org",
+    "status": "New",
+    "recent_interaction_summary": "Signed up 2 days ago via website.",
+    "open_tickets": 0
+  },
+  "frustrated_user_xyz": {
+    "customer_identifier": "frustrated_user_xyz",
+    "status": "Churn Risk",
+    "recent_interaction_summary": "Multiple contacts regarding Widget Pro connectivity problems in the last 10 days. Expressed significant dissatisfaction. Last contact 2 days ago.",
+    "open_tickets": 1
+  },
+  "default-customer-id": {
+    "customer_identifier": "default-customer-id",
+    "status": "Standard",
+    "recent_interaction_summary": "No specific interaction history available for default ID.",
+    "open_tickets": 0
+  },
+  "jane.doe@email.co": {
+    "customer_identifier": "jane.doe@email.co",
+    "status": "Standard",
+    "recent_interaction_summary": "Successfully reset password yesterday.",
+    "open_tickets": 0
+  },
+  "enterprise_admin_acme": {
+    "customer_identifier": "enterprise_admin_acme",
+    "status": "VIP",
+    "recent_interaction_summary": "Quarterly check-in call scheduled for next week. Last interaction was adding 10 user licenses.",
+    "open_tickets": 0
+  },
+  "user_id_998877": {
+    "customer_identifier": "user_id_998877",
+    "status": "Standard",
+    "recent_interaction_summary": "Inquired about Enterprise plans 1 month ago via sales form.",
+    "open_tickets": 0
+  },
+  "tech_support_fan": {
+    "customer_identifier": "tech_support_fan",
+    "status": "Standard",
+    "recent_interaction_summary": "Reported minor UI bug (Ticket #55432) which was fixed in last release. Provided positive feedback on fix.",
+    "open_tickets": 0
+  },
+  "needs_help_asap": {
+    "customer_identifier": "needs_help_asap",
+    "status": "Standard",
+    "recent_interaction_summary": "Contacted support 3 times today via chat about payment failure. Issue appears unresolved.",
+    "open_tickets": 2
+  }
+}

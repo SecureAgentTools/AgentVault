@@ -1,0 +1,105 @@
+# Docker Compose file specifically for the MCP Test Pipeline
+# Uses the custom Python/FastAPI filesystem server (with /rpc endpoint)
+# Uses the custom Python/FastAPI code runner server (with /rpc endpoint)
+
+version: '3.8'
+
+services:
+  # --- AgentVault Registry (Required for discovery) ---
+  # Assuming registry is already running externally or via another compose file
+
+  # --- Custom Filesystem MCP Server (Python/FastAPI) ---
+  # Using the Python/FastAPI implementation with the added /rpc endpoint
+  custom-filesystem-mcp:
+    build:
+      context: ./custom-filesystem-mcp
+      dockerfile: Dockerfile # Using the Python/FastAPI implementation
+    container_name: custom-filesystem-mcp
+    ports:
+      - "8001:8001" # Expose the port for the orchestrator wait check
+    volumes:
+      # Mount shared volume to /data inside the container
+      - mcp_shared_data:/data
+    environment:
+      MCP_PORT: 8001 # Port FastAPI/Uvicorn listens on
+      LOG_LEVEL: DEBUG # Match other services
+      MCP_DATA_DIR: /data # Tell the server where the mounted volume is
+      MCP_FS_READ_ONLY: "false" # Allow writes
+      PYTHONPATH: "/app:/app/src" # Explicitly set PYTHONPATH
+    networks:
+      - agentvault_network
+    restart: unless-stopped
+    # Use entrypoint script for proper setup
+    entrypoint: ["/bin/bash", "/app/entrypoint.sh"]
+
+  # --- Custom Code Runner MCP Server (Python/FastAPI) ---
+  # Replaces the Deno-based code-runner-mcp
+  custom-code-runner-mcp:
+    build:
+      context: ./custom-code-runner-mcp # Build from the new directory
+      dockerfile: Dockerfile
+    container_name: custom-code-runner-mcp
+    ports: # Expose only if direct access needed for debugging
+      - "8002:8002"
+    environment:
+      MCP_PORT: 8002 # Port the FastAPI server will listen on
+      LOG_LEVEL: DEBUG # Match other services
+      TIMEOUT_SECONDS: 15 # Example timeout override
+      PYTHONPATH: "/app/src"
+    # No volumes needed unless code execution requires access to shared data
+    # volumes:
+    #   - mcp_shared_data:/data:ro # Example: Mount shared data read-only if needed
+    networks:
+      - agentvault_network
+    restart: unless-stopped
+
+  # --- MCP Tool Proxy Agent ---
+  mcp-tool-proxy-agent:
+    build:
+      context: ../.. # Build from root context
+      dockerfile: ./poc_agents/mcp_test_pipeline/mcp-tool-proxy-agent/Dockerfile
+    container_name: mcp-tool-proxy-agent
+    ports:
+      - "8059:8059"
+    env_file:
+     - ./mcp-tool-proxy-agent/.env # Use its own .env (ensure it points to /rpc endpoints)
+    networks:
+      - agentvault_network
+    depends_on: # Depends on the *custom* MCP servers
+      - custom-filesystem-mcp
+      - custom-code-runner-mcp
+    restart: unless-stopped
+
+  # --- MCP Test Pipeline Orchestrator ---
+  mcp-test-orchestrator:
+    build:
+      context: ../.. # Build from root context
+      dockerfile: ./poc_agents/mcp_test_pipeline/mcp_test_orchestrator/Dockerfile
+    container_name: mcp-test-orchestrator
+    ports:
+      - "8060:8060" # New port for test orchestrator
+    env_file:
+     - ./mcp_test_orchestrator/.env
+    volumes:
+      - mcp_shared_data:/data # Mount shared volume for test scripts/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Allow access to host registry/LLM if needed
+    networks:
+      - agentvault_network
+    depends_on: # Update dependencies
+      - mcp-tool-proxy-agent
+      - custom-filesystem-mcp # Depends on Python FS server
+      - custom-code-runner-mcp # Depends on Python code runner
+      # Add registry dependency if running registry via compose
+    entrypoint: ["/app/entrypoint.sh"]
+    # The command will pass the script path from the orchestrator's run command
+    command: ["--file", "/data/test_script.py"] # Keep this as entrypoint expects it
+    restart: unless-stopped
+
+volumes:
+  mcp_shared_data: # Define the shared volume for file I/O testing
+
+networks:
+  agentvault_network:
+    external: true # Assuming network is created externally
+    name: agentvault_network

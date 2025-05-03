@@ -1,0 +1,23 @@
+{
+  "ticket_analyzer_agent": {
+    "hri": "local-poc/support-ticket-analyzer"
+  },
+  "kb_search_agent": {
+    "hri": "local-poc/support-kb-search"
+  },
+  "customer_history_agent": {
+    "hri": "local-poc/support-customer-history"
+  },
+  "response_suggester_agent": {
+    "hri": "local-poc/support-response-suggester"
+  },
+  "orchestration": {
+    "recursion_limit": 15,
+    "artifact_base_path": "/app/pipeline_artifacts/support",
+    "registry_url": "http://host.docker.internal:8000"
+  },
+  "timeouts": {
+    "agent_call_timeout": 120.0,
+    "sse_stream_timeout": 300.0
+  }
+}

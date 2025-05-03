@@ -1,0 +1,58 @@
+{
+  "search": {
+    "active_engines": [
+      "DuckDuckGo Lite",
+      "Ecosia",
+      "Mojeek"
+    ],
+    "use_fallback_urls": true,
+    "add_fallback_results": true
+  },
+  "scraper": {
+    "max_urls_per_query": 5,
+    "max_total_urls": 20,
+    "scrape_timeout": 20.0,
+    "request_delay_min": 1.0,
+    "request_delay_max": 3.0,
+    "max_content_length": 20000,
+    "max_retries": 3
+  },
+  "fact_extraction": {
+    "min_fact_chars": 50,
+    "max_facts_per_content": 5,
+    "extract_direct_quotes": true,
+    "prioritize_statistics": true
+  },
+  "fact_verification": {
+    "use_authority_scores": true,
+    "min_confidence_threshold": 0.6,
+    "detect_contradictions": true,
+    "authority_score_weight": 0.7
+  },
+  "visualization": {
+    "max_visualizations": 5,
+    "prefer_chart_types": [
+      "bar_chart",
+      "pie_chart",
+      "line_graph"
+    ],
+    "facts_per_visualization": 5,
+    "generate_svg_content": false
+  },
+  "content_synthesis": {
+    "max_article_length": 5000,
+    "include_executive_summary": true,
+    "citation_style": "inline",
+    "include_images_placeholder": true
+  },
+  "editor": {
+    "style_guide": "academic",
+    "reading_level_target": "college",
+    "tone": "neutral",
+    "suggest_improvements": true
+  },
+  "orchestration": {
+    "recursion_limit": 15,
+    "artifact_base_path": "D:/AgentVault/poc_agents/langgraph_scrapepipe/pipeline_artifacts"
+  }
+}

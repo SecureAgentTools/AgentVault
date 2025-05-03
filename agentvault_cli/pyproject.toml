@@ -1,7 +1,7 @@
 # Using standard PEP 621 [project] table primarily
 [project]
     name = "agentvault-cli"
-    version = "0.1.1"
+    version = "1.0.0"
     description = "Command-line client for the AgentVault ecosystem."
     authors = [{ name = "Raphael Zbigniew Jeziorny", email = "AgentVault@proton.me" }]
     license = { text = "Apache-2.0" }
@@ -28,7 +28,7 @@
         "asyncclick>=8.0,<9.0",
         "httpx>=0.26.0,<0.27.0", # Keep downgraded httpx
         "rich>=13.0,<15.0",
-        "agentvault>=0.2.0,<0.3.0"
+        "agentvault>=1.0.0,<2.0.0"
     ]
 
     [project.scripts]
@@ -56,7 +56,7 @@ build-backend = "poetry.core.masonry.api"
 
 # --- Poetry Specific Configuration (Minimal) ---
 [tool.poetry]
-version = "0.1.1" # Keep consistent with [project] for poetry commands
+version = "1.0.0" # Keep consistent with [project] for poetry commands
 # --- MODIFIED: Point to src directory ---
 packages = [{include = "agentvault_cli", from = "src"}]
 # --- END MODIFIED ---

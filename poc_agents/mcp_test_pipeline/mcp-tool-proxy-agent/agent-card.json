@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/mcp-tool-proxy",
+  "agentVersion": "0.1.0",
+  "name": "MCP Tool Proxy Agent",
+  "description": "Proxies AgentVault A2A requests to locally hosted MCP-compliant tool servers.",
+  "url": "http://localhost:8059/a2a",
+  "provider": {
+    "name": "AgentVault Test Team"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent (PoC)."
+    }
+  ],
+  "skills": [
+    {
+      "id": "mcp.execute_tool",
+      "name": "Execute MCP Tool",
+      "description": "Executes a specific tool via a configured underlying MCP server.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "target_mcp_server_id": {
+            "type": "string",
+            "description": "Logical identifier for the target MCP server (e.g., 'filesystem', 'code-runner'). Must match a key in the proxy's MCP_SERVER_MAP config."
+          },
+          "tool_name": {
+            "type": "string",
+            "description": "The fully qualified name of the tool on the target MCP server (e.g., 'filesystem.readFile', 'code.runPython')."
+          },
+          "arguments": {
+            "type": "object",
+            "description": "Arguments for the tool (structure depends on the tool's inputSchema)."
+          }
+        },
+        "required": ["target_mcp_server_id", "tool_name", "arguments"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the underlying MCP tool call was successful."
+          },
+          "mcp_result": {
+             "type": ["object", "null"],
+             "description": "The 'result' object from the MCP server response if successful.",
+             "properties": {
+                "content": {
+                    "type": "array",
+                    "items": {"type": "object"}
+                 }
+             }
+          },
+          "error": {
+            "type": ["object", "null"],
+            "description": "Structured error details if the operation failed.",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": ["A2A_PROXY", "MCP_PROTOCOL", "MCP_TOOL"],
+                "description": "Origin of the error."
+              },
+              "code": {
+                "type": "string",
+                "description": "Machine-readable error code."
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable error message."
+              },
+              "details": {
+                "type": ["object", "null"],
+                "description": "Optional additional error context (e.g., raw MCP error)."
+              }
+            },
+            "required": ["source", "code", "message"]
+          }
+        },
+        "required": ["success", "mcp_result", "error"]
+      }
+    }
+  ],
+  "tags": ["mcp", "proxy", "tools", "execution", "filesystem", "code", "poc", "test-pipeline"],
+  "components": {
+    "schemas": {}
+  }
+}

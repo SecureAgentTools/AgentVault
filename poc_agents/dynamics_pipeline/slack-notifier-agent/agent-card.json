@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/slack-notifier",
+  "agentVersion": "0.1.0",
+  "name": "Slack Notifier Agent (Mock)",
+  "description": "Mocks sending a Slack notification by logging the target and message.",
+  "url": "http://localhost:8057/a2a",
+  "provider": {
+    "name": "AgentVault Dynamics Demo"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "send_slack_notification",
+      "name": "Send Slack Notification (Mock)",
+      "description": "Logs the intended Slack target and message.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "The target Slack channel or user ID (e.g., '#alerts', 'U123ABC')."
+          },
+          "message_text": {
+            "type": "string",
+            "description": "The text content of the message to send."
+          }
+        },
+        "required": ["target", "message_text"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the mock notification was logged successfully (always true for mock)."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message describing the outcome."
+          }
+        },
+        "required": ["success", "message"]
+      }
+    }
+  ],
+  "tags": ["slack", "notification", "mock", "poc", "execution"],
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,183 +1,70 @@
-```markdown
-# Model Context Protocol (MCP) - AgentVault Profile
+# Model Context Protocol (MCP) Profile (Concept)
 
-## Introduction
+**Status:** Defined & Implemented via Proxy Pattern
 
-The AgentVault Agent-to-Agent (A2A) protocol defines the core mechanisms for secure communication, task management, and event streaming between agents. However, many complex agent interactions require more than just the primary message content. Agents often need additional **context** to perform their tasks effectively. This could include:
+## 1. Introduction
 
-*   User profile information
-*   Relevant snippets from previous interactions
-*   Metadata about the environment
-*   References to external files or data artifacts
-*   Schema definitions for expected inputs/outputs
-*   Tool descriptions and schemas
+The Model Context Protocol (MCP) provides a standardized interface for AgentVault components (like orchestrators or other agents) to discover and execute external **Tools**. MCP enables interaction with capabilities that might reside outside the core A2A agent network, such as secure code execution environments, dedicated filesystem access points, specialized database query engines, or specific hardware interactions.
 
-The **Model Context Protocol (MCP)** is designed to be the standardized way to provide this richer context within the AgentVault ecosystem. It is *not* a separate transport protocol but rather a defined structure for embedding context *within* standard A2A messages.
+**Goal:** To enable standardized, reusable, and potentially secured access to a wide range of external capabilities within the AgentVault ecosystem, complementing the more general-purpose A2A protocol.
 
-## Current Status
+## 2. Protocol Basics
 
-**Evolving Specification:** It's important to note that the formal MCP specification is still evolving within the broader AI agent community. The implementation within AgentVault currently represents a **basic, conceptual profile** based on common needs observed during development.
-
-**Implementation:** The core `agentvault` library provides utilities (`agentvault.mcp_utils`) for formatting and validating a basic MCP structure, and the `agentvault-server-sdk` provides helpers for extracting it on the agent side. Future versions of AgentVault will align with and potentially contribute to more formalized MCP standards as they emerge.
-
-## Transport Mechanism
-
-MCP context is transported within the `metadata` field of standard A2A `Message` objects (defined in `agentvault.models`). Specifically, the formatted MCP payload is expected under the key `"mcp_context"`.
+*   **Transport:** MCP uses HTTP/1.1 or HTTP/2, typically over TLS (HTTPS).
+*   **Message Format:** MCP utilizes **JSON-RPC 2.0** ([Specification](https://www.jsonrpc.org/specification)) for all request/response interactions.
+    *   Standard JSON-RPC fields (`jsonrpc`, `id`, `method`, `params`, `result`, `error`) are used.
+*   **Tool Naming:** Tools are identified using a namespace convention, typically `namespace.toolName` (e.g., `filesystem.readFile`, `code.runPython`).
+*   **Standard Results:** Successful tool executions return a JSON-RPC `result` object, conventionally containing a `content` array of standardized data structures (e.g., `{"type": "text", "text": "..."}`, `{"type": "code_output", "stdout": "...", "stderr": "..."}`).
+*   **Tool Errors:** Tool-specific execution errors (e.g., file not found, code execution timeout) are typically reported within the JSON-RPC `result` object by setting an `"isError": true` flag and providing error details within the `content` array, distinct from JSON-RPC protocol errors.
 
 ```json
+// Example MCP Success Result
 {
-  "role": "user",
-  "parts": [
-    { "type": "text", "content": "Refactor the attached Python script." }
-    // Potentially other parts like FilePart referencing the script
-  ],
-  "metadata": {
-    "timestamp": "...",
-    "client_request_id": "...",
-    // MCP context is embedded here:
-    "mcp_context": {
-       // ... MCP payload structure ...
-    }
+  "jsonrpc": "2.0",
+  "id": "req-123",
+  "result": {
+    "content": [{"type": "text", "text": "Content of the file."}]
+  }
+}
+
+// Example MCP Tool Error Result
+{
+  "jsonrpc": "2.0",
+  "id": "req-456",
+  "result": {
+    "isError": true,
+    "content": [{"type": "text", "text": "Error: File not found at specified path."}]
   }
 }
 ```
 
-## Conceptual Structure (Based on Current Implementation)
+## 3. Integration with AgentVault (A2A Proxy Pattern)
 
-The current implementation in `agentvault.mcp_utils` defines a basic structure using Pydantic models as placeholders.
+While direct client-side support for MCP calls may be added to the `agentvault` library in the future, the **current recommended and proven pattern** for integrating MCP tools into AgentVault workflows is via a dedicated **MCP Tool Proxy Agent**.
 
-1.  **`MCPContext` (Root Object):**
-    *   The top-level container for the context.
-    *   Currently defined with a single primary field:
-        *   `items`: A dictionary where keys are unique identifiers/names for context items, and values are `MCPItem` objects.
+*   **MCP Tool Proxy Agent:** An A2A-compliant agent (built using the `agentvault-server-sdk`) acts as a bridge.
+*   **Workflow:**
+    1.  An Orchestrator (or other A2A client) sends a standard A2A `tasks/send` request to the Proxy Agent. The request's `DataPart` specifies the target tool server (e.g., by a logical ID like `"filesystem"`), the tool name (`filesystem.readFile`), and the arguments (`{"path": "/data/file.txt"}`).
+    2.  The Proxy Agent looks up the actual network address of the target MCP Tool Server based on the provided ID (often configured via environment variables).
+    3.  The Proxy Agent constructs and sends a standard MCP JSON-RPC 2.0 request over HTTP to the target Tool Server's `/rpc` endpoint.
+    4.  The MCP Tool Server executes the tool and returns a JSON-RPC 2.0 response (containing either a `result` or an `error`).
+    5.  The Proxy Agent receives the MCP response and translates it back into a standard A2A task result (e.g., putting the MCP `result` or error details into a `DataPart` artifact or message).
+    6.  The Orchestrator receives the outcome of the tool execution via the A2A protocol from the Proxy Agent.
 
-2.  **`MCPItem` (Individual Context Piece):**
-    *   Represents a single piece of contextual information.
-    *   Fields:
-        *   `id` (Optional `str`): A unique identifier for this specific item within the context payload.
-        *   `mediaType` (Optional `str`): The MIME type of the `content` if applicable (e.g., "text/plain", "application/json", "text/csv").
-        *   `content` (Optional `Any`): The actual contextual data itself (e.g., a string, dictionary, list). Used for embedding smaller pieces of context directly.
-        *   `ref` (Optional `str`): A reference (e.g., a URL, artifact ID) pointing to external context information, often used for larger data.
-        *   `metadata` (Optional `Dict[str, Any]`): Additional key-value metadata specific to this context item.
+*   **Benefits:** This pattern decouples the A2A and MCP domains, allowing orchestrators to leverage MCP tools without implementing MCP specifics. It centralizes the logic for communicating with different tool servers within the proxy.
+*   **Demonstration:** The **[MCP Test Pipeline Example](./examples/poc_mcp_pipeline.md)** successfully implements this pattern, showcasing interaction with custom Python-based MCP servers for filesystem and code execution tasks.
 
-**Example `mcp_context` Payload:**
+## 4. MCP Tool Servers
 
-```json
-"mcp_context": {
-  "items": {
-    "user_profile": {
-      "mediaType": "application/json",
-      "content": {
-        "user_id": "usr_123",
-        "preferences": {"theme": "dark"},
-        "permissions": ["read", "write"]
-      },
-      "metadata": {"source": "internal_db"}
-    },
-    "target_document": {
-      "mediaType": "application/pdf",
-      "ref": "s3://my-bucket/documents/report.pdf",
-      "metadata": {"version": "1.2"}
-    },
-    "system_instruction_override": {
-        "mediaType": "text/plain",
-        "content": "Focus specifically on the financial results section.",
-        "id": "instr-001"
-    }
-  }
-}
-```
+These are the actual services performing the work. They only need to expose an HTTP endpoint (e.g., `/rpc`) that accepts JSON-RPC 2.0 requests for their specific tools.
 
-## Client-Side Usage (AgentVault Library)
+*   **Examples:**
+    *   `custom-filesystem-mcp`: Provides `filesystem.readFile`, `filesystem.writeFile`, `filesystem.listDirectory`.
+    *   `custom-code-runner-mcp`: Provides `code.runPython`.
+*   **Implementation:** Can be built using any web framework capable of handling JSON-RPC over HTTP (like FastAPI, Express, etc.). The AgentVault project provides examples using Python/FastAPI.
 
-The `agentvault.client.AgentVaultClient` provides optional parameters in its `initiate_task` and `send_message` methods to include MCP context:
+## 5. Future Directions
 
-```python
-# Example using agentvault library
-from agentvault import AgentVaultClient, KeyManager, Message, TextPart, agent_card_utils
-from agentvault.models import AgentCard # Assuming AgentCard is available
-
-# Assume agent_card, key_manager are loaded/initialized
-client = AgentVaultClient()
-initial_message = Message(role="user", parts=[TextPart(content="Analyze this data.")])
-
-# Define the context payload
-mcp_payload = {
-    "items": {
-        "data_reference": {
-            "ref": "https://data.example.com/dataset.csv",
-            "mediaType": "text/csv"
-        },
-        "analysis_params": {
-            "content": {"mode": "deep", "output_format": "json"},
-            "mediaType": "application/json"
-        }
-    }
-}
-
-try:
-    # Pass the payload to initiate_task
-    task_id = await client.initiate_task(
-        agent_card=agent_card,
-        initial_message=initial_message,
-        key_manager=key_manager,
-        mcp_context=mcp_payload # Pass the context dictionary here
-    )
-    print(f"Task initiated with MCP context, ID: {task_id}")
-
-    # ... handle subsequent events ...
-
-except Exception as e:
-    print(f"Error: {e}")
-
-```
-
-The client library uses `agentvault.mcp_utils.format_mcp_context` internally to perform basic validation against the placeholder Pydantic models and embed the formatted context into `message.metadata["mcp_context"]` before sending the request.
-
-## Server-Side Usage (AgentVault Server SDK)
-
-Agents built using the `agentvault-server-sdk` can easily extract the MCP context from incoming messages using the provided utility function:
-
-```python
-# Example within an AgentVault SDK Agent method
-from agentvault_server_sdk import BaseA2AAgent
-from agentvault_server_sdk.mcp_utils import get_mcp_context
-from agentvault.models import Message # Assuming Message is available
-
-class MyAgent(BaseA2AAgent):
-    # ... other methods ...
-
-    async def handle_task_send(self, task_id: Optional[str], message: Message) -> str:
-        # Extract MCP context
-        mcp_data = get_mcp_context(message)
-
-        if mcp_data:
-            print(f"Received MCP context for task {task_id or 'new'}: {mcp_data}")
-            # Access specific items
-            user_profile = mcp_data.get("items", {}).get("user_profile")
-            if user_profile and user_profile.get("content"):
-                user_id = user_profile["content"].get("user_id")
-                print(f"User ID from MCP: {user_id}")
-            # ... process context items ...
-        else:
-            print(f"No valid MCP context found in message for task {task_id or 'new'}.")
-
-        # ... rest of task handling logic ...
-        new_task_id = f"task-{uuid.uuid4().hex[:6]}"
-        # ... store task state, start background work etc ...
-        return new_task_id
-
-```
-
-The `get_mcp_context` function safely checks for the presence and type of `message.metadata` and the `"mcp_context"` key, returning the dictionary if found, or `None` otherwise.
-
-## Future Directions
-
-As MCP standards solidify, AgentVault plans to:
-
-*   Adopt or contribute to official schema definitions.
-*   Enhance validation logic in `mcp_utils`.
-*   Potentially provide more structured ways to interact with specific MCP item types within the SDK.
-
-The current implementation provides a flexible placeholder mechanism for passing structured context alongside core A2A messages.
-```
+*   Formalizing standard MCP tool namespaces and content types.
+*   Defining a standard MCP-based tool discovery mechanism.
+*   Potentially adding direct MCP client capabilities to the `agentvault` library.

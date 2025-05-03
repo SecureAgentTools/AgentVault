@@ -1,52 +1,69 @@
-# AgentVault
+# AgentVault: Secure & Interoperable AI Agent Communication
 
-**AgentVault is an open-source ecosystem designed to facilitate secure and interoperable communication between AI agents (Agent-to-Agent or A2A).**
+<figure markdown="span">
+  ![AgentVault Conceptual Vision](assets/images/AVconceptArt2.png){ width="800" }
+  <figcaption>Figure 1: An artistic vision representing the potential of the AgentVault ecosystem.</figcaption>
+</figure>
 
-This project provides libraries, tools, and specifications to enable seamless interaction in a multi-agent world.
+**The AI agent revolution is here, but agents often exist in isolated silos.** How can diverse AI agents discover each other, communicate securely, and collaborate effectively to solve complex problems?
 
----
-
-**➡️ Public Registry & UI Available!**
-
-A live instance of the AgentVault Registry API and its associated Web UI is hosted at:
-**[`https://agentvault-registry-api.onrender.com`](https://agentvault-registry-api.onrender.com)**
-
-*   **Public Discovery UI:** [`https://agentvault-registry-api.onrender.com/ui`](https://agentvault-registry-api.onrender.com/ui)
-*   **Developer Portal UI:** [`https://agentvault-registry-api.onrender.com/ui/developer`](https://agentvault-registry-api.onrender.com/ui/developer) (Login/Register here to manage agents)
-*   **API Base:** `https://agentvault-registry-api.onrender.com/api/v1`
-*   **Note (Cold Start):** This is hosted on Render's free tier. If inactive, it may take **up to 60 seconds** to "wake up" on the first request. You can visit the `/health` endpoint or the UI to wake it up.
+**AgentVault provides the open-source (Apache 2.0) foundational infrastructure layer.** We build the secure, standardized "plumbing" – protocols, tools, and services – enabling a truly interconnected and interoperable multi-agent future.
 
 ---
 
-**➡️ For detailed documentation, please visit the [AgentVault Documentation Hub](index.md) ⬅️**
+## Unlock Collaborative AI Potential
+
+AgentVault empowers developers and organizations to move beyond isolated AI tools towards sophisticated, collaborative systems.
+
+*   **Problem:** Integrating disparate agents requires custom, brittle code; secure communication and discovery are challenging.
+*   **Solution:** AgentVault provides the **standardized rails** for secure discovery ([Registry](developer_guide/registry.md)), communication ([A2A Protocol](architecture/a2a_protocol.md)), and credential management ([KeyManager](guides/key_manager.md)).
 
 ---
 
-## Components
+**➡️ Live Public Registry & UI**
 
-The AgentVault monorepo contains the following key components:
+Explore registered agents or manage your own:
+*   **Discover Agents (UI):** [`https://agentvault-registry-api.onrender.com/ui`](https://agentvault-registry-api.onrender.com/ui)
 
-*   **`agentvault_library`**: ([Developer Guide](developer_guide/library.md)) Core Python client library for interacting with A2A agents, managing keys, and handling protocols (A2A, [MCP](mcp.md)).
-*   **`agentvault_cli`**: ([User Guide](user_guide/cli.md)) Command-line interface for users and developers to manage credentials, discover agents, and run tasks.
-*   **`agentvault_registry`**: ([Developer Guide](developer_guide/registry.md)) Backend API server (FastAPI) acting as the central discovery point for registered agents. Also serves a **Web UI** for public discovery (`/ui`) and developer management (`/ui/developer`). *(Live instance available above)*
-*   **`agentvault_server_sdk`**: ([Developer Guide](developer_guide/server_sdk.md)) Python SDK to help developers build A2A-compliant agent servers easily, integrating with frameworks like FastAPI. Includes packaging tools.
-*   **`agentvault_testing_utils`**: ([Developer Guide](developer_guide/testing.md)) Shared mocks, fixtures, factories, and helpers for testing AgentVault components.
-*   **`examples/`**: Contains practical examples demonstrating how to use the SDK and library (e.g., basic A2A server, LangChain integration). See the [Examples Overview](examples.md).
-*   **`automation_scripts/`**: Scripts to automate common workflows like agent packaging and deployment.
-*   **`docs/`**: Source files for this documentation website (built with MkDocs).
+*   **Developer Portal (UI):** [`https://agentvault-registry-api.onrender.com/ui/developer`](https://agentvault-registry-api.onrender.com/ui/developer) (Login/Register Here)
 
-## Key Protocols
+*   **Registry API Base:** `https://agentvault-registry-api.onrender.com/api/v1`
+*   *(**Note:** Free tier hosting - may take up to 60s to wake up on first request after inactivity. Visit `/health` or the UI first.)*
 
-*   **[Agent-to-Agent (A2A) Profile v0.2](a2a_profile_v0.2.md):** Defines the core communication patterns, task lifecycle, and event streaming via JSON-RPC and SSE.
-*   **[Model Context Protocol (MCP) Profile (Concept)](mcp.md):** Specifies how to embed richer context (like tool requests or user profiles) within standard A2A messages.
+---
 
-## Installation
+## Why AgentVault? The Infrastructure Layer
 
-Please refer to the [Installation Guide](installation.md). For development setup, see the [Contributing Guide](CONTRIBUTING.md).
+AgentVault focuses specifically on providing the essential, secure foundation, complementing higher-level orchestration frameworks.
 
-## Contributing
+*   ✨ **Security-First:** From the ground up, with secure local credential management (`KeyManager`), standard authentication protocols, and TEE awareness.
+*   🌐 **Interoperable:** Built on open standards (JSON-RPC, SSE) and clear schemas ([Agent Cards](concepts.md#agent-card), [A2A Profile v0.2](architecture/a2a_protocol.md)).
+*   🔧 **Integrated Toolkit:** A cohesive set of tools designed for the specific needs of A2A interaction:
+    *   **Registry API & UI:** For discovery and developer management.
+    *   **Client Library (`agentvault`):** For programmatic interaction.
+    *   **Server SDK:** To easily build compliant agents in Python/FastAPI.
+    *   **CLI (`agentvault_cli`):** For user and developer command-line access.
+*   🔓 **Open Source (Apache 2.0):** Ensuring transparency, flexibility, and no vendor lock-in.
 
-Contributions are welcome! Please see the [Contributing Guide](CONTRIBUTING.md) for details on setting up the development environment, running tests, and submitting changes.
+## Core Components (v1.0.0)
+
+*   **[Client Library (`agentvault`)](developer_guide/library.md):** Interact with agents (A2A/MCP), manage keys (`KeyManager`), handle Agent Cards.
+*   **[CLI (`agentvault_cli`)](user_guide/cli.md):** Manage credentials, discover agents, run tasks.
+*   **[Registry API (`agentvault_registry`)](developer_guide/registry.md):** Central API & Web UI for discovery and developer management.
+*   **[Server SDK (`agentvault-server-sdk`)](developer_guide/server_sdk.md):** Build A2A-compliant agents with FastAPI.
+*   **[Protocols & Profiles](protocols/):** Definitions for [A2A](architecture/a2a_protocol.md), [MCP (Concept)](architecture/mcp_support.md), and [TEE](tee_profile.md).
+
+## Get Started
+
+*   **New Users:** Check the [Installation Guide](guides/installation.md) and learn the [CLI Commands](user_guide/cli.md).
+*   **Developers:** Explore the [Developer Guides](developer_guide/), [Examples](examples.md), and start building with the [Server SDK](developer_guide/server_sdk.md).
+
+## Join the Community
+
+AgentVault is built by the community. We welcome your contributions, feedback, and ideas!
+
+*   **[GitHub Repository](https://github.com/SecureAgentTools/AgentVault)**
+*   **[Contributing Guide](CONTRIBUTING.md)**
 
 ## License
 

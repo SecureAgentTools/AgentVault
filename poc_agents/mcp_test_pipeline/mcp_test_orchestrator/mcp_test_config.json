@@ -1,0 +1,13 @@
+{
+  "mcp_tool_proxy_agent": {
+    "hri": "local-poc/mcp-tool-proxy"
+  },
+  "orchestration": {
+    "recursion_limit": 10,
+    "registry_url": "http://host.docker.internal:8000"
+  },
+  "timeouts": {
+    "agent_call_timeout": 90.0,
+    "sse_stream_timeout": 60.0
+  }
+}
