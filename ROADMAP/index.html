@@ -1532,18 +1532,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-status-april-2025-phase-25-underway" class="md-nav__link">
+  <a href="#current-status-may-2025-v100-production-release" class="md-nav__link">
     <span class="md-ellipsis">
-      Current Status (April 2025 - Phase 2.5 Underway)
+      Current Status (May 2025 - v1.0.0 Production Release)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps-phase-26-automation-robustness-polish" class="md-nav__link">
+  <a href="#immediate-next-steps-post-v100" class="md-nav__link">
     <span class="md-ellipsis">
-      Next Steps: Phase 2.6 - Automation, Robustness &amp; Polish
+      Immediate Next Steps (Post v1.0.0)
     </span>
   </a>
   
@@ -1602,46 +1602,68 @@
 <h1 id="agentvault-project-roadmap">AgentVault Project Roadmap<a class="headerlink" href="#agentvault-project-roadmap" title="Permanent link">&para;</a></h1>
 <p>This document outlines the planned development phases and features for the AgentVault ecosystem. Our goal is to create a secure, interoperable, and easy-to-use platform for AI agent communication based on open standards like A2A and MCP concepts.</p>
 <p><em>Disclaimer: This roadmap represents our current plans and priorities. It is subject to change based on development progress, community feedback, and the evolution of underlying standards.</em></p>
-<h2 id="current-status-april-2025-phase-25-underway">Current Status (April 2025 - Phase 2.5 Underway)<a class="headerlink" href="#current-status-april-2025-phase-25-underway" title="Permanent link">&para;</a></h2>
-<p>The AgentVault project has established a functional baseline across its core components and is actively refining the ecosystem based on initial implementation and usability testing.</p>
+<h2 id="current-status-may-2025-v100-production-release">Current Status (May 2025 - v1.0.0 Production Release)<a class="headerlink" href="#current-status-may-2025-v100-production-release" title="Permanent link">&para;</a></h2>
+<p><strong>AgentVault v1.0.0 is LIVE and production-ready!</strong> 🎉</p>
+<p>This release establishes a stable, secure, and feature-complete foundation for building and managing interoperable AI agent systems based on A2A and MCP principles.</p>
+<p><strong>Key achievements included in v1.0.0:</strong></p>
 <ul>
-<li><strong><code>agentvault</code> Library:</strong> Core client implemented (A2A JSON-RPC/SSE, Auth Schemes, KeyManager, Models, Utils). Published.</li>
-<li><strong><code>agentvault_registry</code> API &amp; UI:</strong> Operational API (Card CRUD, Validation, Discovery Filters incl. TEE/Tags). <strong>New:</strong> Developer authentication via email/password (JWT), email verification, recovery keys, programmatic API key management (<code>/developers/me/apikeys</code>), Agent Builder endpoint (<code>/agent-builder/generate</code>). Web UI for public discovery (<code>/ui</code>) and developer portal (<code>/ui/developer</code>) with login/register/recovery flows implemented. Uses PostgreSQL/Alembic. Rate limiting/CORS active. <em>(Note: Email sending depends on deployment configuration).</em></li>
-<li><strong><code>agentvault_cli</code>:</strong> Functional CLI (<code>config</code>, <code>discover</code>, <code>run</code>). Supports KeyManager (keyring, oauth config), SSE streaming, artifact saving.</li>
-<li><strong><code>agentvault_server_sdk</code>:</strong> Foundational SDK (<code>BaseA2AAgent</code>, FastAPI integration, <code>@a2a_method</code>, <code>InMemoryTaskStore</code> with notifications), packaging tool (<code>agentvault-sdk package</code>). Published.</li>
-<li><strong><code>agentvault_testing_utils</code>:</strong> Shared utilities (<code>MockAgentVaultClient</code>, <code>mock_a2a_server</code> fixture, factory, <code>EchoAgent</code>, assertions).</li>
-<li><strong>Examples:</strong> Basic Server, LangChain Tool, OAuth Agent, Stateful Agent, Library Usage examples available.</li>
-<li><strong>Documentation:</strong> Structure established, core concepts/architecture/security documented, component guides drafted, A2A/TEE profiles documented, examples included. Deployed via GitHub Pages.</li>
-<li><strong>CI/CD:</strong> Dependency audit and docs deployment workflows functional.</li>
+<li><strong>Core Components (Stable v1.0.0):</strong><ul>
+<li><strong><code>agentvault</code> Library:</strong> Mature client implementation (A2A JSON-RPC/SSE, Auth Schemes incl. OAuth2, KeyManager w/ Keyring, MCP embedding, Models).</li>
+<li><strong><code>agentvault_registry</code> API &amp; UI:</strong> Fully functional API (Card CRUD, Discovery Filters, Validation) and Web UI (Public Discovery, Developer Portal) with robust developer authentication (Email/Password, JWT, Recovery Keys, Programmatic API Keys), Agent Builder, and PostgreSQL/Alembic backend.</li>
+<li><strong><code>agentvault_cli</code>:</strong> Feature-complete CLI (<code>config</code>, <code>discover</code>, <code>run</code>) supporting KeyManager, SSE streaming, and artifact handling.</li>
+<li><strong><code>agentvault_server_sdk</code>:</strong> Stable SDK (<code>BaseA2AAgent</code>, FastAPI integration, <code>@a2a_method</code>, <code>InMemoryTaskStore</code> w/ notifications), including the <code>agentvault-sdk package</code> tool for Dockerization.</li>
+<li><strong><code>agentvault_testing_utils</code>:</strong> Comprehensive shared utilities for robust testing.</li>
 </ul>
-<h2 id="next-steps-phase-26-automation-robustness-polish">Next Steps: Phase 2.6 - Automation, Robustness &amp; Polish<a class="headerlink" href="#next-steps-phase-26-automation-robustness-polish" title="Permanent link">&para;</a></h2>
-<p><strong>Objective:</strong> Complete automation scripts, improve robustness (testing, error handling, scalability), and polish the developer/user experience.</p>
-<p><strong>Key Tasks:</strong></p>
+</li>
+<li><strong>Validated POC Pipelines:</strong> Successfully implemented and validated diverse end-to-end examples showcasing core capabilities:<ul>
+<li>✅ <strong>MCP Tool Access:</strong> Secure, proxied filesystem &amp; code execution.</li>
+<li>✅ <strong>E-commerce Personalization:</strong> Multi-agent data aggregation for recommendations.</li>
+<li>✅ <strong>Secure ETL Workflows:</strong> Database-driven artifact passing.</li>
+<li>✅ <strong>Multi-Agent Research:</strong> Complex 7-agent orchestration (LangGraph).</li>
+<li>✅ <strong>Dynamics 365 Enrichment &amp; Actions:</strong> Enterprise data wrapping &amp; action triggering.</li>
+<li>✅ <strong>Support Ticket Triage:</strong> Routing &amp; enrichment patterns.</li>
+<li><em>(POC code and updated documentation released on GitHub)</em></li>
+</ul>
+</li>
+<li><strong>Documentation:</strong> Overhauled documentation site providing core concepts, architecture, security details, comprehensive guides for each component, and initial POC overviews.</li>
+<li><strong>CI/CD &amp; Security:</strong> Established workflows for dependency security scanning (<code>pip-audit</code>) and documentation deployment.</li>
+</ul>
+<h2 id="immediate-next-steps-post-v100">Immediate Next Steps (Post v1.0.0)<a class="headerlink" href="#immediate-next-steps-post-v100" title="Permanent link">&para;</a></h2>
+<p>With the v1.0.0 foundation now stable, the immediate focus shifts towards adoption, community engagement, and incremental improvements:</p>
 <ol>
-<li><strong>Automation Scripts:</strong><ul>
-<li><strong>TODO:</strong> Finalize and test <code>automation_scripts/</code> (<code>av_create_package_agent</code>, <code>av_deploy_register_agent</code>, <code>av_find_run_task</code>). Ensure they work reliably with the latest components.</li>
-<li><strong>TODO:</strong> Refine agent template generation (e.g., better <code>.env</code> setup based on selected options).</li>
+<li><strong>Community Building &amp; Support:</strong><ul>
+<li>Actively engage with early adopters and users on GitHub (Issues, Discussions).</li>
+<li>Improve contribution guidelines and onboarding processes.</li>
+<li>Respond promptly to feedback and bug reports.</li>
 </ul>
 </li>
-<li><strong>Registry Enhancements:</strong><ul>
-<li><strong>TODO:</strong> Investigate and potentially optimize developer programmatic API key lookup performance if needed for scale.</li>
-<li><strong>TODO:</strong> Implement email-based password reset flow (currently placeholder).</li>
-<li><strong>TODO:</strong> Further UI/UX improvements for the Developer Portal (e.g., easier card editing interface, clearer API key management).</li>
+<li><strong>Documentation Enhancement:</strong><ul>
+<li>Create <strong>detailed guides</strong> for each of the released POC pipelines, explaining setup, execution, and the specific AgentVault features demonstrated.</li>
+<li>Add more advanced usage examples and tutorials based on user feedback.</li>
+<li>Refine API reference documentation.</li>
 </ul>
 </li>
-<li><strong>SDK &amp; Error Handling:</strong><ul>
-<li><strong>TODO:</strong> Provide examples or interfaces for persistent <code>BaseTaskStore</code> implementations (e.g., Redis, SQL).</li>
-<li><strong>TODO:</strong> Review and standardize error handling and logging across all components for consistency.</li>
+<li><strong>Usability &amp; DX Polish:</strong><ul>
+<li>Address any minor usability issues or friction points identified in the core components based on initial v1.0.0 feedback.</li>
+<li>Potentially enhance the Agent Builder with more options or templates.</li>
+<li>Improve error messages and logging for better debugging.</li>
 </ul>
 </li>
-<li><strong>Documentation Polish:</strong><ul>
-<li><strong>TODO:</strong> Add more diagrams where helpful (e.g., auth flows).</li>
-<li><strong>TODO:</strong> Review all guides for clarity and accuracy against latest code.</li>
+<li><strong>Maintenance &amp; Bug Fixes:</strong><ul>
+<li>Prioritize addressing any bugs or stability issues reported against the v1.0.0 release.</li>
+<li>Regularly update dependencies and address security audit findings.</li>
+</ul>
+</li>
+<li><strong>Begin Phase 3 Exploration:</strong><ul>
+<li>Start initial design and feasibility studies for key Phase 3 features (e.g., Federated Registry concepts, SPIFFE/SPIRE integration research for Agent Identity Fabric).</li>
 </ul>
 </li>
 </ol>
 <h2 id="future-considerations-phase-3-beyond">Future Considerations (Phase 3 &amp; Beyond)<a class="headerlink" href="#future-considerations-phase-3-beyond" title="Permanent link">&para;</a></h2>
 <p><strong>Objective:</strong> Expand AgentVault into a comprehensive, enterprise-ready platform for secure, scalable, and truly intelligent multi-agent collaboration across diverse environments.</p>
+<p><strong>Concept Diagram:</strong></p>
+<p><img alt="Federated Registry &amp; Identity Fabric Concept Diagram" src="../assets/images/federatedregistryconcept.png" />
+<em>(Diagram illustrating the interplay between federated registries and a zero-trust identity fabric based on SPIFFE/SPIRE, OAuth2, and OPA for secure cross-domain agent communication.)</em></p>
 <p><strong>Key Areas:</strong></p>
 <ol>
 <li><strong>Federated Registry &amp; Discovery:</strong><ul>
