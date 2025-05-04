@@ -1,46 +1,64 @@
-
 # AgentVault Project Roadmap
 
 This document outlines the planned development phases and features for the AgentVault ecosystem. Our goal is to create a secure, interoperable, and easy-to-use platform for AI agent communication based on open standards like A2A and MCP concepts.
 
 *Disclaimer: This roadmap represents our current plans and priorities. It is subject to change based on development progress, community feedback, and the evolution of underlying standards.*
 
-## Current Status (April 2025 - Phase 2.5 Underway)
+## Current Status (May 2025 - v1.0.0 Production Release)
 
-The AgentVault project has established a functional baseline across its core components and is actively refining the ecosystem based on initial implementation and usability testing.
+**AgentVault v1.0.0 is LIVE and production-ready!** 🎉
 
-*   **`agentvault` Library:** Core client implemented (A2A JSON-RPC/SSE, Auth Schemes, KeyManager, Models, Utils). Published.
-*   **`agentvault_registry` API & UI:** Operational API (Card CRUD, Validation, Discovery Filters incl. TEE/Tags). **New:** Developer authentication via email/password (JWT), email verification, recovery keys, programmatic API key management (`/developers/me/apikeys`), Agent Builder endpoint (`/agent-builder/generate`). Web UI for public discovery (`/ui`) and developer portal (`/ui/developer`) with login/register/recovery flows implemented. Uses PostgreSQL/Alembic. Rate limiting/CORS active. *(Note: Email sending depends on deployment configuration).*
-*   **`agentvault_cli`:** Functional CLI (`config`, `discover`, `run`). Supports KeyManager (keyring, oauth config), SSE streaming, artifact saving.
-*   **`agentvault_server_sdk`:** Foundational SDK (`BaseA2AAgent`, FastAPI integration, `@a2a_method`, `InMemoryTaskStore` with notifications), packaging tool (`agentvault-sdk package`). Published.
-*   **`agentvault_testing_utils`:** Shared utilities (`MockAgentVaultClient`, `mock_a2a_server` fixture, factory, `EchoAgent`, assertions).
-*   **Examples:** Basic Server, LangChain Tool, OAuth Agent, Stateful Agent, Library Usage examples available.
-*   **Documentation:** Structure established, core concepts/architecture/security documented, component guides drafted, A2A/TEE profiles documented, examples included. Deployed via GitHub Pages.
-*   **CI/CD:** Dependency audit and docs deployment workflows functional.
+This release establishes a stable, secure, and feature-complete foundation for building and managing interoperable AI agent systems based on A2A and MCP principles.
 
-## Next Steps: Phase 2.6 - Automation, Robustness & Polish
+**Key achievements included in v1.0.0:**
 
-**Objective:** Complete automation scripts, improve robustness (testing, error handling, scalability), and polish the developer/user experience.
+*   **Core Components (Stable v1.0.0):**
+    *   **`agentvault` Library:** Mature client implementation (A2A JSON-RPC/SSE, Auth Schemes incl. OAuth2, KeyManager w/ Keyring, MCP embedding, Models).
+    *   **`agentvault_registry` API & UI:** Fully functional API (Card CRUD, Discovery Filters, Validation) and Web UI (Public Discovery, Developer Portal) with robust developer authentication (Email/Password, JWT, Recovery Keys, Programmatic API Keys), Agent Builder, and PostgreSQL/Alembic backend.
+    *   **`agentvault_cli`:** Feature-complete CLI (`config`, `discover`, `run`) supporting KeyManager, SSE streaming, and artifact handling.
+    *   **`agentvault_server_sdk`:** Stable SDK (`BaseA2AAgent`, FastAPI integration, `@a2a_method`, `InMemoryTaskStore` w/ notifications), including the `agentvault-sdk package` tool for Dockerization.
+    *   **`agentvault_testing_utils`:** Comprehensive shared utilities for robust testing.
+*   **Validated POC Pipelines:** Successfully implemented and validated diverse end-to-end examples showcasing core capabilities:
+    *   ✅ **MCP Tool Access:** Secure, proxied filesystem & code execution.
+    *   ✅ **E-commerce Personalization:** Multi-agent data aggregation for recommendations.
+    *   ✅ **Secure ETL Workflows:** Database-driven artifact passing.
+    *   ✅ **Multi-Agent Research:** Complex 7-agent orchestration (LangGraph).
+    *   ✅ **Dynamics 365 Enrichment & Actions:** Enterprise data wrapping & action triggering.
+    *   ✅ **Support Ticket Triage:** Routing & enrichment patterns.
+    *   *(POC code and updated documentation released on GitHub)*
+*   **Documentation:** Overhauled documentation site providing core concepts, architecture, security details, comprehensive guides for each component, and initial POC overviews.
+*   **CI/CD & Security:** Established workflows for dependency security scanning (`pip-audit`) and documentation deployment.
 
-**Key Tasks:**
+## Immediate Next Steps (Post v1.0.0)
 
-1.  **Automation Scripts:**
-    *   **TODO:** Finalize and test `automation_scripts/` (`av_create_package_agent`, `av_deploy_register_agent`, `av_find_run_task`). Ensure they work reliably with the latest components.
-    *   **TODO:** Refine agent template generation (e.g., better `.env` setup based on selected options).
-3.  **Registry Enhancements:**
-    *   **TODO:** Investigate and potentially optimize developer programmatic API key lookup performance if needed for scale.
-    *   **TODO:** Implement email-based password reset flow (currently placeholder).
-    *   **TODO:** Further UI/UX improvements for the Developer Portal (e.g., easier card editing interface, clearer API key management).
-4.  **SDK & Error Handling:**
-    *   **TODO:** Provide examples or interfaces for persistent `BaseTaskStore` implementations (e.g., Redis, SQL).
-    *   **TODO:** Review and standardize error handling and logging across all components for consistency.
-5.  **Documentation Polish:**
-    *   **TODO:** Add more diagrams where helpful (e.g., auth flows).
-    *   **TODO:** Review all guides for clarity and accuracy against latest code.
+With the v1.0.0 foundation now stable, the immediate focus shifts towards adoption, community engagement, and incremental improvements:
+
+1.  **Community Building & Support:**
+    *   Actively engage with early adopters and users on GitHub (Issues, Discussions).
+    *   Improve contribution guidelines and onboarding processes.
+    *   Respond promptly to feedback and bug reports.
+2.  **Documentation Enhancement:**
+    *   Create **detailed guides** for each of the released POC pipelines, explaining setup, execution, and the specific AgentVault features demonstrated.
+    *   Add more advanced usage examples and tutorials based on user feedback.
+    *   Refine API reference documentation.
+3.  **Usability & DX Polish:**
+    *   Address any minor usability issues or friction points identified in the core components based on initial v1.0.0 feedback.
+    *   Potentially enhance the Agent Builder with more options or templates.
+    *   Improve error messages and logging for better debugging.
+4.  **Maintenance & Bug Fixes:**
+    *   Prioritize addressing any bugs or stability issues reported against the v1.0.0 release.
+    *   Regularly update dependencies and address security audit findings.
+5.  **Begin Phase 3 Exploration:**
+    *   Start initial design and feasibility studies for key Phase 3 features (e.g., Federated Registry concepts, SPIFFE/SPIRE integration research for Agent Identity Fabric).
 
 ## Future Considerations (Phase 3 & Beyond)
 
 **Objective:** Expand AgentVault into a comprehensive, enterprise-ready platform for secure, scalable, and truly intelligent multi-agent collaboration across diverse environments.
+
+**Concept Diagram:**
+
+![Federated Registry & Identity Fabric Concept Diagram](assets/images/federatedregistryconcept.png)
+*(Diagram illustrating the interplay between federated registries and a zero-trust identity fabric based on SPIFFE/SPIRE, OAuth2, and OPA for secure cross-domain agent communication.)*
 
 **Key Areas:**
 
@@ -71,4 +89,3 @@ The AgentVault project has established a functional baseline across its core com
 ## Contributing
 
 We welcome community contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-

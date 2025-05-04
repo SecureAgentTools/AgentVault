@@ -73,7 +73,7 @@ The registry is a central service for agent discovery. It requires Docker and Do
 
 **Setup Instructions:**
 
-Detailed instructions for building the Docker image, configuring the `.env` file (database connection, admin user, secrets), and running the registry service using `docker compose` can be found in the **[Registry Setup & API Guide](../developer_guide/registry/#running-with-docker-recommended)**.
+Detailed instructions for building the Docker image, configuring the `.env` file (database connection, admin user, secrets), and running the registry service using `docker compose` can be found in the **[Registry Setup & API Guide](developer_guide/registry.md#running-with-docker-recommended)**.
 
 ## Testing Utilities (`agentvault-testing-utils`)
 
