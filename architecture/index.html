@@ -631,18 +631,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#high-level-diagram" class="md-nav__link">
+  <a href="#high-level-architecture-diagram" class="md-nav__link">
     <span class="md-ellipsis">
-      High-Level Diagram
+      High-Level Architecture Diagram
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#explanation" class="md-nav__link">
+  <a href="#explanation-of-secure-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Explanation
+      Explanation of Secure Workflow
     </span>
   </a>
   
@@ -1602,64 +1602,60 @@
 
 
 <h1 id="agentvault-architecture">AgentVault Architecture<a class="headerlink" href="#agentvault-architecture" title="Permanent link">&para;</a></h1>
-<p>This document provides a high-level overview of the AgentVault architecture, illustrating the relationships between key components and communication protocols.</p>
+<p>This document provides a high-level overview of the AgentVault architecture, illustrating the relationships between key components and communication protocols, emphasizing the secure, enterprise-grade workflow.</p>
 <h2 id="core-components-interactions">Core Components &amp; Interactions<a class="headerlink" href="#core-components-interactions" title="Permanent link">&para;</a></h2>
-<p>The AgentVault ecosystem revolves around several key entities:</p>
+<p>The AgentVault ecosystem enables secure and orchestrated interactions between various components:</p>
 <ol>
-<li><strong>Agents (A2A Compliant):</strong> Independent services exposing capabilities via the <strong>Agent-to-Agent (A2A) Protocol</strong>. They are described by <strong>Agent Cards</strong>. Examples include specialized agents for research, data processing, or interacting with specific APIs.</li>
-<li><strong>MCP Tool Servers:</strong> Services exposing specific, often low-level capabilities (like filesystem access, code execution, database queries, API interactions) via the <strong>Model Context Protocol (MCP)</strong>, which uses JSON-RPC 2.0 over HTTP. These are <em>not</em> necessarily full A2A agents.</li>
-<li><strong>AgentVault Registry:</strong> A central discovery service where agents publish their <strong>Agent Cards</strong>. Clients and other agents query the registry to find agents based on their capabilities or unique IDs (HRIs).</li>
-<li><strong>Orchestrator:</strong> A component (e.g., a LangGraph workflow, a Python script, another agent) that coordinates tasks across multiple A2A agents and potentially MCP tools to achieve a complex goal.</li>
-<li><strong>MCP Tool Proxy Agent:</strong> A specialized A2A-compliant agent designed to bridge the A2A and MCP domains. Orchestrators send A2A requests to the proxy, specifying a target MCP tool and its arguments. The proxy translates this into an MCP (JSON-RPC) call to the appropriate <strong>MCP Tool Server</strong>, receives the result, and translates it back into an A2A response for the orchestrator. <strong>This is the current recommended pattern for integrating MCP tools into A2A workflows.</strong></li>
-<li><strong>Clients / User Interfaces:</strong> Tools like the <strong>AgentVault CLI</strong> or custom applications that allow users to interact with the system, initiate tasks, query the registry, or manage agents.</li>
+<li><strong>Developer/User:</strong> The human initiating tasks and managing the system, typically via the CLI.</li>
+<li><strong>AgentVault CLI:</strong> The command-line interface for interacting with AgentVault, including running tasks, managing configurations, and discovering agents.</li>
+<li><strong>Local Key Manager:</strong> A client-side component (using OS keyring, environment variables, or files) responsible for securely storing and retrieving credentials (like Registry API keys or Agent-specific keys/OAuth tokens) needed for authentication.</li>
+<li><strong>AgentVault Registry:</strong> A central discovery service where agents publish their <strong>Agent Cards</strong>. It allows clients to find agents based on their capabilities or unique IDs (HRIs). Developer authentication is required to manage cards.</li>
+<li><strong>Agent (A2A Compliant):</strong> The service performing the core task. In enterprise scenarios, this agent might run within a <strong>Trusted Execution Environment (TEE)</strong> for enhanced security and integrity. It communicates via the A2A protocol.</li>
+<li><strong>TEE Attestation Service (Optional):</strong> An external or integrated service responsible for verifying the integrity and identity of an agent running within a TEE before sensitive operations are performed.</li>
+<li><strong>Secure Artifact Storage (Optional):</strong> A dedicated storage solution (like cloud storage or a secure local store) used for handling large or sensitive data artifacts generated or consumed by agents, referenced via URLs or secure handles rather than being embedded directly in A2A messages.</li>
+<li><strong>AgentVault Library:</strong> Used internally by the CLI (and potentially orchestrators or custom clients) to handle A2A communication, interact with the Key Manager, parse Agent Cards, and manage task lifecycles.</li>
+<li><strong>(Implied) OAuth Authorization Server:</strong> Involved when agents use OAuth2 authentication schemes for secure, delegated access.</li>
+<li><strong>(Implied) Policy Engine (e.g., OPA):</strong> Can be integrated by agents or infrastructure for fine-grained authorization decisions (as depicted in the Federated Identity concept).</li>
 </ol>
 <h2 id="communication-protocols">Communication Protocols<a class="headerlink" href="#communication-protocols" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>A2A Protocol:</strong> Used for primary communication between clients, orchestrators, and A2A-compliant agents (including the MCP Tool Proxy Agent). Uses JSON-RPC 2.0 over HTTP(S) with SSE support for streaming.</li>
-<li><strong>MCP (Model Context Protocol):</strong> Used for communication between the MCP Tool Proxy Agent and specific MCP Tool Servers. Uses JSON-RPC 2.0 over HTTP(S).</li>
+<li><strong>A2A Protocol:</strong> The primary protocol for task management and communication between the CLI/Orchestrator and A2A-compliant Agents. Uses JSON-RPC 2.0 over HTTPS, with SSE for event streaming.</li>
+<li><strong>Registry API:</strong> A RESTful API (HTTPS) used by the CLI and developers to manage and discover Agent Cards.</li>
+<li><strong>Attestation Protocol:</strong> Specific protocol dependent on the TEE technology used (e.g., SGX Remote Attestation, AWS Nitro Attestation) used between the Agent (in TEE), the Attestation Service, and potentially the Client/CLI.</li>
+<li><strong>Storage Protocol:</strong> Standard protocols like HTTPS (S3 API, etc.) used for interacting with Secure Artifact Storage.</li>
+<li><strong>MCP (Model Context Protocol):</strong> Used for agent-to-tool communication, typically via a proxy agent. (See <a href="../mcp/">MCP Profile</a> and <a href="../examples/poc_mcp_pipeline/">MCP Example</a>).</li>
 </ul>
-<h2 id="high-level-diagram">High-Level Diagram<a class="headerlink" href="#high-level-diagram" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    User([User/Developer]) --&gt; CLI[AgentVault CLI]
-    CLI --&gt; Orchestrator((Orchestrator))
-    CLI --&gt; Registry[(Registry)]
-
-    Orchestrator -- Discover --&gt; Registry
-    Registry -- Card Info --&gt; Orchestrator
-
-    Orchestrator -- A2A Task --&gt; Agent1[A2A Agent 1]
-    Agent1 -- A2A Result --&gt; Orchestrator
-    Orchestrator -- A2A Task --&gt; Agent2[A2A Agent 2]
-    Agent2 -- A2A Result --&gt; Orchestrator
-
-    Orchestrator -- A2A Request --&gt; MCP_Proxy[MCP Tool Proxy Agent]
-    MCP_Proxy -- MCP Call --&gt; MCPServer1[/MCP Tool Server 1/]
-    MCPServer1 -- MCP Response --&gt; MCP_Proxy
-    MCP_Proxy -- MCP Call --&gt; MCPServer2[/MCP Tool Server 2/]
-    MCPServer2 -- MCP Response --&gt; MCP_Proxy
-    MCP_Proxy -- MCP Call --&gt; MCPServerN[/... Other Tools/]
-    MCPServerN -- MCP Response --&gt; MCP_Proxy
-    MCP_Proxy -- A2A Response --&gt; Orchestrator
-
-    User -- Deploys --&gt; Agent1
-    User -- Deploys --&gt; MCP_Proxy
-    User -- Deploys --&gt; MCPServer1
-    User -- Deploys --&gt; MCPServer2
-</code></pre>
-<h2 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h2>
+<h2 id="high-level-architecture-diagram">High-Level Architecture Diagram<a class="headerlink" href="#high-level-architecture-diagram" title="Permanent link">&para;</a></h2>
+<p>The following diagram visualizes the key components and a typical secure workflow, including optional TEE attestation:</p>
+<p><img alt="AgentVault Architecture Diagram" src="../assets/images/AgentVaultArch.png" />
+<em>(Diagram showing the Developer interacting via CLI, which uses the KeyManager and Registry. The CLI optionally checks attestation with an Attestation Service before initiating a task with a Target Agent (potentially in a TEE). The Agent may interact with Secure Artifact Storage and streams results back to the CLI via A2A/SSE.)</em></p>
+<h2 id="explanation-of-secure-workflow">Explanation of Secure Workflow<a class="headerlink" href="#explanation-of-secure-workflow" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>User Interaction:</strong> Users typically interact via the CLI or custom applications, which communicate with the Orchestrator or Registry using the A2A protocol.</li>
-<li><strong>Orchestration:</strong> The Orchestrator uses the Registry to discover agents based on their capabilities (defined in their Agent Cards). It then initiates tasks and receives results/events from these agents using the A2A protocol.</li>
-<li><strong>MCP Tool Usage:</strong> When the Orchestrator needs to execute an external tool (like reading a file, running code, querying a specific API):<ul>
-<li>It sends an A2A request to the <strong>MCP Tool Proxy Agent</strong>. This request includes the logical ID of the target MCP server (e.g., "filesystem", "code-runner", "database-tool"), the specific tool name (e.g., "filesystem.readFile"), and the necessary arguments.</li>
-<li>The <strong>MCP Tool Proxy Agent</strong> looks up the actual URL of the target MCP server (e.g., <code>http://custom-filesystem-mcp:8001/rpc</code>) and sends a standard JSON-RPC 2.0 request over HTTP to it.</li>
-<li>The <strong>MCP Tool Server</strong> executes the requested method and returns a JSON-RPC 2.0 response.</li>
-<li>The Proxy Agent relays the result (or error) back to the Orchestrator within the A2A task's response.</li>
+<li><strong>Task Initiation:</strong> The Developer uses the <strong>AgentVault CLI</strong> to run a task on a target agent, specifying the agent reference (HRI or URL) and input data. The <code>--attest</code> flag can be used to request TEE attestation verification.</li>
+<li><strong>Agent Discovery (if HRI used):</strong> The CLI contacts the <strong>AgentVault Registry</strong> (authenticating using a Developer API Key fetched from the <strong>Local Key Manager</strong>) to retrieve the <strong>Agent Card</strong> for the target agent.</li>
+<li><strong>Agent Card Parsing:</strong> The CLI parses the Agent Card to get the agent's A2A endpoint URL, required authentication schemes, and TEE details (if present).</li>
+<li><strong>TEE Attestation (Optional):</strong> If the <code>--attest</code> flag was used and the Agent Card indicates TEE support, the CLI interacts with the appropriate <strong>TEE Attestation Service</strong> to verify the integrity and identity of the target agent instance <em>before</em> sending the task. If verification fails, the process stops.</li>
+<li><strong>Credential Retrieval:</strong> The CLI requests the necessary credentials (API Key, OAuth details) for the target agent from the <strong>Local Key Manager</strong>. The Key Manager securely retrieves these based on the agent's requirements specified in the card.</li>
+<li><strong>A2A Task Initiation:</strong> The CLI (using the underlying AgentVault Library) establishes a secure HTTPS connection to the <strong>Target Agent's</strong> A2A endpoint. It sends the <code>tasks/send</code> request (JSON-RPC), including the task input and necessary authentication headers (API Key or Bearer Token obtained via Key Manager/OAuth flow).</li>
+<li><strong>Agent Processing &amp; SSE Streaming:</strong><ul>
+<li>The Target Agent authenticates the request.</li>
+<li>It begins processing the task asynchronously.</li>
+<li>The CLI establishes an SSE connection (<code>tasks/sendSubscribe</code>) to receive real-time updates.</li>
+<li>The Agent streams <code>task_status</code>, <code>task_message</code>, and <code>task_artifact</code> events back to the CLI via SSE over HTTPS.</li>
+<li><strong>Artifact Handling:</strong> If the agent generates large or sensitive artifacts, it may upload them to <strong>Secure Artifact Storage</strong> and send back only a URL or reference in the <code>task_artifact</code> event. Small artifacts might be included directly in the event.</li>
 </ul>
 </li>
-<li><strong>Agent Specialization:</strong> Each component focuses on its core competency. A2A Agents handle complex logic and state, while MCP Tool Servers provide specific, reusable functions via a simple RPC interface. The Proxy pattern decouples the A2A and MCP domains.</li>
+<li><strong>Event Processing (CLI):</strong><ul>
+<li>The CLI receives and parses SSE events.</li>
+<li>It displays status updates and messages to the Developer.</li>
+<li>For artifact events, if a URL/reference is present (or the artifact is deemed large), the CLI may download the content from <strong>Secure Artifact Storage</strong>. Otherwise, it displays/saves inline content.</li>
+<li>The SSE loop continues until a terminal task status (COMPLETED, FAILED, CANCELED) is received.</li>
+</ul>
+</li>
+<li><strong>Final Status:</strong> The CLI may optionally make a final <code>tasks/get</code> call to retrieve the complete final task state.</li>
+<li><strong>Results:</strong> The CLI displays the final results, status, and any relevant artifact locations or content to the Developer.</li>
 </ol>
-<p>This architecture allows for flexible and scalable multi-agent systems where different components communicate using appropriate protocols, facilitated by the AgentVault framework and demonstrated effectively in the <strong><a href="../examples/poc_mcp_pipeline/">MCP Test Pipeline Example</a></strong>.</p>
+<p>This workflow, leveraging components like the Key Manager, Registry, optional TEE Attestation, and distinct communication protocols (A2A, MCP via proxy), provides a secure and robust framework for orchestrating complex agent tasks.</p>
 
 
 
