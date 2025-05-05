@@ -99,6 +99,7 @@ The `create_a2a_router` function bridges your agent logic (either a `BaseA2AAgen
         app.add_exception_handler(AgentServerError, agent_server_error_handler)
         app.add_exception_handler(Exception, generic_exception_handler) # Catch-all LAST
         ```
+    5.  **Extensibility Note (External Authorization):** AgentVault's SDK architecture, leveraging FastAPI's dependency injection, allows for the integration of external authorization mechanisms. For instance, developers can implement custom dependencies to query policy engines like Open Policy Agent (OPA) before routing requests to agent logic. *(This requires custom implementation and is not a built-in feature of AgentVault v1.0.0).*
 
 ### 4. A2A Method Decorator (`@a2a_method`)
 
