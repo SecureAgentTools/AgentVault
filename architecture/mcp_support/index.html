@@ -18,7 +18,7 @@
     
     
       
-        <title>AgentVault MCP Support (Conceptual Profile) - AgentVault Documentation</title>
+        <title>AgentVault MCP Support (Proxy Pattern - v1.0.0) - AgentVault Documentation</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#agentvault-mcp-support-conceptual-profile" class="md-skip">
+        <a href="#agentvault-mcp-support-proxy-pattern-v100" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AgentVault MCP Support (Conceptual Profile)
+              AgentVault MCP Support (Proxy Pattern - v1.0.0)
             
           </span>
         </div>
@@ -1512,127 +1512,192 @@
 
 
 
-<h1 id="agentvault-mcp-support-conceptual-profile">AgentVault MCP Support (Conceptual Profile)<a class="headerlink" href="#agentvault-mcp-support-conceptual-profile" title="Permanent link">&para;</a></h1>
-<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
-<p>The AgentVault Agent-to-Agent (A2A) protocol defines the core mechanisms for secure communication, task management, and event streaming between agents. However, many complex agent interactions require more than just the primary message content. Agents often need additional <strong>context</strong> to perform their tasks effectively. This could include:</p>
+<h1 id="agentvault-mcp-support-proxy-pattern-v100">AgentVault MCP Support (Proxy Pattern - v1.0.0)<a class="headerlink" href="#agentvault-mcp-support-proxy-pattern-v100" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Defined &amp; Implemented via Proxy Pattern</p>
+<h2 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">&para;</a></h2>
+<p>The AgentVault Agent-to-Agent (A2A) protocol defines the core mechanisms for secure communication, task management, and event streaming between agents. However, many complex agent interactions require agents to execute external <strong>Tools</strong> (e.g., filesystem access, code execution, database queries, specialized APIs).</p>
+<p>The <strong>Model Context Protocol (MCP)</strong> is a conceptual protocol designed for agent-tool interaction, typically using JSON-RPC 2.0 over HTTP(S). While direct client-library support for invoking MCP tools may evolve, <strong>AgentVault v1.0.0 provides a robust and validated solution for integrating MCP tools via the A2A Proxy Pattern.</strong></p>
+<p><strong>Goal:</strong> To enable standardized, reusable, secure, and controlled access to external capabilities within AgentVault workflows without requiring the orchestrator or core agents to directly implement the MCP protocol.</p>
+<h2 id="2-the-a2a-proxy-pattern">2. The A2A Proxy Pattern<a class="headerlink" href="#2-the-a2a-proxy-pattern" title="Permanent link">&para;</a></h2>
+<p>The recommended and validated pattern in AgentVault v1.0.0 for integrating MCP tools involves a dedicated <strong>MCP Tool Proxy Agent</strong>:</p>
 <ul>
-<li>User profile information</li>
-<li>Relevant snippets from previous interactions</li>
-<li>Metadata about the environment</li>
-<li>References to external files or data artifacts</li>
-<li>Schema definitions for expected inputs/outputs</li>
-<li>Tool descriptions and schemas</li>
+<li><strong>MCP Tool Proxy Agent:</strong> An A2A-compliant agent (built using the <code>agentvault-server-sdk</code>) acts as a secure bridge between the A2A domain and the MCP domain.</li>
+<li><strong>MCP Tool Server:</strong> A separate service (potentially non-A2A compliant itself) that exposes specific tools (e.g., <code>filesystem.readFile</code>, <code>code.runPython</code>) via an MCP-compatible JSON-RPC 2.0 HTTP endpoint (typically <code>/rpc</code>).</li>
+<li><strong>Orchestrator/Client:</strong> An A2A client (like the <code>agentvault-cli</code>, a LangGraph orchestrator, or a custom application using the <code>agentvault</code> library) that needs to invoke an MCP tool.</li>
 </ul>
-<p>The <strong>Model Context Protocol (MCP)</strong> concept within AgentVault provides a structured way to embed this richer context <em>within</em> standard A2A messages.</p>
-<h2 id="current-status-agentvault-v100">Current Status (AgentVault v1.0.0)<a class="headerlink" href="#current-status-agentvault-v100" title="Permanent link">&para;</a></h2>
-<p><strong>Evolving Standard:</strong> The formal MCP specification is still evolving within the broader AI agent community.</p>
-<p><strong>AgentVault Implementation:</strong> AgentVault v1.0.0 provides <strong>basic, conceptual support</strong> for MCP.
-*   The core <code>agentvault</code> library includes utilities (<code>agentvault.mcp_utils</code>) for formatting and validating a basic MCP structure (<code>MCPContext</code> and <code>MCPItem</code> Pydantic models).
-*   The <code>AgentVaultClient</code> allows embedding this structured context into the <code>message.metadata["mcp_context"]</code> field during <code>initiate_task</code> or <code>send_message</code> calls.
-*   The <code>agentvault-server-sdk</code> provides a helper (<code>get_mcp_context</code>) for agents to easily extract this dictionary from incoming messages.</p>
-<p>This provides a flexible mechanism for passing structured context but <strong>does not yet enforce a strict, standardized MCP schema</strong> beyond the basic container structure defined in <code>mcp_utils.py</code>. Future AgentVault versions will aim to align with official MCP standards as they mature.</p>
-<h2 id="transport-mechanism">Transport Mechanism<a class="headerlink" href="#transport-mechanism" title="Permanent link">&para;</a></h2>
-<p>MCP context is embedded within the <code>metadata</code> field of standard A2A <code>Message</code> objects (<code>agentvault.models.Message</code>) under the key <code>"mcp_context"</code>.</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Example A2A Message including MCP Context</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Refactor the attached Python script based on these guidelines.&quot;</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">],</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">&quot;client_request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="c1">// MCP context is embedded here:</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">&quot;mcp_context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">       </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">         </span><span class="nt">&quot;guidelines_doc&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">            </span><span class="nt">&quot;ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;artifact://guideline-doc-123&quot;</span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">            </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text/markdown&quot;</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">         </span><span class="p">},</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">         </span><span class="nt">&quot;user_prefs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">            </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;refactoring_style&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aggressive&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;target_python&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3.11&quot;</span><span class="p">},</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">            </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">         </span><span class="p">}</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">         </span><span class="c1">// ... potentially other context items ...</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">       </span><span class="p">}</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="structure-current-conceptual-model">Structure (Current Conceptual Model)<a class="headerlink" href="#structure-current-conceptual-model" title="Permanent link">&para;</a></h2>
-<p>The <code>agentvault.mcp_utils</code> module defines placeholder Pydantic models for structure validation:</p>
+<p><strong>Workflow:</strong></p>
 <ol>
-<li>
-<p><strong><code>MCPContext</code> (Root Object):</strong></p>
-<ul>
-<li><code>items</code> (Dict[str, MCPItem]): Dictionary mapping unique item names/IDs to <code>MCPItem</code> objects.</li>
-</ul>
-</li>
-<li>
-<p><strong><code>MCPItem</code> (Individual Context Piece):</strong></p>
-<ul>
-<li><code>id</code> (Optional <code>str</code>): Item identifier within the context.</li>
-<li><code>mediaType</code> (Optional <code>str</code>): MIME type (e.g., "text/plain", "application/json").</li>
-<li><code>content</code> (Optional <code>Any</code>): Direct content (string, dict, list).</li>
-<li><code>ref</code> (Optional <code>str</code>): Reference to external context (URL, artifact ID).</li>
-<li><code>metadata</code> (Optional <code>Dict[str, Any]</code>): Item-specific metadata.</li>
-</ul>
-</li>
+<li><strong>A2A Request to Proxy:</strong> The Orchestrator sends a standard A2A <code>tasks/send</code> request to the Proxy Agent's <code>/a2a</code> endpoint. The crucial information about the desired MCP call is embedded within a <code>DataPart</code> of the A2A <code>Message</code>.</li>
+<li><strong>Proxy Authentication &amp; Routing:</strong> The Proxy Agent authenticates the Orchestrator using standard A2A mechanisms (API Key, OAuth2 via <code>KeyManager</code>). It then parses the <code>DataPart</code> to identify the target MCP server and tool.</li>
+<li><strong>MCP Request from Proxy:</strong> The Proxy Agent looks up the target MCP Tool Server's URL (e.g., from its configuration) and sends a standard MCP JSON-RPC 2.0 request (e.g., <code>{"method": "filesystem.readFile", "params": {...}}</code>) via HTTP POST to the Tool Server's <code>/rpc</code> endpoint.</li>
+<li><strong>MCP Tool Execution:</strong> The MCP Tool Server executes the requested tool.</li>
+<li><strong>MCP Response to Proxy:</strong> The Tool Server sends a JSON-RPC 2.0 response back to the Proxy Agent (containing either a <code>result</code> or an <code>error</code>, potentially using the <code>isError: true</code> convention within the <code>result</code> for tool-level errors).</li>
+<li><strong>A2A Response from Proxy:</strong> The Proxy Agent translates the MCP response into a standard A2A format (e.g., placing the MCP <code>result</code> or error details within a <code>DataPart</code> of an assistant <code>Message</code> or <code>Artifact</code>) and sends it back to the Orchestrator via the A2A task's SSE stream or final result.</li>
 </ol>
-<p><strong>Example <code>mcp_context</code> Payload:</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&quot;mcp_context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;user_profile&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usr_123&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="nt">&quot;preferences&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;theme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dark&quot;</span><span class="p">},</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;write&quot;</span><span class="p">]</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="p">},</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;internal_db&quot;</span><span class="p">}</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nt">&quot;target_document&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/pdf&quot;</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">&quot;ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://my-bucket/documents/report.pdf&quot;</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2&quot;</span><span class="p">}</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">}</span>
+<p><strong>Diagram:</strong></p>
+<pre class="mermaid"><code>graph LR
+    subgraph ClientSide [Orchestrator / Client]
+        Orchestrator("🤖 Orchestrator")
+    end
+
+    subgraph AgentVaultInfra [AgentVault Infrastructure]
+        ProxyAgent["🛡️ MCP Tool Proxy Agent&lt;br&gt;(A2A Compliant)&lt;br&gt;&lt;i&gt;Authenticates Client&lt;/i&gt;"]
+    end
+
+    subgraph ToolServerSide [External Tool Server]
+        ToolServer("🛠️ MCP Tool Server&lt;br&gt;(JSON-RPC @ /rpc)")
+    end
+
+    Orchestrator -- "1. A2A Request&lt;br&gt;(via HTTPS + Auth Header)&lt;br&gt;Payload includes DataPart:&lt;br&gt;{target_id, tool_name, args}" --&gt; ProxyAgent
+
+    ProxyAgent -- "2. MCP Request&lt;br&gt;(via HTTPS)&lt;br&gt;{method: tool_name, params: args}" --&gt; ToolServer
+
+    ToolServer -- "3. MCP Response&lt;br&gt;(via HTTPS)&lt;br&gt;{result: ...} or {error: ...}" --&gt; ProxyAgent
+
+    ProxyAgent -- "4. A2A Response / Event&lt;br&gt;(via HTTPS / SSE)&lt;br&gt;Contains translated MCP result/error" --&gt; Orchestrator
+
+    style ClientSide fill:#e3f2fd,stroke:#90caf9
+    style AgentVaultInfra fill:#e8f5e9,stroke:#a5d6a7
+    style ToolServerSide fill:#fce4ec,stroke:#f8bbd0</code></pre>
+<h2 id="3-a2a-message-structure-client-proxy">3. A2A Message Structure (Client -&gt; Proxy)<a class="headerlink" href="#3-a2a-message-structure-client-proxy" title="Permanent link">&para;</a></h2>
+<p>Instead of using <code>message.metadata["mcp_context"]</code>, the client sends instructions to the proxy embedded within a <code>DataPart</code> inside the standard A2A <code>Message.parts</code> list.</p>
+<p><strong>Required <code>DataPart.content</code> structure:</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;target_mcp_server_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;filesystem&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// Logical ID mapped to URL in Proxy config</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;tool_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;filesystem.readFile&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// The MCP method to call</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                        </span><span class="c1">// Parameters for the MCP method</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/input.txt&quot;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="client-side-usage-agentvault-library">Client-Side Usage (<code>agentvault</code> Library)<a class="headerlink" href="#client-side-usage-agentvault-library" title="Permanent link">&para;</a></h2>
-<p>Use the <code>mcp_context</code> parameter in <code>AgentVaultClient</code> methods:</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVaultClient</span><span class="p">,</span> <span class="n">KeyManager</span><span class="p">,</span> <span class="n">Message</span><span class="p">,</span> <span class="n">TextPart</span><span class="p">,</span> <span class="n">agent_card_utils</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_with_mcp</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">AgentVaultClient</span><span class="p">,</span> <span class="n">card</span><span class="p">,</span> <span class="n">km</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">context_dict</span><span class="p">):</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">task_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">initiate_task</span><span class="p">(</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>            <span class="n">agent_card</span><span class="o">=</span><span class="n">card</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="n">initial_message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="n">key_manager</span><span class="o">=</span><span class="n">km</span><span class="p">,</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="n">mcp_context</span><span class="o">=</span><span class="n">context_dict</span> <span class="c1"># Pass the context here</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="p">)</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task with MCP started: </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="c1"># ... stream events ...</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p><strong>Example A2A Message sent by Orchestrator to Proxy Agent:</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// This is the JSON-RPC &#39;params.message&#39; field in the tasks/send request</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// Or &#39;system&#39; / &#39;assistant&#39; depending on orchestrator</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;mediaType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// Recommended</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="nt">&quot;target_mcp_server_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;code&quot;</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="nt">&quot;tool_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;code.runPython&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">          </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;print(&#39;Hello from proxied MCP call!&#39;)&quot;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="c1">// Optionally include a TextPart for human context if needed</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="c1">// { &quot;type&quot;: &quot;text&quot;, &quot;content&quot;: &quot;Execute the code specified in the data part.&quot;}</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="c1">// metadata[&quot;mcp_context&quot;] is NOT used for this pattern</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">}</span>
 </span></code></pre></div>
-The library validates and embeds the dictionary under <code>message.metadata["mcp_context"]</code>.</p>
-<h2 id="server-side-usage-agentvault-server-sdk">Server-Side Usage (<code>agentvault-server-sdk</code>)<a class="headerlink" href="#server-side-usage-agentvault-server-sdk" title="Permanent link">&para;</a></h2>
-<p>Use the <code>get_mcp_context</code> helper:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseA2AAgent</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault_server_sdk.mcp_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_mcp_context</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyAgent</span><span class="p">(</span><span class="n">BaseA2AAgent</span><span class="p">):</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_task_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">mcp_data</span> <span class="o">=</span> <span class="n">get_mcp_context</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="k">if</span> <span class="n">mcp_data</span><span class="p">:</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MCP Data Received: </span><span class="si">{</span><span class="n">mcp_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            <span class="c1"># Process mcp_data[&#39;items&#39;]...</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="c1"># ... rest of logic ...</span>
+<h2 id="4-client-side-usage-agentvault-library">4. Client-Side Usage (<code>agentvault</code> Library)<a class="headerlink" href="#4-client-side-usage-agentvault-library" title="Permanent link">&para;</a></h2>
+<p>To invoke an MCP tool via the proxy pattern using the client library:</p>
+<ol>
+<li>Load the <strong>Proxy Agent's</strong> <code>AgentCard</code>.</li>
+<li>Instantiate <code>KeyManager</code> for the Proxy Agent's authentication.</li>
+<li>Construct the A2A <code>Message</code> with the correct <code>DataPart</code> payload (as shown above).</li>
+<li>Use <code>AgentVaultClient.initiate_task</code> (or <code>send_message</code>) targeting the <strong>Proxy Agent</strong>.</li>
+<li>Process the A2A events/response received <em>from the Proxy Agent</em>, which will contain the translated result or error from the underlying MCP call.</li>
+</ol>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">agentvault</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">AgentVaultClient</span><span class="p">,</span> <span class="n">KeyManager</span><span class="p">,</span> <span class="n">Message</span><span class="p">,</span> <span class="n">DataPart</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">agent_card_utils</span><span class="p">,</span> <span class="n">models</span> <span class="k">as</span> <span class="n">av_models</span><span class="p">,</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">av_exceptions</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">call_mcp_via_proxy</span><span class="p">(</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">proxy_agent_ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="c1"># ID, URL, or file path for the *Proxy* Agent</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">target_mcp_server_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">):</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">key_manager</span> <span class="o">=</span> <span class="n">KeyManager</span><span class="p">(</span><span class="n">use_keyring</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Assuming proxy might need auth</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">proxy_card</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">task_id</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="c1"># Load the PROXY agent&#39;s card</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        <span class="n">proxy_card</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent_card_utils</span><span class="o">.</span><span class="n">fetch_agent_card_from_url</span><span class="p">(</span><span class="n">proxy_agent_ref</span><span class="p">)</span> <span class="c1"># Example load</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">proxy_card</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Proxy agent card not found&quot;</span><span class="p">)</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>        <span class="c1"># Prepare the DataPart payload for the proxy</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        <span class="n">proxy_instruction_payload</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>            <span class="s2">&quot;target_mcp_server_id&quot;</span><span class="p">:</span> <span class="n">target_mcp_server_id</span><span class="p">,</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>            <span class="s2">&quot;tool_name&quot;</span><span class="p">:</span> <span class="n">tool_name</span><span class="p">,</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>            <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="n">arguments</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>        <span class="p">}</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        <span class="n">initial_message</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="c1"># Or appropriate role</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>            <span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">DataPart</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">proxy_instruction_payload</span><span class="p">)]</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="p">)</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>        <span class="k">async</span> <span class="k">with</span> <span class="n">AgentVaultClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending tool request to Proxy Agent: </span><span class="si">{</span><span class="n">proxy_card</span><span class="o">.</span><span class="n">human_readable_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>            <span class="n">task_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">initiate_task</span><span class="p">(</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>                <span class="n">agent_card</span><span class="o">=</span><span class="n">proxy_card</span><span class="p">,</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>                <span class="n">initial_message</span><span class="o">=</span><span class="n">initial_message</span><span class="p">,</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>                <span class="n">key_manager</span><span class="o">=</span><span class="n">key_manager</span>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>            <span class="p">)</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Proxy Task initiated: </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>            <span class="c1"># Stream events FROM THE PROXY</span>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>            <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">receive_messages</span><span class="p">(</span><span class="n">proxy_card</span><span class="p">,</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">key_manager</span><span class="p">):</span>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">av_models</span><span class="o">.</span><span class="n">TaskStatusUpdateEvent</span><span class="p">):</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Proxy Task Status: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>                     <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span> <span class="k">break</span> <span class="c1"># Proxy task finished</span>
+</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>                 <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">av_models</span><span class="o">.</span><span class="n">TaskMessageEvent</span><span class="p">):</span>
+</span><span id="__span-2-48"><a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>                     <span class="c1"># The proxy wraps the MCP result/error in a message part</span>
+</span><span id="__span-2-49"><a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Proxy Response Message:&quot;</span><span class="p">)</span>
+</span><span id="__span-2-50"><a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>                     <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
+</span><span id="__span-2-51"><a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">DataPart</span><span class="p">):</span>
+</span><span id="__span-2-52"><a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>                             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Data Result/Error from MCP: </span><span class="si">{</span><span class="n">part</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-53"><a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>                             <span class="c1"># TODO: Parse part.content (which should match McpToolExecOutput)</span>
+</span><span id="__span-2-54"><a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a>                             <span class="c1"># to check success/error and extract MCP result</span>
+</span><span id="__span-2-55"><a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>                         <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a>                             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Other Part: </span><span class="si">{</span><span class="n">part</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-57"><a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a>                 <span class="c1"># Handle other events...</span>
+</span><span id="__span-2-58"><a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a>
+</span><span id="__span-2-59"><a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a>    <span class="k">except</span> <span class="n">av_exceptions</span><span class="o">.</span><span class="n">AgentVaultError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-2-60"><a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AgentVault Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-61"><a id="__codelineno-2-61" name="__codelineno-2-61" href="#__codelineno-2-61"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-2-62"><a id="__codelineno-2-62" name="__codelineno-2-62" href="#__codelineno-2-62"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-63"><a id="__codelineno-2-63" name="__codelineno-2-63" href="#__codelineno-2-63"></a>
+</span><span id="__span-2-64"><a id="__codelineno-2-64" name="__codelineno-2-64" href="#__codelineno-2-64"></a><span class="c1"># Example Call</span>
+</span><span id="__span-2-65"><a id="__codelineno-2-65" name="__codelineno-2-65" href="#__codelineno-2-65"></a><span class="c1"># asyncio.run(call_mcp_via_proxy(</span>
+</span><span id="__span-2-66"><a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a><span class="c1">#     proxy_agent_ref=&quot;http://localhost:8059/agent-card.json&quot;,</span>
+</span><span id="__span-2-67"><a id="__codelineno-2-67" name="__codelineno-2-67" href="#__codelineno-2-67"></a><span class="c1">#     target_mcp_server_id=&quot;filesystem&quot;,</span>
+</span><span id="__span-2-68"><a id="__codelineno-2-68" name="__codelineno-2-68" href="#__codelineno-2-68"></a><span class="c1">#     tool_name=&quot;filesystem.readFile&quot;,</span>
+</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a><span class="c1">#     arguments={&quot;path&quot;: &quot;/data/test_script.py&quot;}</span>
+</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a><span class="c1"># ))</span>
 </span></code></pre></div>
-<h2 id="future">Future<a class="headerlink" href="#future" title="Permanent link">&para;</a></h2>
-<p>AgentVault aims to adopt official MCP standards as they stabilize, potentially refining the <code>mcp_utils</code> models and validation, and adding more specific helpers in the client library and server SDK. The current implementation provides a basic, flexible mechanism for passing structured context.</p>
+<h2 id="5-server-side-usage-implementing-the-proxy-agent">5. Server-Side Usage (Implementing the Proxy Agent)<a class="headerlink" href="#5-server-side-usage-implementing-the-proxy-agent" title="Permanent link">&para;</a></h2>
+<p>The MCP Tool Proxy Agent itself (built with <code>agentvault-server-sdk</code>):</p>
+<ol>
+<li>Receives the A2A <code>Message</code> in its <code>handle_task_send</code> method.</li>
+<li>Extracts the <code>target_mcp_server_id</code>, <code>tool_name</code>, and <code>arguments</code> from the incoming <code>Message.parts</code> (specifically looking for the <code>DataPart</code>).</li>
+<li>Looks up the target MCP server's base URL using the <code>target_mcp_server_id</code> (e.g., from an environment variable map <code>MCP_SERVER_MAP</code>).</li>
+<li>Uses an HTTP client (like <code>httpx</code>) to make the JSON-RPC 2.0 POST request to the target MCP server's <code>/rpc</code> endpoint.</li>
+<li>Parses the JSON-RPC response from the MCP server.</li>
+<li>Uses its <code>TaskStore</code> (<code>notify_message_event</code> or <code>notify_artifact_event</code>) to send the outcome back to the original A2A caller, wrapping the MCP result/error within a <code>DataPart</code>.</li>
+</ol>
+<p><em>(See the <code>mcp-tool-proxy-agent/src/mcp_tool_proxy_agent/agent.py</code> file in the POC for a concrete implementation.)</em></p>
+<h2 id="6-underlying-mcp-protocol-details-proxy-tool-server">6. Underlying MCP Protocol Details (Proxy &lt;-&gt; Tool Server)<a class="headerlink" href="#6-underlying-mcp-protocol-details-proxy-tool-server" title="Permanent link">&para;</a></h2>
+<p>The communication <em>between the Proxy Agent and the MCP Tool Server</em> uses JSON-RPC 2.0 over HTTPS POST, typically to an <code>/rpc</code> endpoint on the tool server.</p>
+<ul>
+<li><strong>Request:</strong> Standard JSON-RPC request where <code>method</code> is the tool name (e.g., <code>filesystem.readFile</code>) and <code>params</code> contains the arguments object.</li>
+<li><strong>Response (Success):</strong> JSON-RPC response where the <code>result</code> field contains the tool's output, often structured with a <code>content</code> array (e.g., <code>{"content": [{"type": "text", "text": "file data"}]}</code>).</li>
+<li><strong>Response (Tool Error):</strong> JSON-RPC response where the <code>result</code> field contains <code>{"isError": true, "content": [{"type": "text", "text": "Error message"}]}</code>.</li>
+<li><strong>Response (Protocol Error):</strong> Standard JSON-RPC <code>error</code> object (e.g., for method not found, invalid params).</li>
+</ul>
+<h2 id="7-future-considerations">7. Future Considerations<a class="headerlink" href="#7-future-considerations" title="Permanent link">&para;</a></h2>
+<p>While the A2A Proxy Pattern is robust and recommended for v1.0.0, future work could include:</p>
+<ul>
+<li>Adding direct MCP client support to the <code>agentvault</code> library for simpler scenarios where a proxy isn't desired (though this requires careful security consideration).</li>
+<li>Further standardization of MCP tool schemas and discovery mechanisms.</li>
+<li>Refining the <code>mcp_utils</code> in the core library to align with official MCP specifications as they mature.</li>
+</ul>
 
 
 
