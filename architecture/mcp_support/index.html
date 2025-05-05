@@ -1535,30 +1535,8 @@
 <li><strong>A2A Response from Proxy:</strong> The Proxy Agent translates the MCP response into a standard A2A format (e.g., placing the MCP <code>result</code> or error details within a <code>DataPart</code> of an assistant <code>Message</code> or <code>Artifact</code>) and sends it back to the Orchestrator via the A2A task's SSE stream or final result.</li>
 </ol>
 <p><strong>Diagram:</strong></p>
-<pre class="mermaid"><code>graph LR
-    subgraph ClientSide [Orchestrator / Client]
-        Orchestrator("🤖 Orchestrator")
-    end
-
-    subgraph AgentVaultInfra [AgentVault Infrastructure]
-        ProxyAgent["🛡️ MCP Tool Proxy Agent&lt;br&gt;(A2A Compliant)&lt;br&gt;&lt;i&gt;Authenticates Client&lt;/i&gt;"]
-    end
-
-    subgraph ToolServerSide [External Tool Server]
-        ToolServer("🛠️ MCP Tool Server&lt;br&gt;(JSON-RPC @ /rpc)")
-    end
-
-    Orchestrator -- "1. A2A Request&lt;br&gt;(via HTTPS + Auth Header)&lt;br&gt;Payload includes DataPart:&lt;br&gt;{target_id, tool_name, args}" --&gt; ProxyAgent
-
-    ProxyAgent -- "2. MCP Request&lt;br&gt;(via HTTPS)&lt;br&gt;{method: tool_name, params: args}" --&gt; ToolServer
-
-    ToolServer -- "3. MCP Response&lt;br&gt;(via HTTPS)&lt;br&gt;{result: ...} or {error: ...}" --&gt; ProxyAgent
-
-    ProxyAgent -- "4. A2A Response / Event&lt;br&gt;(via HTTPS / SSE)&lt;br&gt;Contains translated MCP result/error" --&gt; Orchestrator
-
-    style ClientSide fill:#e3f2fd,stroke:#90caf9
-    style AgentVaultInfra fill:#e8f5e9,stroke:#a5d6a7
-    style ToolServerSide fill:#fce4ec,stroke:#f8bbd0</code></pre>
+<p><img alt="AgentVault MCP Proxy Architecture" src="../../assets/images/agentvaultmcpproxyarch.png" />
+<em>(Diagram showing Orchestrator communicating via A2A (HTTPS+Auth) to the MCP Tool Proxy Agent. The Proxy Agent then communicates via MCP (HTTPS/JSON-RPC) to an MCP Tool Server, receiving a response, and relaying the outcome back to the Orchestrator via A2A.)</em></p>
 <h2 id="3-a2a-message-structure-client-proxy">3. A2A Message Structure (Client -&gt; Proxy)<a class="headerlink" href="#3-a2a-message-structure-client-proxy" title="Permanent link">&para;</a></h2>
 <p>Instead of using <code>message.metadata["mcp_context"]</code>, the client sends instructions to the proxy embedded within a <code>DataPart</code> inside the standard A2A <code>Message.parts</code> list.</p>
 <p><strong>Required <code>DataPart.content</code> structure:</strong></p>
