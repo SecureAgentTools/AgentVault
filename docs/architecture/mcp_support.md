@@ -29,32 +29,8 @@ The recommended and validated pattern in AgentVault v1.0.0 for integrating MCP t
 
 **Diagram:**
 
-```mermaid
-graph LR
-    subgraph ClientSide [Orchestrator / Client]
-        Orchestrator("🤖 Orchestrator")
-    end
-
-    subgraph AgentVaultInfra [AgentVault Infrastructure]
-        ProxyAgent["🛡️ MCP Tool Proxy Agent<br>(A2A Compliant)<br><i>Authenticates Client</i>"]
-    end
-
-    subgraph ToolServerSide [External Tool Server]
-        ToolServer("🛠️ MCP Tool Server<br>(JSON-RPC @ /rpc)")
-    end
-
-    Orchestrator -- "1. A2A Request<br>(via HTTPS + Auth Header)<br>Payload includes DataPart:<br>{target_id, tool_name, args}" --> ProxyAgent
-
-    ProxyAgent -- "2. MCP Request<br>(via HTTPS)<br>{method: tool_name, params: args}" --> ToolServer
-
-    ToolServer -- "3. MCP Response<br>(via HTTPS)<br>{result: ...} or {error: ...}" --> ProxyAgent
-
-    ProxyAgent -- "4. A2A Response / Event<br>(via HTTPS / SSE)<br>Contains translated MCP result/error" --> Orchestrator
-
-    style ClientSide fill:#e3f2fd,stroke:#90caf9
-    style AgentVaultInfra fill:#e8f5e9,stroke:#a5d6a7
-    style ToolServerSide fill:#fce4ec,stroke:#f8bbd0
-```
+![AgentVault MCP Proxy Architecture](../assets/images/agentvaultmcpproxyarch.png)
+*(Diagram showing Orchestrator communicating via A2A (HTTPS+Auth) to the MCP Tool Proxy Agent. The Proxy Agent then communicates via MCP (HTTPS/JSON-RPC) to an MCP Tool Server, receiving a response, and relaying the outcome back to the Orchestrator via A2A.)*
 
 ## 3. A2A Message Structure (Client -> Proxy)
 
