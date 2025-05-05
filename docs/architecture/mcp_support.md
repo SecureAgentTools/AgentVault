@@ -1,138 +1,212 @@
-# AgentVault MCP Support (Conceptual Profile)
+# AgentVault MCP Support (Proxy Pattern - v1.0.0)
 
-## Introduction
+**Status:** Defined & Implemented via Proxy Pattern
 
-The AgentVault Agent-to-Agent (A2A) protocol defines the core mechanisms for secure communication, task management, and event streaming between agents. However, many complex agent interactions require more than just the primary message content. Agents often need additional **context** to perform their tasks effectively. This could include:
+## 1. Introduction
 
-*   User profile information
-*   Relevant snippets from previous interactions
-*   Metadata about the environment
-*   References to external files or data artifacts
-*   Schema definitions for expected inputs/outputs
-*   Tool descriptions and schemas
+The AgentVault Agent-to-Agent (A2A) protocol defines the core mechanisms for secure communication, task management, and event streaming between agents. However, many complex agent interactions require agents to execute external **Tools** (e.g., filesystem access, code execution, database queries, specialized APIs).
 
-The **Model Context Protocol (MCP)** concept within AgentVault provides a structured way to embed this richer context *within* standard A2A messages.
+The **Model Context Protocol (MCP)** is a conceptual protocol designed for agent-tool interaction, typically using JSON-RPC 2.0 over HTTP(S). While direct client-library support for invoking MCP tools may evolve, **AgentVault v1.0.0 provides a robust and validated solution for integrating MCP tools via the A2A Proxy Pattern.**
 
-## Current Status (AgentVault v1.0.0)
+**Goal:** To enable standardized, reusable, secure, and controlled access to external capabilities within AgentVault workflows without requiring the orchestrator or core agents to directly implement the MCP protocol.
 
-**Evolving Standard:** The formal MCP specification is still evolving within the broader AI agent community.
+## 2. The A2A Proxy Pattern
 
-**AgentVault Implementation:** AgentVault v1.0.0 provides **basic, conceptual support** for MCP.
-*   The core `agentvault` library includes utilities (`agentvault.mcp_utils`) for formatting and validating a basic MCP structure (`MCPContext` and `MCPItem` Pydantic models).
-*   The `AgentVaultClient` allows embedding this structured context into the `message.metadata["mcp_context"]` field during `initiate_task` or `send_message` calls.
-*   The `agentvault-server-sdk` provides a helper (`get_mcp_context`) for agents to easily extract this dictionary from incoming messages.
+The recommended and validated pattern in AgentVault v1.0.0 for integrating MCP tools involves a dedicated **MCP Tool Proxy Agent**:
 
-This provides a flexible mechanism for passing structured context but **does not yet enforce a strict, standardized MCP schema** beyond the basic container structure defined in `mcp_utils.py`. Future AgentVault versions will aim to align with official MCP standards as they mature.
+*   **MCP Tool Proxy Agent:** An A2A-compliant agent (built using the `agentvault-server-sdk`) acts as a secure bridge between the A2A domain and the MCP domain.
+*   **MCP Tool Server:** A separate service (potentially non-A2A compliant itself) that exposes specific tools (e.g., `filesystem.readFile`, `code.runPython`) via an MCP-compatible JSON-RPC 2.0 HTTP endpoint (typically `/rpc`).
+*   **Orchestrator/Client:** An A2A client (like the `agentvault-cli`, a LangGraph orchestrator, or a custom application using the `agentvault` library) that needs to invoke an MCP tool.
 
-## Transport Mechanism
+**Workflow:**
 
-MCP context is embedded within the `metadata` field of standard A2A `Message` objects (`agentvault.models.Message`) under the key `"mcp_context"`.
+1.  **A2A Request to Proxy:** The Orchestrator sends a standard A2A `tasks/send` request to the Proxy Agent's `/a2a` endpoint. The crucial information about the desired MCP call is embedded within a `DataPart` of the A2A `Message`.
+2.  **Proxy Authentication & Routing:** The Proxy Agent authenticates the Orchestrator using standard A2A mechanisms (API Key, OAuth2 via `KeyManager`). It then parses the `DataPart` to identify the target MCP server and tool.
+3.  **MCP Request from Proxy:** The Proxy Agent looks up the target MCP Tool Server's URL (e.g., from its configuration) and sends a standard MCP JSON-RPC 2.0 request (e.g., `{"method": "filesystem.readFile", "params": {...}}`) via HTTP POST to the Tool Server's `/rpc` endpoint.
+4.  **MCP Tool Execution:** The MCP Tool Server executes the requested tool.
+5.  **MCP Response to Proxy:** The Tool Server sends a JSON-RPC 2.0 response back to the Proxy Agent (containing either a `result` or an `error`, potentially using the `isError: true` convention within the `result` for tool-level errors).
+6.  **A2A Response from Proxy:** The Proxy Agent translates the MCP response into a standard A2A format (e.g., placing the MCP `result` or error details within a `DataPart` of an assistant `Message` or `Artifact`) and sends it back to the Orchestrator via the A2A task's SSE stream or final result.
+
+**Diagram:**
+
+```mermaid
+graph LR
+    subgraph ClientSide [Orchestrator / Client]
+        Orchestrator("🤖 Orchestrator")
+    end
+
+    subgraph AgentVaultInfra [AgentVault Infrastructure]
+        ProxyAgent["🛡️ MCP Tool Proxy Agent<br>(A2A Compliant)<br><i>Authenticates Client</i>"]
+    end
+
+    subgraph ToolServerSide [External Tool Server]
+        ToolServer("🛠️ MCP Tool Server<br>(JSON-RPC @ /rpc)")
+    end
+
+    Orchestrator -- "1. A2A Request<br>(via HTTPS + Auth Header)<br>Payload includes DataPart:<br>{target_id, tool_name, args}" --> ProxyAgent
+
+    ProxyAgent -- "2. MCP Request<br>(via HTTPS)<br>{method: tool_name, params: args}" --> ToolServer
+
+    ToolServer -- "3. MCP Response<br>(via HTTPS)<br>{result: ...} or {error: ...}" --> ProxyAgent
+
+    ProxyAgent -- "4. A2A Response / Event<br>(via HTTPS / SSE)<br>Contains translated MCP result/error" --> Orchestrator
+
+    style ClientSide fill:#e3f2fd,stroke:#90caf9
+    style AgentVaultInfra fill:#e8f5e9,stroke:#a5d6a7
+    style ToolServerSide fill:#fce4ec,stroke:#f8bbd0
+```
+
+## 3. A2A Message Structure (Client -> Proxy)
+
+Instead of using `message.metadata["mcp_context"]`, the client sends instructions to the proxy embedded within a `DataPart` inside the standard A2A `Message.parts` list.
+
+**Required `DataPart.content` structure:**
 
 ```json
-// Example A2A Message including MCP Context
 {
-  "role": "user",
-  "parts": [
-    { "type": "text", "content": "Refactor the attached Python script based on these guidelines." }
-  ],
-  "metadata": {
-    "timestamp": "...",
-    "client_request_id": "...",
-    // MCP context is embedded here:
-    "mcp_context": {
-       "items": {
-         "guidelines_doc": {
-            "ref": "artifact://guideline-doc-123",
-            "mediaType": "text/markdown"
-         },
-         "user_prefs": {
-            "content": {"refactoring_style": "aggressive", "target_python": "3.11"},
-            "mediaType": "application/json"
-         }
-         // ... potentially other context items ...
-       }
-    }
+  "target_mcp_server_id": "filesystem", // Logical ID mapped to URL in Proxy config
+  "tool_name": "filesystem.readFile",   // The MCP method to call
+  "arguments": {                        // Parameters for the MCP method
+    "path": "/data/input.txt"
   }
 }
 ```
 
-## Structure (Current Conceptual Model)
-
-The `agentvault.mcp_utils` module defines placeholder Pydantic models for structure validation:
-
-1.  **`MCPContext` (Root Object):**
-    *   `items` (Dict[str, MCPItem]): Dictionary mapping unique item names/IDs to `MCPItem` objects.
-
-2.  **`MCPItem` (Individual Context Piece):**
-    *   `id` (Optional `str`): Item identifier within the context.
-    *   `mediaType` (Optional `str`): MIME type (e.g., "text/plain", "application/json").
-    *   `content` (Optional `Any`): Direct content (string, dict, list).
-    *   `ref` (Optional `str`): Reference to external context (URL, artifact ID).
-    *   `metadata` (Optional `Dict[str, Any]`): Item-specific metadata.
-
-**Example `mcp_context` Payload:**
+**Example A2A Message sent by Orchestrator to Proxy Agent:**
 
 ```json
-"mcp_context": {
-  "items": {
-    "user_profile": {
-      "mediaType": "application/json",
+// This is the JSON-RPC 'params.message' field in the tasks/send request
+{
+  "role": "user", // Or 'system' / 'assistant' depending on orchestrator
+  "parts": [
+    {
+      "type": "data",
+      "mediaType": "application/json", // Recommended
       "content": {
-        "user_id": "usr_123",
-        "preferences": {"theme": "dark"},
-        "permissions": ["read", "write"]
-      },
-      "metadata": {"source": "internal_db"}
-    },
-    "target_document": {
-      "mediaType": "application/pdf",
-      "ref": "s3://my-bucket/documents/report.pdf",
-      "metadata": {"version": "1.2"}
+        "target_mcp_server_id": "code",
+        "tool_name": "code.runPython",
+        "arguments": {
+          "code": "print('Hello from proxied MCP call!')"
+        }
+      }
     }
-  }
+    // Optionally include a TextPart for human context if needed
+    // { "type": "text", "content": "Execute the code specified in the data part."}
+  ],
+  "metadata": null // metadata["mcp_context"] is NOT used for this pattern
 }
 ```
 
-## Client-Side Usage (`agentvault` Library)
+## 4. Client-Side Usage (`agentvault` Library)
 
-Use the `mcp_context` parameter in `AgentVaultClient` methods:
+To invoke an MCP tool via the proxy pattern using the client library:
+
+1.  Load the **Proxy Agent's** `AgentCard`.
+2.  Instantiate `KeyManager` for the Proxy Agent's authentication.
+3.  Construct the A2A `Message` with the correct `DataPart` payload (as shown above).
+4.  Use `AgentVaultClient.initiate_task` (or `send_message`) targeting the **Proxy Agent**.
+5.  Process the A2A events/response received *from the Proxy Agent*, which will contain the translated result or error from the underlying MCP call.
 
 ```python
-from agentvault import AgentVaultClient, KeyManager, Message, TextPart, agent_card_utils
+import asyncio
+from agentvault import (
+    AgentVaultClient, KeyManager, Message, DataPart,
+    agent_card_utils, models as av_models, exceptions as av_exceptions
+)
 
-async def run_with_mcp(client: AgentVaultClient, card, km, msg, context_dict):
+async def call_mcp_via_proxy(
+    proxy_agent_ref: str, # ID, URL, or file path for the *Proxy* Agent
+    target_mcp_server_id: str,
+    tool_name: str,
+    arguments: dict
+):
+    key_manager = KeyManager(use_keyring=True) # Assuming proxy might need auth
+    proxy_card = None
+    task_id = None
+
     try:
-        task_id = await client.initiate_task(
-            agent_card=card,
-            initial_message=msg,
-            key_manager=km,
-            mcp_context=context_dict # Pass the context here
+        # Load the PROXY agent's card
+        proxy_card = await agent_card_utils.fetch_agent_card_from_url(proxy_agent_ref) # Example load
+        if not proxy_card: raise ValueError("Proxy agent card not found")
+
+        # Prepare the DataPart payload for the proxy
+        proxy_instruction_payload = {
+            "target_mcp_server_id": target_mcp_server_id,
+            "tool_name": tool_name,
+            "arguments": arguments
+        }
+        initial_message = Message(
+            role="user", # Or appropriate role
+            parts=[DataPart(content=proxy_instruction_payload)]
         )
-        print(f"Task with MCP started: {task_id}")
-        # ... stream events ...
+
+        async with AgentVaultClient() as client:
+            print(f"Sending tool request to Proxy Agent: {proxy_card.human_readable_id}")
+            task_id = await client.initiate_task(
+                agent_card=proxy_card,
+                initial_message=initial_message,
+                key_manager=key_manager
+            )
+            print(f"Proxy Task initiated: {task_id}")
+
+            # Stream events FROM THE PROXY
+            async for event in client.receive_messages(proxy_card, task_id, key_manager):
+                 if isinstance(event, av_models.TaskStatusUpdateEvent):
+                     print(f"  Proxy Task Status: {event.state}")
+                     if event.state.is_terminal(): break # Proxy task finished
+                 elif isinstance(event, av_models.TaskMessageEvent):
+                     # The proxy wraps the MCP result/error in a message part
+                     print(f"  Proxy Response Message:")
+                     for part in event.message.parts:
+                         if isinstance(part, DataPart):
+                             print(f"    Data Result/Error from MCP: {part.content}")
+                             # TODO: Parse part.content (which should match McpToolExecOutput)
+                             # to check success/error and extract MCP result
+                         else:
+                             print(f"    Other Part: {part}")
+                 # Handle other events...
+
+    except av_exceptions.AgentVaultError as e:
+        print(f"AgentVault Error: {e}")
     except Exception as e:
-        print(f"Error: {e}")
-```
-The library validates and embeds the dictionary under `message.metadata["mcp_context"]`.
+        print(f"Unexpected Error: {e}")
 
-## Server-Side Usage (`agentvault-server-sdk`)
-
-Use the `get_mcp_context` helper:
-
-```python
-from agentvault_server_sdk import BaseA2AAgent
-from agentvault_server_sdk.mcp_utils import get_mcp_context
-from agentvault.models import Message
-
-class MyAgent(BaseA2AAgent):
-    async def handle_task_send(self, task_id: Optional[str], message: Message) -> str:
-        mcp_data = get_mcp_context(message)
-        if mcp_data:
-            print(f"MCP Data Received: {mcp_data}")
-            # Process mcp_data['items']...
-        # ... rest of logic ...
+# Example Call
+# asyncio.run(call_mcp_via_proxy(
+#     proxy_agent_ref="http://localhost:8059/agent-card.json",
+#     target_mcp_server_id="filesystem",
+#     tool_name="filesystem.readFile",
+#     arguments={"path": "/data/test_script.py"}
+# ))
 ```
 
-## Future
+## 5. Server-Side Usage (Implementing the Proxy Agent)
 
-AgentVault aims to adopt official MCP standards as they stabilize, potentially refining the `mcp_utils` models and validation, and adding more specific helpers in the client library and server SDK. The current implementation provides a basic, flexible mechanism for passing structured context.
+The MCP Tool Proxy Agent itself (built with `agentvault-server-sdk`):
+
+1.  Receives the A2A `Message` in its `handle_task_send` method.
+2.  Extracts the `target_mcp_server_id`, `tool_name`, and `arguments` from the incoming `Message.parts` (specifically looking for the `DataPart`).
+3.  Looks up the target MCP server's base URL using the `target_mcp_server_id` (e.g., from an environment variable map `MCP_SERVER_MAP`).
+4.  Uses an HTTP client (like `httpx`) to make the JSON-RPC 2.0 POST request to the target MCP server's `/rpc` endpoint.
+5.  Parses the JSON-RPC response from the MCP server.
+6.  Uses its `TaskStore` (`notify_message_event` or `notify_artifact_event`) to send the outcome back to the original A2A caller, wrapping the MCP result/error within a `DataPart`.
+
+*(See the `mcp-tool-proxy-agent/src/mcp_tool_proxy_agent/agent.py` file in the POC for a concrete implementation.)*
+
+## 6. Underlying MCP Protocol Details (Proxy <-> Tool Server)
+
+The communication *between the Proxy Agent and the MCP Tool Server* uses JSON-RPC 2.0 over HTTPS POST, typically to an `/rpc` endpoint on the tool server.
+
+*   **Request:** Standard JSON-RPC request where `method` is the tool name (e.g., `filesystem.readFile`) and `params` contains the arguments object.
+*   **Response (Success):** JSON-RPC response where the `result` field contains the tool's output, often structured with a `content` array (e.g., `{"content": [{"type": "text", "text": "file data"}]}`).
+*   **Response (Tool Error):** JSON-RPC response where the `result` field contains `{"isError": true, "content": [{"type": "text", "text": "Error message"}]}`.
+*   **Response (Protocol Error):** Standard JSON-RPC `error` object (e.g., for method not found, invalid params).
+
+## 7. Future Considerations
+
+While the A2A Proxy Pattern is robust and recommended for v1.0.0, future work could include:
+
+*   Adding direct MCP client support to the `agentvault` library for simpler scenarios where a proxy isn't desired (though this requires careful security consideration).
+*   Further standardization of MCP tool schemas and discovery mechanisms.
+*   Refining the `mcp_utils` in the core library to align with official MCP specifications as they mature.
+
