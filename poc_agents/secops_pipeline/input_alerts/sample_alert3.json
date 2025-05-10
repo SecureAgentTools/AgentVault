@@ -1,0 +1,28 @@
+{
+  "alert_id": "SEC-2025-0549",
+  "name": "Malware Detection Alert",
+  "severity": "High",
+  "source": "Endpoint Protection",
+  "timestamp": "2025-05-08T10:12:45Z",
+  "description": "Ransomware behavior detected on engineering workstation",
+  "details": {
+    "endpoint": "workstation-17.example.com",
+    "user": "robert.lee",
+    "process": "winword.exe",
+    "malware_type": "Ransomware",
+    "malware_family": "BlackCat",
+    "detection_method": "Behavioral Analysis",
+    "file_hash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+    "suspicious_behaviors": [
+      "Mass file encryption",
+      "Shadow copy deletion",
+      "Registry modification"
+    ],
+    "affected_files": 247,
+    "infected_path": "C:\\Users\\robert.lee\\Downloads\\invoice_april.docx"
+  },
+  "affected_systems": ["workstation-17.example.com"],
+  "tactic": "Impact",
+  "technique": "Data Encryption",
+  "raw_log": "May 8 10:12:45 edr-agent-17 DETECTION: ransomware_behavior=true, process=winword.exe, pid=4532, user=robert.lee, confidence=97"
+}

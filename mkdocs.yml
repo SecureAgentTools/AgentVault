@@ -46,6 +46,7 @@ nav:
       - Basic Agents: examples/basic_agents.md # New page for simple examples
       - LangChain Tool: examples/langchain_integration.md
       - Pipelines (POCs):
+          - SecOps Pipeline (LLM-Enhanced): examples/poc_secops.md
           - Research Pipeline: examples/poc_research.md
           - Support Ticket Pipeline: examples/poc_support.md
           - Dynamics 365 Pipeline: examples/poc_dynamics.md

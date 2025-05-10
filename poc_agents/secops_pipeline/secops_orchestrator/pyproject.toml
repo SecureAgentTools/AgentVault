@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "secops-pipeline-orchestrator"
+version = "0.1.0"
+description = "LangGraph orchestrator for the Automated SecOps Alert Triage, Enrichment, and Response pipeline using AgentVault."
+authors = ["AgentVault A-Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md" # Assuming a README will be added later
+packages = [{include = "secops_orchestrator", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12" # REQ-SECOPS-ORCH-1.1
+
+# Core AgentVault library - Use HOST-RELATIVE path here
+agentvault = {path = "../../../agentvault_library", develop = true}
+
+# LangChain & LangGraph for orchestration
+langgraph = "^0.1.1" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+langchain-core = "^0.2.23" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+
+# Communication & Data Handling
+httpx = {version = ">=0.26.0,<0.27.0", extras = ["http2", "brotli"]} # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+pydantic = "^2.7.1" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+python-dotenv = "^1.0.1" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+pydantic-settings = "^2.0" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+
+# Resilience
+tenacity = "^8.2.3" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+pytest-asyncio = "^0.23.0" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+pytest-mock = "^3.12.0" # REQ-SECOPS-ORCH-1.1 - Match version from MCP POC
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# REQ-SECOPS-ORCH-1.1: Define src directory
+[tool.setuptools]
+packages = ["secops_orchestrator"]
+package_dir = {"" = "src"}
+
+# Define script entry point if runnable directly (REQ-SECOPS-ORCH-1.8 related)
+[tool.poetry.scripts]
+run_secops_pipeline = "secops_orchestrator.run:cli_entry_point"

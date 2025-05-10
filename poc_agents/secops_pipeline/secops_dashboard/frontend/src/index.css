@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #1a202c;
+  color: #e2e8f0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.pipeline-node {
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 180px;
+  font-size: 14px;
+  color: white;
+}
+
+.node-pending {
+  background-color: #4a5568;
+  border: 2px solid #2d3748;
+}
+
+.node-active {
+  background-color: #3182ce;
+  border: 2px solid #2c5282;
+  animation: pulse 1.5s infinite;
+}
+
+.node-completed {
+  background-color: #48bb78;
+  border: 2px solid #2f855a;
+}
+
+.node-error {
+  background-color: #e53e3e;
+  border: 2px solid #9b2c2c;
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(49, 130, 206, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(49, 130, 206, 0);
+  }
+}
+
+.dashboard-card {
+  @apply bg-gray-800 p-4 rounded-lg shadow-md;
+}
+
+.dashboard-card-header {
+  @apply text-lg font-medium mb-3 text-white border-b border-gray-700 pb-2;
+}

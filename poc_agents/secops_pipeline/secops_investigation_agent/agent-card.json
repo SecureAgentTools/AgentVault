@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/secops-investigation-agent",
+  "agentVersion": "0.1.0",
+  "name": "SecOps Alert Investigation Agent",
+  "description": "Investigates enriched security alerts by querying logs, correlating events, and assessing impact.",
+  "url": "http://localhost:8072/a2a",
+  "provider": {
+    "name": "AgentVault POC Team"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this internal POC agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "investigate_alert",
+      "name": "Investigate Enriched Alert",
+      "description": "Takes standardized alert data and enrichment results, performs investigation steps (e.g., log queries via MCP Proxy), and returns findings.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "alert": {
+            "type": "object",
+            "description": "The standardized alert data."
+          },
+          "enrichment": {
+             "type": "object",
+             "description": "Enrichment results for IOCs in the alert."
+          }
+        },
+        "required": ["alert", "enrichment"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+           "severity": { "type": "string", "enum": ["Low", "Medium", "High", "Critical", "Unknown"], "description": "Assessed severity level."},
+           "confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "Confidence score (0.0-1.0) that this is a true positive requiring action."},
+           "summary": { "type": "string", "description": "Brief summary of investigation findings."},
+           "details": { "type": "object", "description": "Structured details, e.g., correlated events, affected assets."}
+        },
+        "required": ["severity", "confidence", "summary"]
+      }
+    }
+  ],
+  "tags": ["security", "soc", "investigation", "incident response", "correlation", "poc", "secops-pipeline"]
+}

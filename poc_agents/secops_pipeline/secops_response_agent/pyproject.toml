@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "secops-response-agent"
+version = "0.1.0"
+description = "AgentVault SecOps Agent: Executes response actions (e.g., create ticket, block IP)."
+authors = ["AgentVault A-Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "secops_response_agent", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+agentvault-server-sdk = {path = "../../../agentvault_server_sdk", develop = true}
+# Add httpx as it's needed by the agent to call the MCP Proxy Agent
+agentvault = {path = "../../../agentvault_library", develop = true} # For AgentVaultClient
+httpx = {version = ">=0.26.0,<0.27.0"}
+pydantic = "^2.7.1"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.setuptools]
+packages = ["secops_response_agent"]
+package_dir = {"" = "src"}

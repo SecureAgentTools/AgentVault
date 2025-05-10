@@ -1,0 +1,25 @@
+{
+  "alert_id": "SEC-2025-0548",
+  "name": "Anomalous Data Exfiltration",
+  "severity": "High",
+  "source": "Network IDS",
+  "timestamp": "2025-05-08T04:27:15Z",
+  "description": "Unusual outbound data transfer to unknown external destination",
+  "details": {
+    "source_host": "workstation-42.example.com",
+    "source_ip": "10.12.45.87",
+    "destination_ip": "198.51.100.23",
+    "destination_domain": "data-archive.example-cloud-store.net",
+    "transfer_size_mb": 245,
+    "transfer_protocol": "HTTPS",
+    "user": "jane.doe",
+    "department": "R&D",
+    "typical_daily_transfer_mb": 25,
+    "time_of_day": "04:27:15",
+    "working_hours": "09:00-17:00"
+  },
+  "affected_systems": ["workstation-42.example.com"],
+  "tactic": "Exfiltration",
+  "technique": "Exfiltration Over Web Service",
+  "raw_log": "May 8 04:27:15 gateway-fw-1 CEF:0|Security|Gateway|2.1|1001|Large Data Transfer|8|src=10.12.45.87 dst=198.51.100.23 dpt=443 out=256901120 cs1=jane.doe"
+}

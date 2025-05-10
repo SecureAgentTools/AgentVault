@@ -1,0 +1,20 @@
+{
+  "alert_ingestor_agent": null,
+  "enrichment_agent": {
+    "hri": "local-poc/secops-enrichment-agent"
+  },
+  "investigation_agent": {
+    "hri": "local-poc/secops-investigation-agent"
+  },
+  "response_agent": {
+    "hri": "local-poc/secops-response-agent"
+  },
+  "orchestration": {
+    "recursion_limit": 15,
+    "registry_url": null
+  },
+  "timeouts": {
+    "agent_call_timeout": 120.0,
+    "sse_stream_timeout": 300.0
+  }
+}

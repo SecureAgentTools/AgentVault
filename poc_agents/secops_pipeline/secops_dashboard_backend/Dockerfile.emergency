@@ -1,0 +1,9 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# No dependencies needed!
+COPY emergency_server.py .
+
+# Just run with Python directly
+CMD ["python", "emergency_server.py"]

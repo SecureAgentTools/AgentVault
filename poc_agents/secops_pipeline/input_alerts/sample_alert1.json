@@ -1,0 +1,24 @@
+{
+  "alert_id": "SEC-2025-0547",
+  "name": "Suspicious Authentication Activity",
+  "severity": "Medium",
+  "source": "SIEM",
+  "timestamp": "2025-05-07T22:15:30Z",
+  "description": "Multiple failed login attempts followed by successful login from unusual location",
+  "details": {
+    "user": "john.smith",
+    "source_ip": "203.0.113.42",
+    "failed_attempts": 5,
+    "timespan_minutes": 3,
+    "successful_login": true,
+    "user_role": "Finance Administrator",
+    "typical_login_hours": "08:00-18:00",
+    "login_time": "03:14:22",
+    "typical_login_locations": ["New York", "Boston"],
+    "current_login_location": "Unknown (Tor Exit Node)"
+  },
+  "affected_systems": ["finance.example.com", "payroll.example.com"],
+  "tactic": "Initial Access",
+  "technique": "Valid Accounts",
+  "raw_log": "May 7 03:14:22 auth-server sshd[12345]: Accepted password for john.smith from 203.0.113.42 port 54321"
+}

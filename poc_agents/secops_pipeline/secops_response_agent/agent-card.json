@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/secops-response-agent",
+  "agentVersion": "0.1.0",
+  "name": "SecOps Response Agent",
+  "description": "Executes automated response actions based on security investigation outcomes (e.g., create ticket, block IP).",
+  "url": "http://localhost:8073/a2a",
+  "provider": {
+    "name": "AgentVault POC Team"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this internal POC agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "execute_action",
+      "name": "Execute Security Response Action",
+      "description": "Takes a defined action type and parameters, executes the corresponding response (e.g., create Jira ticket).",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "action_type": {
+            "type": "string",
+            "enum": ["CREATE_TICKET", "BLOCK_IP", "ISOLATE_HOST"],
+            "description": "The type of response action to execute."
+          },
+          "parameters": {
+             "type": "object",
+             "description": "Parameters specific to the action type (e.g., ticket summary/description, IP address)."
+          }
+        },
+        "required": ["action_type", "parameters"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+           "action": { "type": "string", "description": "The action that was attempted."},
+           "status": { "type": "string", "enum": ["Success", "Failed", "Error"], "description": "Outcome of the action execution."},
+           "details": { "type": ["object", "null"], "description": "Optional details, e.g., created ticket ID or error message."}
+        },
+        "required": ["action", "status"]
+      }
+    }
+  ],
+  "tags": ["security", "soc", "response", "automation", "incident response", "ticketing", "poc", "secops-pipeline"]
+}

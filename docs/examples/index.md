@@ -20,6 +20,8 @@ These examples illustrate specific features of the AgentVault client library (`a
 
 These Proof-of-Concept (POC) pipelines demonstrate how multiple specialized agents can collaborate to solve more complex problems using AgentVault orchestration principles.
 
+*   **[SecOps Pipeline (LLM-Enhanced)](./poc_secops.md):** 🔥 **FEATURED** 🔥 An advanced Security Operations pipeline using the Qwen3-8B LLM for real-time security alert analysis, investigation, and automated response. Demonstrates direct LLM integration, transparent reasoning, and interactive dashboard visualization. (Uses LangGraph for orchestration with Redis for real-time updates).
+
 *   **[Research Pipeline](./poc_research.md):** A sophisticated pipeline orchestrating 7 agents (topic research, crawling, extraction, verification, synthesis, editing, visualization) to generate comprehensive research reports on a given topic. Demonstrates complex workflow, artifact passing, and local artifact storage. (Uses LangGraph for orchestration).
 *   **[Support Ticket Pipeline](./poc_support.md):** Orchestrates 4 agents (ticket analysis, KB search, customer history, response suggestion) to process customer support tickets and suggest responses. Showcases integrating different data sources. (Uses LangGraph for orchestration).
 *   **[Dynamics 365 Pipeline](./poc_dynamics.md):** A pipeline simulating integration with Dynamics 365 data. It involves fetching data, enrichment, health analysis, action recommendation, briefing generation, and task creation/notification execution. Demonstrates rule-based analysis, LLM usage, and executing actions based on insights. (Uses LangGraph for orchestration).

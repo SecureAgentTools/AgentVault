@@ -1,0 +1,29 @@
+{
+  "alert_id": "SEC-2025-0551",
+  "name": "Unusual Data Access Pattern",
+  "severity": "High",
+  "source": "DLP System",
+  "timestamp": "2025-05-08T19:44:22Z",
+  "description": "Employee accessed unusually large volume of sensitive documents outside normal pattern",
+  "details": {
+    "user": "jennifer.wong",
+    "user_department": "Marketing",
+    "document_types": [
+      "Financial Reports",
+      "Customer PII",
+      "Employee Salary Data"
+    ],
+    "files_accessed": 47,
+    "access_period_minutes": 22,
+    "typical_daily_access": 5,
+    "access_time": "19:44:22",
+    "working_hours": "09:00-17:00",
+    "device": "personal-laptop.example.com",
+    "resignation_notice": true,
+    "resignation_date": "2025-05-15"
+  },
+  "affected_systems": ["sharepoint.example.com", "financial-docs.example.com"],
+  "tactic": "Collection",
+  "technique": "Data from Information Repositories",
+  "raw_log": "May 8 19:44:22 dlp-monitor [ALERT]: Unusual access pattern detected, user=jennifer.wong, docs=47, threshold=10, policy=SensitiveDocAccess"
+}

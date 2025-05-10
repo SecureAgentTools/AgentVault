@@ -1,0 +1,6 @@
+version: '3.8'
+
+services:
+  secops-dashboard-backend:
+    environment:
+      - REDIS_URL=redis://secops-redis:6379

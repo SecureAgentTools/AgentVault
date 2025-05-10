@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "secops-investigation-agent"
+version = "0.1.0"
+description = "AgentVault SecOps Agent: Investigates alerts using enriched data, logs, etc."
+authors = ["AgentVault A-Team <agentvault@example.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "secops_investigation_agent", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+agentvault = {path = "./agentvault_library", develop = true}
+agentvault-server-sdk = {path = "./agentvault_server_sdk", develop = true}
+
+httpx = {version = ">=0.26.0,<0.27.0"}
+pydantic = "^2.7.1"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.setuptools]
+packages = ["secops_investigation_agent"]
+package_dir = {"" = "src"}

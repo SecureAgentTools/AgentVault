@@ -24,6 +24,7 @@ The AgentVault ecosystem enables secure and orchestrated interactions between va
 *   **Attestation Protocol:** Specific protocol dependent on the TEE technology used (e.g., SGX Remote Attestation, AWS Nitro Attestation) used between the Agent (in TEE), the Attestation Service, and potentially the Client/CLI.
 *   **Storage Protocol:** Standard protocols like HTTPS (S3 API, etc.) used for interacting with Secure Artifact Storage.
 *   **MCP (Model Context Protocol):** Used for agent-to-tool communication, typically via a proxy agent. (See [MCP Profile](./mcp.md) and [MCP Example](./examples/poc_mcp_pipeline.md)).
+*   **LLM Integration:** Direct integration with large language models (LLMs) like Qwen3-8B to enhance agent capabilities with sophisticated reasoning and decision-making. (See [SecOps Pipeline Example](./examples/poc_secops.md)).
 
 ## High-Level Architecture Diagram
 

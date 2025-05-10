@@ -81,6 +81,12 @@ local_*.db
 logs/
 *.log.*
 
+# Database backups
+backups/
+*.sql
+*.dump
+*.bak
+
 # Temp files
 temp/
 tmp/

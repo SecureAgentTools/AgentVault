@@ -1,0 +1,29 @@
+{
+  "CREATE_TICKET": {
+    "action_type": "CREATE_TICKET",
+    "parameters": {
+      "summary": "Suspicious authentication activity for john.smith",
+      "description": "Multiple failed login attempts followed by successful login from Tor exit node",
+      "priority": "Medium",
+      "affected_systems": ["finance.example.com", "payroll.example.com"]
+    }
+  },
+  "BLOCK_IP": {
+    "action_type": "BLOCK_IP",
+    "parameters": {
+      "ip_address": "203.0.113.42",
+      "reason": "Suspicious authentication activity - Tor exit node",
+      "duration_hours": 24,
+      "alert_id": "SEC-2025-0547"
+    }
+  },
+  "ISOLATE_HOST": {
+    "action_type": "ISOLATE_HOST",
+    "parameters": {
+      "hostname": "workstation-42.example.com",
+      "reason": "Suspected data exfiltration activity",
+      "isolation_level": "full",
+      "alert_id": "SEC-2025-0548"
+    }
+  }
+}

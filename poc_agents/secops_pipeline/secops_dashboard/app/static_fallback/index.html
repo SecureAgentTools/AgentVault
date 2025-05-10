@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecOps Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2d3748;
+            padding-bottom: 10px;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .card {
+            background-color: #2d3748;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .card-header {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 8px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success {
+            background-color: #48bb78;
+        }
+        .status-pending {
+            background-color: #e3a008;
+        }
+        .status-error {
+            background-color: #e53e3e;
+        }
+        .alert {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #553c1b;
+            color: #fbd38d;
+            border-radius: 4px;
+        }
+        #recent-executions {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .execution-item {
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #3f4756;
+            cursor: pointer;
+        }
+        .execution-item:hover {
+            background-color: #4a5568;
+        }
+        .execution-active {
+            border-left: 4px solid #3182ce;
+        }
+        .pipeline-step {
+            display: inline-block;
+            padding: 4px 8px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            background-color: #4a5568;
+        }
+        .step-active {
+            background-color: #3182ce;
+        }
+        .step-completed {
+            background-color: #48bb78;
+        }
+        .step-error {
+            background-color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>SecOps Pipeline Dashboard</h1>
+                <p>Real-time monitoring of security operations with LLM integration</p>
+            </div>
+            <div>
+                <span class="status status-success"></span> Connected to Pipeline
+            </div>
+        </header>
+        
+        <div class="alert">
+            <p><strong>Note:</strong> This is a fallback static page. The full dashboard with real-time updates should be available soon.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2 class="card-header">Pipeline Flow</h2>
+                <div id="pipeline-flow">
+                    <div class="pipeline-step">Start</div>
+                    <div class="pipeline-step">Ingest Alert</div>
+                    <div class="pipeline-step step-active">Enrich Alert</div>
+                    <div class="pipeline-step">Investigate</div>
+                    <div class="pipeline-step">Determine Response</div>
+                    <div class="pipeline-step">Execute Response</div>
+                    <div class="pipeline-step">End</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-header">Recent Executions</h2>
+                <div id="recent-executions">
+                    <div class="execution-item execution-active">
+                        <div><strong>Alert: Suspicious Login Attempt</strong></div>
+                        <div>Status: <span class="status status-pending"></span> In Progress</div>
+                        <div>Started: A few moments ago</div>
+                    </div>
+                    <div class="execution-item">
+                        <div><strong>Alert: Malware Detection</strong></div>
+                        <div>Status: <span class="status status-success"></span> Completed</div>
+                        <div>Finished: 10 minutes ago</div>
+                    </div>
+                    <div class="execution-item">
+                        <div><strong>Alert: Firewall Rule Violation</strong></div>
+                        <div>Status: <span class="status status-error"></span> Failed</div>
+                        <div>Finished: 1 hour ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2 class="card-header">Alert Details</h2>
+                <div>
+                    <div><strong>Name:</strong> Suspicious Login Attempt</div>
+                    <div><strong>Source:</strong> VPN Gateway</div>
+                    <div><strong>Time:</strong> 2025-05-08 12:30:15</div>
+                    <div><strong>User:</strong> john.smith</div>
+                    <div><strong>Source IP:</strong> 203.0.113.42</div>
+                    <div><strong>Description:</strong> Multiple failed login attempts followed by successful login from unusual location</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-header">Enrichment Results</h2>
+                <div>
+                    <div><strong>IP Reputation:</strong> <span style="color: #ed8936;">Suspicious</span></div>
+                    <div><strong>IP Location:</strong> Netherlands (Tor Exit Node)</div>
+                    <div><strong>Previous Activity:</strong> No prior history for this IP</div>
+                    <div><strong>User Context:</strong> Finance Administrator, typically logs in during business hours</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2 class="card-header">LLM Decision</h2>
+                <div>
+                    <div><strong>Severity:</strong> <span style="color: #ed8936;">Medium</span></div>
+                    <div><strong>Confidence:</strong> 85%</div>
+                    <div><strong>Determined Action:</strong> Create Ticket</div>
+                    <div><strong>Summary:</strong> The login pattern is suspicious given the user's role and unusual source. Requires investigation but doesn't warrant immediate isolation.</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-header">Response Action</h2>
+                <div>
+                    <div><strong>Action Type:</strong> Create Ticket</div>
+                    <div><strong>Status:</strong> <span style="color: #48bb78;">Success</span></div>
+                    <div><strong>Ticket ID:</strong> SEC-2025-001</div>
+                    <div><strong>Priority:</strong> Medium</div>
+                    <div><strong>Assigned To:</strong> Security Team</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This is just a placeholder script for the static page
+        // The full dashboard uses React and WebSockets for real-time updates
+        console.log('Static dashboard page loaded');
+        
+        // Auto refresh to check if the real dashboard becomes available
+        setTimeout(() => {
+            window.location.reload();
+        }, 10000); // Refresh every 10 seconds
+    </script>
+</body>
+</html>

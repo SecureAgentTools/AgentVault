@@ -6,6 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     postgresql-client \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -16,6 +17,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
 COPY . /app/
+
+# Fix line endings on shell scripts
+RUN dos2unix /app/*.sh
 
 # Fix permissions on scripts
 RUN chmod +x /app/*.sh

@@ -1,0 +1,23 @@
+SECOPS PIPELINE WITH QWEN3-8B LLM INTEGRATION - SIMPLE GUIDE
+===========================================================
+
+1) Make sure LM Studio is running with the server enabled
+   - Open LM Studio
+   - Load the Qwen3-8B model
+   - Enable the server in Settings > Server (on port 1234)
+
+2) Test that the LLM is working (optional):
+   python -m shared.test_llm
+
+3) Run the SecOps pipeline with Docker Compose:
+   docker-compose -f docker-compose.secops.yml down
+   docker-compose -f docker-compose.secops.yml up -d
+
+4) Process a sample alert:
+   docker-compose -f docker-compose.secops.yml run --rm secops-orchestrator --alert-file /app/input_alerts/sample_alert1.json
+
+5) View the logs:
+   docker-compose -f docker-compose.secops.yml logs -f
+
+That's it! The pipeline will now use the Qwen3-8B model through LM Studio to analyze alerts,
+investigate security incidents, and determine appropriate response actions.

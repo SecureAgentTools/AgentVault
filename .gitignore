@@ -84,6 +84,8 @@ ipython_config.py
 .env
 .env.*
 !/.env.example # Allow example env files
+!**/.env.example # Allow all example env files in subfolders
+!**/.env.docker.example # Allow docker example env files in subfolders
 .venv/ # Explicitly ignore root venv
 /.venv/
 venv/
@@ -147,6 +149,9 @@ local_*.db
 temp/
 logs/
 *.log # General log files
+
+# Tempdel folders (temporary files to be deleted)
+**/Tempdel/
 
 # Specific local key files (examples)
 *.keys.*

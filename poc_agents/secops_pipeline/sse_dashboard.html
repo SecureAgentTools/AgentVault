@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecOps Pipeline Dashboard (SSE)</title>
+    <!-- Same styles as dynamic_dashboard.html -->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2d3748;
+            padding-bottom: 10px;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .subtitle {
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        .card {
+            background-color: #2d3748;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        .card-updating {
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+        }
+        .card-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .badge {
+            font-size: 10px;
+            padding: 2px 6px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 16px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success {
+            background-color: #48bb78;
+        }
+        .status-pending {
+            background-color: #e3a008;
+        }
+        .status-error {
+            background-color: #e53e3e;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background-color: #1f4a30;
+            color: #68d391;
+        }
+        .badge-warning {
+            background-color: #744210;
+            color: #fbd38d;
+        }
+        .badge-danger {
+            background-color: #742a2a;
+            color: #feb2b2;
+        }
+        .badge-info {
+            background-color: #2a4365;
+            color: #90cdf4;
+        }
+        .execution-item {
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #3f4756;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .execution-item:hover {
+            background-color: #4a5568;
+        }
+        .execution-active {
+            border-left: 4px solid #3182ce;
+            background-color: #2c3750;
+        }
+        .pipeline-flow {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            position: relative;
+        }
+        .pipeline-flow::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 60px;
+            right: 60px;
+            height: 2px;
+            background-color: #4a5568;
+            z-index: 0;
+        }
+        .step {
+            width: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .step-node {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: bold;
+            box-shadow: 0 0 0 4px #1a202c;
+            transition: all 0.3s ease;
+        }
+        .step-pending { background-color: #4a5568; }
+        .step-active { background-color: #3182ce; animation: pulse 1.5s infinite; }
+        .step-completed { background-color: #48bb78; }
+        .step-error { background-color: #e53e3e; }
+        .step-label {
+            font-size: 12px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .divider {
+            margin: 32px 0;
+            border-top: 1px solid #4a5568;
+        }
+        .text-danger { color: #f56565; }
+        .text-warning { color: #ed8936; }
+        .text-success { color: #48bb78; }
+        .text-info { color: #63b3ed; }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(49, 130, 206, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(49, 130, 206, 0); }
+        }
+        
+        .metric {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .metric-label {
+            width: 120px;
+            color: #a0aec0;
+        }
+        .metric-value {
+            font-weight: 600;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 24px;
+            background-color: #2d3748;
+            border-radius: 12px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #3182ce;
+            border-radius: 12px;
+            text-align: center;
+            line-height: 24px;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            transition: width 0.5s ease;
+        }
+        
+        footer {
+            margin-top: 32px;
+            text-align: center;
+            color: #718096;
+            font-size: 12px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th,
+        .data-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #4a5568;
+        }
+        .data-table th {
+            color: #a0aec0;
+            font-weight: 600;
+        }
+        .data-table tbody tr:hover {
+            background-color: #2d3748;
+        }
+        .highlight {
+            color: #f6e05e;
+            font-weight: 600;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background-color: #2a4365;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Connection status indicator in bottom right */
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .connection-status.connected {
+            background-color: #1f4a30;
+            color: #68d391;
+        }
+        .connection-status.connecting {
+            background-color: #744210;
+            color: #fbd38d;
+        }
+        .connection-status.disconnected {
+            background-color: #742a2a;
+            color: #feb2b2;
+        }
+        .connection-status .status {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>SecOps Pipeline Dashboard (SSE Version)</h1>
+                <p class="subtitle">Real-time monitoring of security operations with LLM integration</p>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <div style="margin-right: 24px; display: flex; align-items: center;">
+                    <span id="pipeline-status-indicator" class="status status-pending"></span>
+                    <span id="pipeline-status-text">Pipeline Status</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span id="llm-status-indicator" class="status status-pending"></span>
+                    <span id="llm-status-text">LLM Status</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Same UI components as dynamic_dashboard.html -->
+        <!-- Pipeline flow card -->
+        <div id="pipeline-flow-card" class="card full-width">
+            <h2 class="card-header">Pipeline Execution Flow</h2>
+            <div class="pipeline-flow">
+                <div class="step">
+                    <div id="step-1" class="step-node step-pending">1</div>
+                    <div class="step-label">Start</div>
+                </div>
+                <div class="step">
+                    <div id="step-2" class="step-node step-pending">2</div>
+                    <div class="step-label">Ingest Alert</div>
+                </div>
+                <div class="step">
+                    <div id="step-3" class="step-node step-pending">3</div>
+                    <div class="step-label">Enrichment</div>
+                </div>
+                <div class="step">
+                    <div id="step-4" class="step-node step-pending">4</div>
+                    <div class="step-label">Investigation</div>
+                </div>
+                <div class="step">
+                    <div id="step-5" class="step-node step-pending">5</div>
+                    <div class="step-label">Determine Response</div>
+                </div>
+                <div class="step">
+                    <div id="step-6" class="step-node step-pending">6</div>
+                    <div class="step-label">Execute Response</div>
+                </div>
+                <div class="step">
+                    <div id="step-7" class="step-node step-pending">7</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+            <div id="pipeline-status" style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span id="pipeline-status-badge" class="badge badge-info">WAITING</span>
+                        <span id="project-id" style="margin-left: 8px;">Waiting for pipeline execution...</span>
+                    </div>
+                    <div>
+                        <span id="duration">Duration: --</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Other cards remain the same as dynamic_dashboard.html -->
+        <div class="grid">
+            <div id="executions-card" class="card">
+                <h2 class="card-header">Recent Executions</h2>
+                <div id="executions-list">
+                    <div class="execution-item execution-active">
+                        <div><strong>Suspicious Login Attempt</strong></div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <span class="badge badge-success">COMPLETED</span>
+                            <span>May 8, 2025 - 14:39:39</span>
+                        </div>
+                    </div>
+                    <div class="execution-item">
+                        <div><strong>Malware Detection</strong></div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <span class="badge badge-success">COMPLETED</span>
+                            <span>May 8, 2025 - 14:30:15</span>
+                        </div>
+                    </div>
+                    <div class="execution-item">
+                        <div><strong>Firewall Rule Violation</strong></div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <span class="badge badge-warning">MANUAL_REVIEW</span>
+                            <span>May 8, 2025 - 13:45:22</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="summary-card" class="card">
+                <h2 class="card-header">Execution Summary</h2>
+                <div>
+                    <div class="metric">
+                        <div class="metric-label">Status:</div>
+                        <div class="metric-value">
+                            <span id="summary-status" class="badge badge-info">WAITING</span>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Project ID:</div>
+                        <div id="summary-project-id" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Start Time:</div>
+                        <div id="summary-start-time" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Duration:</div>
+                        <div id="summary-duration" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Alert Source:</div>
+                        <div id="summary-alert-source" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Response:</div>
+                        <div id="summary-response" class="metric-value">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rest of the cards... -->
+        <div id="alert-details-card" class="card">
+            <h2 class="card-header">Alert Details</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <div>
+                    <div class="metric">
+                        <div class="metric-label">Name:</div>
+                        <div id="alert-name" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Source:</div>
+                        <div id="alert-source" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Time:</div>
+                        <div id="alert-time" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">User:</div>
+                        <div id="alert-user" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Source IP:</div>
+                        <div id="alert-source-ip" class="metric-value">--</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="metric">
+                        <div class="metric-label">Description:</div>
+                        <div id="alert-description" class="metric-value" style="font-weight: normal;">
+                            --
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Affected Systems:</div>
+                        <div id="alert-affected-systems" class="metric-value">
+                            --
+                        </div>
+                    </div>
+                    <div id="alert-additional-details" class="metric">
+                        <!-- Additional details will be inserted here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div id="enrichment-card" class="card">
+                <h2 class="card-header">Enrichment Results</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Indicator</th>
+                            <th>Type</th>
+                            <th>Verdict</th>
+                        </tr>
+                    </thead>
+                    <tbody id="enrichment-table-body">
+                        <!-- Enrichment data rows will be inserted here -->
+                        <tr>
+                            <td colspan="3">Waiting for enrichment data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div id="enrichment-additional-context" style="margin-top: 16px;">
+                    <!-- Additional context will be inserted here -->
+                </div>
+            </div>
+            
+            <div id="llm-decision-card" class="card">
+                <h2 class="card-header">LLM-Enhanced Decision</h2>
+                <div class="metric">
+                    <div class="metric-label">Severity:</div>
+                    <div id="llm-severity" class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Confidence:</div>
+                    <div id="llm-confidence" class="metric-value">--</div>
+                </div>
+                <div class="progress-container">
+                    <div id="llm-confidence-bar" class="progress-bar" style="width: 0%;">0%</div>
+                </div>
+                
+                <div class="metric">
+                    <div class="metric-label">Determined Action:</div>
+                    <div id="llm-action" class="metric-value">--</div>
+                </div>
+                
+                <div style="margin-top: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">LLM Reasoning:</div>
+                    <div id="llm-reasoning" style="background-color: #2a4a68; padding: 12px; border-radius: 4px; font-size: 14px;">
+                        Waiting for LLM analysis...
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="response-card" class="card">
+            <h2 class="card-header">Response Action Execution</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <div>
+                    <div class="metric">
+                        <div class="metric-label">Action Type:</div>
+                        <div id="response-action-type" class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Status:</div>
+                        <div class="metric-value">
+                            <span id="response-status" class="badge badge-info">Waiting</span>
+                        </div>
+                    </div>
+                    <div id="response-details" class="metric">
+                        <!-- Action-specific details will go here -->
+                    </div>
+                </div>
+                <div>
+                    <div class="metric">
+                        <div class="metric-label">Parameters:</div>
+                        <div id="response-parameters" class="metric-value" style="font-weight: normal;">
+                            <!-- Parameters will go here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>SecOps Pipeline v1.0 | Qwen3-8B LLM Integration | AgentVault Framework</p>
+        </footer>
+    </div>
+    
+    <!-- Connection status indicator -->
+    <div id="connection-status" class="connection-status connecting">
+        <span class="status status-pending"></span>
+        <span>Connecting to server...</span>
+    </div>
+    
+    <!-- Notification element -->
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements - reuse the same element IDs as in dynamic_dashboard.html
+            const pipelineStatusIndicator = document.getElementById('pipeline-status-indicator');
+            const pipelineStatusText = document.getElementById('pipeline-status-text');
+            const llmStatusIndicator = document.getElementById('llm-status-indicator');
+            const llmStatusText = document.getElementById('llm-status-text');
+            const connectionStatus = document.getElementById('connection-status');
+            const notification = document.getElementById('notification');
+            
+            // Pipeline flow nodes
+            const stepNodes = [
+                document.getElementById('step-1'),
+                document.getElementById('step-2'),
+                document.getElementById('step-3'),
+                document.getElementById('step-4'),
+                document.getElementById('step-5'),
+                document.getElementById('step-6'),
+                document.getElementById('step-7')
+            ];
+            
+            // SSE connection variables
+            let eventSource = null;
+            let reconnectAttempts = 0;
+            const maxReconnectAttempts = 10;
+            const reconnectDelay = 3000; // 3 seconds
+            
+            // Connect to SSE
+            function connectSSE() {
+                // Close existing connection if any
+                if (eventSource) {
+                    console.log('Closing existing SSE connection');
+                    eventSource.close();
+                    eventSource = null;
+                }
+                
+                // Get the SSE URL
+                const protocol = window.location.protocol;
+                const hostname = window.location.hostname;
+                const port = window.location.port ? ':' + window.location.port : '';
+                const sseUrl = `${protocol}//${hostname}${port}/sse`;
+                
+                console.log(`Connecting to SSE endpoint: ${sseUrl}`);
+                
+                // Update connection status
+                connectionStatus.className = 'connection-status connecting';
+                connectionStatus.innerHTML = '<span class="status status-pending"></span><span>Connecting...</span>';
+                
+                try {
+                    // Create SSE connection
+                    eventSource = new EventSource(sseUrl);
+                    
+                    // Connection opened
+                    eventSource.onopen = function() {
+                        console.log('SSE connection opened');
+                        // Reset reconnect attempts on successful connection
+                        reconnectAttempts = 0;
+                    };
+                    
+                    // Message handler
+                    eventSource.onmessage = function(event) {
+                        console.log(`SSE message received: ${event.data.slice(0, 100)}...`);
+                        try {
+                            const data = JSON.parse(event.data);
+                            
+                            // If this is a connection status event, update UI
+                            if (data.event_type === 'connection_status') {
+                                console.log('Connection status event received');
+                                connectionStatus.className = 'connection-status connected';
+                                connectionStatus.innerHTML = '<span class="status status-success"></span><span>Connected</span>';
+                                
+                                pipelineStatusIndicator.className = 'status status-success';
+                                pipelineStatusText.textContent = 'Pipeline Connected';
+                                
+                                llmStatusIndicator.className = 'status status-success';
+                                llmStatusText.textContent = 'LLM Connected';
+                                
+                                showNotification('Connected to SecOps Pipeline', 'success');
+                            } else {
+                                // Process other event types
+                                handleSSEMessage(data);
+                            }
+                        } catch (error) {
+                            console.error('Error parsing message:', error);
+                        }
+                    };
+                    
+                    // Error handler
+                    eventSource.onerror = function(error) {
+                        console.error('SSE connection error:', error);
+                        connectionStatus.className = 'connection-status disconnected';
+                        connectionStatus.innerHTML = '<span class="status status-error"></span><span>Disconnected</span>';
+                        
+                        // Close the connection
+                        eventSource.close();
+                        eventSource = null;
+                        
+                        // Attempt to reconnect
+                        if (reconnectAttempts < maxReconnectAttempts) {
+                            reconnectAttempts++;
+                            console.log(`Attempting to reconnect (${reconnectAttempts}/${maxReconnectAttempts})...`);
+                            connectionStatus.innerHTML = `<span class="status status-pending"></span><span>Reconnecting (${reconnectAttempts}/${maxReconnectAttempts})...</span>`;
+                            setTimeout(connectSSE, reconnectDelay);
+                        } else {
+                            console.log('Max reconnect attempts reached');
+                            showNotification('Connection lost. Please refresh the page.', 'error');
+                        }
+                    };
+                } catch (error) {
+                    console.error('Error creating SSE connection:', error);
+                    connectionStatus.className = 'connection-status disconnected';
+                    connectionStatus.innerHTML = '<span class="status status-error"></span><span>Connection Failed</span>';
+                    
+                    // Attempt to reconnect
+                    if (reconnectAttempts < maxReconnectAttempts) {
+                        reconnectAttempts++;
+                        console.log(`Attempting to reconnect (${reconnectAttempts}/${maxReconnectAttempts})...`);
+                        setTimeout(connectSSE, reconnectDelay);
+                    }
+                }
+            }
+            
+            // Handle SSE messages (reuse the same logic from dynamic_dashboard.html)
+            function handleSSEMessage(data) {
+                // Highlight the card being updated
+                highlightCard(data.event_type);
+                
+                // Handle different event types
+                switch(data.event_type) {
+                    case 'pipeline_status':
+                        updatePipelineStatus(data);
+                        break;
+                    case 'llm_status':
+                        updateLlmStatus(data);
+                        break;
+                    case 'pipeline_step':
+                        updatePipelineStep(data);
+                        break;
+                    case 'execution_summary':
+                        updateExecutionSummary(data);
+                        break;
+                    case 'alert_details':
+                        updateAlertDetails(data);
+                        break;
+                    case 'enrichment_results':
+                        updateEnrichmentResults(data);
+                        break;
+                    case 'llm_decision':
+                        updateLlmDecision(data);
+                        break;
+                    case 'response_action':
+                        updateResponseAction(data);
+                        break;
+                    case 'execution_list':
+                        updateExecutionList(data);
+                        break;
+                    case 'test_event':
+                        showNotification(data.message, 'info');
+                        break;
+                    default:
+                        console.log('Unknown event type:', data.event_type);
+                }
+            }
+            
+            // Highlight card being updated
+            function highlightCard(eventType) {
+                let cardId = null;
+                
+                switch(eventType) {
+                    case 'pipeline_step':
+                        cardId = 'pipeline-flow-card';
+                        break;
+                    case 'execution_summary':
+                        cardId = 'summary-card';
+                        break;
+                    case 'alert_details':
+                        cardId = 'alert-details-card';
+                        break;
+                    case 'enrichment_results':
+                        cardId = 'enrichment-card';
+                        break;
+                    case 'llm_decision':
+                        cardId = 'llm-decision-card';
+                        break;
+                    case 'response_action':
+                        cardId = 'response-card';
+                        break;
+                    case 'execution_list':
+                        cardId = 'executions-card';
+                        break;
+                }
+                
+                if (cardId) {
+                    const card = document.getElementById(cardId);
+                    card.classList.add('card-updating');
+                    setTimeout(() => {
+                        card.classList.remove('card-updating');
+                    }, 1000);
+                }
+            }
+            
+            // Show notification
+            function showNotification(message, type = 'info') {
+                notification.textContent = message;
+                notification.className = 'notification show';
+                
+                // Add color based on type
+                if (type === 'success') {
+                    notification.style.backgroundColor = '#1f4a30';
+                } else if (type === 'error') {
+                    notification.style.backgroundColor = '#742a2a';
+                } else if (type === 'warning') {
+                    notification.style.backgroundColor = '#744210';
+                } else {
+                    notification.style.backgroundColor = '#2a4365';
+                }
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    notification.className = 'notification';
+                }, 3000);
+            }
+            
+            // All the other update functions remain the same as in dynamic_dashboard.html
+            // Update functions for different sections - reuse from dynamic_dashboard.html
+            function updatePipelineStatus(data) {
+                if (data.connected) {
+                    pipelineStatusIndicator.className = 'status status-success';
+                    pipelineStatusText.textContent = 'Pipeline Connected';
+                } else {
+                    pipelineStatusIndicator.className = 'status status-error';
+                    pipelineStatusText.textContent = 'Pipeline Disconnected';
+                }
+            }
+            
+            function updateLlmStatus(data) {
+                if (data.connected) {
+                    llmStatusIndicator.className = 'status status-success';
+                    llmStatusText.textContent = 'LLM Connected';
+                } else {
+                    llmStatusIndicator.className = 'status status-error';
+                    llmStatusText.textContent = 'LLM Disconnected';
+                }
+            }
+            
+            function updatePipelineStep(data) {
+                // Update project ID
+                document.getElementById('project-id').textContent = data.project_id || '';
+                
+                // Update pipeline status
+                const statusBadge = document.getElementById('pipeline-status-badge');
+                if (data.error_step !== null && data.error_step !== undefined) {
+                    statusBadge.className = 'badge badge-danger';
+                    statusBadge.textContent = 'ERROR';
+                } else if (data.current_step >= data.total_steps) {
+                    statusBadge.className = 'badge badge-success';
+                    statusBadge.textContent = 'COMPLETED';
+                } else {
+                    statusBadge.className = 'badge badge-info';
+                    statusBadge.textContent = 'PROCESSING';
+                }
+                
+                // Reset all steps to pending
+                stepNodes.forEach(node => {
+                    node.className = 'step-node step-pending';
+                });
+                
+                // Set completed steps
+                for (let i = 0; i < data.current_step; i++) {
+                    if (i < stepNodes.length) {
+                        stepNodes[i].className = 'step-node step-completed';
+                    }
+                }
+                
+                // Set current active step
+                if (data.current_step < stepNodes.length && data.current_step >= 0) {
+                    stepNodes[data.current_step].className = 'step-node step-active';
+                }
+                
+                // Set error step if any
+                if (data.error_step !== null && data.error_step !== undefined && data.error_step < stepNodes.length) {
+                    stepNodes[data.error_step].className = 'step-node step-error';
+                }
+                
+                // Update duration if provided
+                if (data.duration_seconds) {
+                    document.getElementById('duration').textContent = `Duration: ${data.duration_seconds.toFixed(2)}s`;
+                }
+            }
+            
+            function updateExecutionSummary(data) {
+                // Update status badge
+                const statusBadge = document.getElementById('summary-status');
+                if (data.status === 'COMPLETED') {
+                    statusBadge.className = 'badge badge-success';
+                } else if (data.status === 'ERROR' || data.status === 'FAILED') {
+                    statusBadge.className = 'badge badge-danger';
+                } else if (data.status === 'MANUAL_REVIEW') {
+                    statusBadge.className = 'badge badge-warning';
+                } else {
+                    statusBadge.className = 'badge badge-info';
+                }
+                statusBadge.textContent = data.status;
+                
+                // Update other fields
+                document.getElementById('summary-project-id').textContent = data.project_id || '--';
+                document.getElementById('summary-start-time').textContent = data.start_time || '--';
+                document.getElementById('summary-duration').textContent = data.duration_seconds ? `${data.duration_seconds.toFixed(2)} seconds` : '--';
+                document.getElementById('summary-alert-source').textContent = data.alert_source || '--';
+                document.getElementById('summary-response').textContent = data.response_action || '--';
+            }
+            
+            function updateAlertDetails(data) {
+                // Update basic alert details
+                document.getElementById('alert-name').textContent = data.name || '--';
+                document.getElementById('alert-source').textContent = data.source || '--';
+                document.getElementById('alert-time').textContent = data.time || '--';
+                document.getElementById('alert-description').textContent = data.description || '--';
+                
+                // Update affected systems
+                const affectedSystemsElement = document.getElementById('alert-affected-systems');
+                if (data.affected_systems && data.affected_systems.length > 0) {
+                    affectedSystemsElement.innerHTML = '';
+                    data.affected_systems.forEach(system => {
+                        const div = document.createElement('div');
+                        div.textContent = system;
+                        affectedSystemsElement.appendChild(div);
+                    });
+                } else {
+                    affectedSystemsElement.textContent = 'None';
+                }
+                
+                // Extract user and source IP from details if available
+                if (data.details) {
+                    document.getElementById('alert-user').textContent = data.details.user || '--';
+                    document.getElementById('alert-source-ip').textContent = data.details.source_ip || '--';
+                    
+                    // Add any additional details
+                    const additionalDetailsElement = document.getElementById('alert-additional-details');
+                    additionalDetailsElement.innerHTML = '';
+                    
+                    // Display a few important additional details (customize based on alert types)
+                    const detailsToShow = {
+                        'login_time': 'Login Time',
+                        'malware_type': 'Malware Type',
+                        'malware_family': 'Malware Family',
+                        'scan_type': 'Scan Type',
+                        'geolocation': 'Geolocation',
+                        'user_department': 'Department'
+                    };
+                    
+                    let additionalDetailsAdded = false;
+                    
+                    for (const [key, label] of Object.entries(detailsToShow)) {
+                        if (data.details[key]) {
+                            additionalDetailsAdded = true;
+                            const metricDiv = document.createElement('div');
+                            metricDiv.className = 'metric';
+                            
+                            const labelDiv = document.createElement('div');
+                            labelDiv.className = 'metric-label';
+                            labelDiv.textContent = label + ':';
+                            
+                            const valueDiv = document.createElement('div');
+                            valueDiv.className = 'metric-value';
+                            valueDiv.textContent = data.details[key];
+                            
+                            metricDiv.appendChild(labelDiv);
+                            metricDiv.appendChild(valueDiv);
+                            additionalDetailsElement.appendChild(metricDiv);
+                        }
+                    }
+                }
+            }
+            
+            function updateEnrichmentResults(data) {
+                // Update enrichment table
+                const tableBody = document.getElementById('enrichment-table-body');
+                tableBody.innerHTML = '';
+                
+                if (data.indicators && data.indicators.length > 0) {
+                    data.indicators.forEach(indicator => {
+                        const row = document.createElement('tr');
+                        
+                        // Indicator cell
+                        const indicatorCell = document.createElement('td');
+                        indicatorCell.className = 'highlight';
+                        indicatorCell.textContent = indicator.value || '';
+                        
+                        // Type cell
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = indicator.type || '';
+                        
+                        // Verdict cell
+                        const verdictCell = document.createElement('td');
+                        const verdictText = document.createElement('span');
+                        verdictText.textContent = indicator.verdict || '';
+                        
+                        // Add color based on verdict
+                        if (indicator.verdict) {
+                            if (indicator.verdict.toLowerCase().includes('malicious') || 
+                                indicator.verdict.toLowerCase().includes('suspicious')) {
+                                verdictText.className = 'text-warning';
+                            } else if (indicator.verdict.toLowerCase().includes('legitimate') || 
+                                     indicator.verdict.toLowerCase().includes('clean')) {
+                                verdictText.className = 'text-success';
+                            }
+                        }
+                        
+                        verdictCell.appendChild(verdictText);
+                        
+                        // Add cells to row
+                        row.appendChild(indicatorCell);
+                        row.appendChild(typeCell);
+                        row.appendChild(verdictCell);
+                        
+                        // Add row to table
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 3;
+                    cell.textContent = 'No enrichment data available';
+                    row.appendChild(cell);
+                    tableBody.appendChild(row);
+                }
+                
+                // Update additional context
+                const contextElement = document.getElementById('enrichment-additional-context');
+                contextElement.innerHTML = '';
+                
+                if (data.additional_context) {
+                    // Display important context information
+                    const contextItems = [
+                        { key: 'ip_location', label: 'IP Location' },
+                        { key: 'previous_activity', label: 'Previous Activity' },
+                        { key: 'enrichment_source', label: 'Enrichment Source' }
+                    ];
+                    
+                    contextItems.forEach(item => {
+                        if (data.additional_context[item.key]) {
+                            const metricDiv = document.createElement('div');
+                            metricDiv.className = 'metric';
+                            
+                            const labelDiv = document.createElement('div');
+                            labelDiv.className = 'metric-label';
+                            labelDiv.textContent = item.label + ':';
+                            
+                            const valueDiv = document.createElement('div');
+                            valueDiv.className = 'metric-value';
+                            
+                            // Add text coloring for location if it contains certain keywords
+                            if (item.key === 'ip_location' && 
+                                data.additional_context[item.key].toLowerCase().includes('tor') ||
+                                data.additional_context[item.key].toLowerCase().includes('suspicious')) {
+                                valueDiv.className += ' text-warning';
+                            }
+                            
+                            valueDiv.textContent = data.additional_context[item.key];
+                            
+                            metricDiv.appendChild(labelDiv);
+                            metricDiv.appendChild(valueDiv);
+                            contextElement.appendChild(metricDiv);
+                        }
+                    });
+                }
+            }
+            
+            function updateLlmDecision(data) {
+                // Update severity with appropriate color
+                const severityElement = document.getElementById('llm-severity');
+                severityElement.textContent = data.severity || '--';
+                
+                // Add color based on severity
+                severityElement.className = 'metric-value';
+                if (data.severity) {
+                    if (data.severity === 'Critical' || data.severity === 'High') {
+                        severityElement.className += ' text-danger';
+                    } else if (data.severity === 'Medium') {
+                        severityElement.className += ' text-warning';
+                    } else if (data.severity === 'Low') {
+                        severityElement.className += ' text-success';
+                    }
+                }
+                
+                // Update confidence percentage
+                document.getElementById('llm-confidence').textContent = data.confidence_percentage ? `${data.confidence_percentage}%` : '--';
+                
+                // Update confidence progress bar
+                const confidenceBar = document.getElementById('llm-confidence-bar');
+                if (data.confidence_percentage) {
+                    confidenceBar.style.width = `${data.confidence_percentage}%`;
+                    confidenceBar.textContent = `${data.confidence_percentage}%`;
+                    
+                    // Change color based on confidence level
+                    if (data.confidence_percentage >= 80) {
+                        confidenceBar.style.backgroundColor = '#48bb78'; // Green for high confidence
+                    } else if (data.confidence_percentage >= 50) {
+                        confidenceBar.style.backgroundColor = '#e3a008'; // Yellow for medium confidence
+                    } else {
+                        confidenceBar.style.backgroundColor = '#e53e3e'; // Red for low confidence
+                    }
+                } else {
+                    confidenceBar.style.width = '0%';
+                    confidenceBar.textContent = '0%';
+                }
+                
+                // Update recommended action
+                const actionElement = document.getElementById('llm-action');
+                actionElement.textContent = data.recommended_action || '--';
+                actionElement.className = 'metric-value';
+                
+                // Add color based on action
+                if (data.recommended_action) {
+                    if (data.recommended_action === 'ISOLATE_HOST') {
+                        actionElement.className += ' text-danger';
+                    } else if (data.recommended_action === 'BLOCK_IP') {
+                        actionElement.className += ' text-warning';
+                    } else if (data.recommended_action === 'CREATE_TICKET') {
+                        actionElement.className += ' text-info';
+                    }
+                }
+                
+                // Update reasoning
+                document.getElementById('llm-reasoning').textContent = data.reasoning || 'No reasoning provided';
+            }
+            
+            function updateResponseAction(data) {
+                // Update action type
+                const actionTypeElement = document.getElementById('response-action-type');
+                actionTypeElement.textContent = data.action_type || '--';
+                actionTypeElement.className = 'metric-value';
+                
+                // Add color based on action type
+                if (data.action_type) {
+                    if (data.action_type === 'ISOLATE_HOST') {
+                        actionTypeElement.className += ' text-danger';
+                    } else if (data.action_type === 'BLOCK_IP') {
+                        actionTypeElement.className += ' text-warning';
+                    } else if (data.action_type === 'CREATE_TICKET') {
+                        actionTypeElement.className += ' text-info';
+                    }
+                }
+                
+                // Update status badge
+                const statusBadge = document.getElementById('response-status');
+                if (data.status === 'Success') {
+                    statusBadge.className = 'badge badge-success';
+                } else if (data.status === 'Failed' || data.status === 'Error') {
+                    statusBadge.className = 'badge badge-danger';
+                } else {
+                    statusBadge.className = 'badge badge-info';
+                }
+                statusBadge.textContent = data.status || 'Waiting';
+                
+                // Update details based on action type
+                const detailsElement = document.getElementById('response-details');
+                detailsElement.innerHTML = '';
+                
+                if (data.details) {
+                    if (data.action_type === 'CREATE_TICKET' && data.details.ticket_id) {
+                        addMetric(detailsElement, 'Ticket ID:', data.details.ticket_id);
+                    } else if (data.action_type === 'BLOCK_IP') {
+                        if (data.details.block_rule_id) {
+                            addMetric(detailsElement, 'Rule ID:', data.details.block_rule_id);
+                        }
+                        if (data.details.block_status) {
+                            addMetric(detailsElement, 'Block Status:', data.details.block_status);
+                        }
+                        if (data.details.target_ip) {
+                            addMetric(detailsElement, 'Target IP:', data.details.target_ip);
+                        }
+                    } else if (data.action_type === 'ISOLATE_HOST') {
+                        if (data.details.isolation_id) {
+                            addMetric(detailsElement, 'Isolation ID:', data.details.isolation_id);
+                        }
+                        if (data.details.isolation_status) {
+                            addMetric(detailsElement, 'Isolation Status:', data.details.isolation_status);
+                        }
+                        if (data.details.target_host) {
+                            addMetric(detailsElement, 'Target Host:', data.details.target_host);
+                        }
+                    }
+                    
+                    // Add error details if any
+                    if (data.details.error_details) {
+                        let errorText = typeof data.details.error_details === 'string' 
+                            ? data.details.error_details 
+                            : JSON.stringify(data.details.error_details);
+                        
+                        addMetric(detailsElement, 'Error:', errorText, 'text-danger');
+                    }
+                }
+                
+                // Update parameters
+                const parametersElement = document.getElementById('response-parameters');
+                parametersElement.innerHTML = '';
+                
+                if (data.parameters) {
+                    for (const [key, value] of Object.entries(data.parameters)) {
+                        if (typeof value === 'object' && Array.isArray(value)) {
+                            addParameter(parametersElement, key, value.join(', '));
+                        } else if (typeof value === 'object') {
+                            addParameter(parametersElement, key, JSON.stringify(value));
+                        } else {
+                            addParameter(parametersElement, key, value);
+                        }
+                    }
+                } else {
+                    parametersElement.textContent = 'No parameters available';
+                }
+            }
+            
+            function updateExecutionList(data) {
+                const executionsList = document.getElementById('executions-list');
+                executionsList.innerHTML = '';
+                
+                if (data.executions && data.executions.length > 0) {
+                    data.executions.forEach((execution, index) => {
+                        const item = document.createElement('div');
+                        item.className = index === 0 ? 'execution-item execution-active' : 'execution-item';
+                        
+                        const titleDiv = document.createElement('div');
+                        const titleStrong = document.createElement('strong');
+                        titleStrong.textContent = execution.name || 'Unnamed Execution';
+                        titleDiv.appendChild(titleStrong);
+                        
+                        const detailsDiv = document.createElement('div');
+                        detailsDiv.style.display = 'flex';
+                        detailsDiv.style.justifyContent = 'space-between';
+                        detailsDiv.style.marginTop = '4px';
+                        
+                        const statusSpan = document.createElement('span');
+                        statusSpan.className = 'badge';
+                        
+                        if (execution.status === 'COMPLETED') {
+                            statusSpan.className += ' badge-success';
+                        } else if (execution.status === 'FAILED' || execution.status === 'ERROR') {
+                            statusSpan.className += ' badge-danger';
+                        } else if (execution.status === 'MANUAL_REVIEW') {
+                            statusSpan.className += ' badge-warning';
+                        } else {
+                            statusSpan.className += ' badge-info';
+                        }
+                        
+                        statusSpan.textContent = execution.status || 'UNKNOWN';
+                        
+                        const timeSpan = document.createElement('span');
+                        timeSpan.textContent = execution.timestamp || '';
+                        
+                        detailsDiv.appendChild(statusSpan);
+                        detailsDiv.appendChild(timeSpan);
+                        
+                        item.appendChild(titleDiv);
+                        item.appendChild(detailsDiv);
+                        executionsList.appendChild(item);
+                    });
+                } else {
+                    executionsList.textContent = 'No recent executions';
+                }
+            }
+            
+            // Helper functions
+            function addMetric(parent, label, value, valueClass = '') {
+                const metricDiv = document.createElement('div');
+                metricDiv.className = 'metric';
+                
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'metric-label';
+                labelDiv.textContent = label;
+                
+                const valueDiv = document.createElement('div');
+                valueDiv.className = valueClass ? `metric-value ${valueClass}` : 'metric-value';
+                valueDiv.textContent = value;
+                
+                metricDiv.appendChild(labelDiv);
+                metricDiv.appendChild(valueDiv);
+                parent.appendChild(metricDiv);
+            }
+            
+            function addParameter(parent, key, value) {
+                const div = document.createElement('div');
+                const strong = document.createElement('strong');
+                strong.textContent = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ') + ': ';
+                div.appendChild(strong);
+                div.appendChild(document.createTextNode(value));
+                parent.appendChild(div);
+            }
+            
+            // Initial connection
+            connectSSE();
+        });
+    </script>
+</body>
+</html>

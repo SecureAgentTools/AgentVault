@@ -1,0 +1,301 @@
+version: '3.8'
+
+services:
+  # --- SecOps MCP Tool Proxy Agent ---
+  secops-mcp-proxy:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/secops_pipeline/mcp-tool-proxy-agent/Dockerfile
+    container_name: secops-mcp-proxy
+    ports:
+      - "8069:8069" # Keep using port 8069
+    env_file:
+      - ./mcp-tool-proxy-agent/.env
+    environment:
+      - LOG_LEVEL=DEBUG
+      - AGENTVAULT_REGISTRY_URL=http://host.docker.internal:8000
+      # Add this explicit server map as a backup
+      - MCP_SERVER_MAP={"tip_virustotal":"http://secops-threat-intel:8101","tip_abuseipdb":"http://secops-threat-intel:8101","network_firewall_main":"http://secops-firewall:8102","endpoint_detection_response_edr":"http://secops-edr:8103","ticketing_system_jira":"http://secops-ticketing:8104"}
+    volumes:
+      - ./shared:/app/shared:ro
+    networks:
+      - agentvault_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8069/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # --- SecOps Pipeline Orchestrator ---
+  secops-orchestrator:
+    build:
+      context: ../.. # Build from AgentVault project root
+      dockerfile: ./poc_agents/secops_pipeline/secops_orchestrator/Dockerfile
+    container_name: secops-orchestrator
+    env_file:
+      - ./secops_orchestrator/.env # Orchestrator specific .env
+    environment:
+      # Basic configuration
+      - LOG_LEVEL=DEBUG
+      - MCP_PROXY_AGENT_HRI=local-poc/mcp-tool-proxy
+      - AGENTVAULT_REGISTRY_URL=http://host.docker.internal:8000
+      # LLM configuration
+      - LMSTUDIO_API_URL=http://host.docker.internal:1234/v1
+      - LLM_MODEL_NAME=qwen3-8b
+      - LMSTUDIO_TIMEOUT_SECONDS=60
+      - RUNNING_IN_DOCKER=true
+      # Redis for event publishing
+      - REDIS_URL=redis://secops-redis:6379
+    volumes:
+      # Mount a directory for input alert files (example)
+      - ./input_alerts:/app/input_alerts:ro
+      # Mount a directory for potential output artifacts from the orchestrator
+      - ./orchestrator_outputs:/app/orchestrator_outputs
+      # Mount shared directory for LLM client
+      - ./shared:/app/shared:ro
+    networks:
+      - agentvault_network
+    depends_on:
+      secops-investigation-agent:
+        condition: service_healthy
+      secops-enrichment-agent:
+        condition: service_started
+      secops-response-agent:
+        condition: service_started
+      secops-mcp-proxy:
+        condition: service_started
+    # Example command to run a specific alert file:
+    # Adjust path based on where you mount input_alerts
+    command: ["--alert-file", "/app/input_alerts/sample_alert1.json"]
+    restart: "unless-stopped" # Keep orchestrator running to handle events
+
+  # --- SecOps Enrichment Agent ---
+  secops-enrichment-agent:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/secops_pipeline/secops_enrichment_agent/Dockerfile
+    container_name: secops-enrichment-agent
+    ports:
+      - "8071:8071" # Expose for direct testing if needed
+    env_file:
+      - ./secops_enrichment_agent/.env
+    environment:
+      - MCP_PROXY_AGENT_HRI=local-poc/mcp-tool-proxy
+      - AGENTVAULT_REGISTRY_URL=http://host.docker.internal:8000
+      # LLM configuration
+      - LMSTUDIO_API_URL=http://host.docker.internal:1234/v1
+      - LLM_MODEL_NAME=qwen3-8b
+      - LMSTUDIO_TIMEOUT_SECONDS=60
+      - RUNNING_IN_DOCKER=true
+    volumes:
+      # Mount shared directory for shared modules
+      - ./shared:/app/shared:ro
+    networks:
+      - agentvault_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8071/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # --- SecOps Investigation Agent ---
+  secops-investigation-agent:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/secops_pipeline/secops_investigation_agent/Dockerfile
+    container_name: secops-investigation-agent
+    ports:
+      - "8072:8072" # Expose for direct testing if needed
+    env_file:
+      - ./secops_investigation_agent/.env
+    environment:
+      # Basic configuration
+      - LOG_LEVEL=DEBUG
+      - MCP_PROXY_AGENT_HRI=local-poc/mcp-tool-proxy
+      - AGENTVAULT_REGISTRY_URL=http://host.docker.internal:8000
+      # LLM configuration
+      - LMSTUDIO_API_URL=http://host.docker.internal:1234/v1
+      - LLM_MODEL_NAME=qwen3-8b
+      - LMSTUDIO_TIMEOUT_SECONDS=60
+      - RUNNING_IN_DOCKER=true
+    volumes:
+      # Mount shared directory for shared modules
+      - ./shared:/app/shared:ro
+    networks:
+      - agentvault_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8072/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # --- SecOps Response Agent ---
+  secops-response-agent:
+    build:
+      context: ../..
+      dockerfile: ./poc_agents/secops_pipeline/secops_response_agent/Dockerfile
+    container_name: secops-response-agent
+    ports:
+      - "8073:8073" # Expose for direct testing if needed
+    env_file:
+      - ./secops_response_agent/.env
+    environment:
+      # Basic configuration
+      - LOG_LEVEL=DEBUG
+      - MCP_PROXY_AGENT_HRI=local-poc/mcp-tool-proxy
+      - AGENTVAULT_REGISTRY_URL=http://host.docker.internal:8000
+      - MCP_PROXY_URL=http://secops-mcp-proxy:8069
+      # LLM configuration
+      - LMSTUDIO_API_URL=http://host.docker.internal:1234/v1
+      - LLM_MODEL_NAME=qwen3-8b
+      - LMSTUDIO_TIMEOUT_SECONDS=60
+      - RUNNING_IN_DOCKER=true
+    volumes:
+      # Mount shared directory for shared modules
+      - ./shared:/app/shared:ro
+    networks:
+      - agentvault_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8073/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # --- Mock MCP Services (for demonstration) ---
+  secops-threat-intel:
+    image: node:18-alpine
+    container_name: secops-threat-intel
+    command: >
+      sh -c "echo '{\"jsonrpc\":\"2.0\",\"id\":\"test\",\"result\":{\"isError\":false,\"content\":{\"reputation\":\"malicious\",\"score\":90}}}' > /tmp/mock_response.json && 
+             echo 'const http = require(\"http\"); const fs = require(\"fs\"); http.createServer((req, res) => { res.writeHead(200, {\"Content-Type\": \"application/json\"}); if (req.method === \"POST\" && req.url === \"/rpc\") { let body = \"\"; req.on(\"data\", chunk => { body += chunk.toString(); }); req.on(\"end\", () => { try { const request = JSON.parse(body); console.log(\"Received RPC request:\", request); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":request.id,\"result\":{\"isError\":false,\"content\":{\"reputation\":\"malicious\",\"score\":90}}})); } catch(e) { console.error(\"Error parsing request:\", e); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":\"unknown\",\"error\":{\"code\":-32700,\"message\":\"Parse error\"}})); } }); } else { res.end(JSON.stringify({\"status\":\"ok\"})); } }).listen(8101, () => console.log(\"Mock threat intel server running on port 8101\"));' > server.js && 
+             node server.js"
+    ports:
+      - "8101:8101"
+    networks:
+      - agentvault_network
+
+  secops-firewall:
+    image: node:18-alpine
+    container_name: secops-firewall
+    command: >
+      sh -c "echo '{\"jsonrpc\":\"2.0\",\"id\":\"test\",\"result\":{\"isError\":false,\"content\":{\"rule_id\":\"FW12345\",\"status\":\"blocked\"}}}' > /tmp/mock_response.json && 
+             echo 'const http = require(\"http\"); const fs = require(\"fs\"); http.createServer((req, res) => { res.writeHead(200, {\"Content-Type\": \"application/json\"}); if (req.method === \"POST\" && req.url === \"/rpc\") { let body = \"\"; req.on(\"data\", chunk => { body += chunk.toString(); }); req.on(\"end\", () => { try { const request = JSON.parse(body); console.log(\"Received RPC request:\", request); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":request.id,\"result\":{\"isError\":false,\"content\":{\"rule_id\":\"FW12345\",\"status\":\"blocked\"}}})); } catch(e) { console.error(\"Error parsing request:\", e); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":\"unknown\",\"error\":{\"code\":-32700,\"message\":\"Parse error\"}})); } }); } else { res.end(JSON.stringify({\"status\":\"ok\"})); } }).listen(8102, () => console.log(\"Mock firewall server running on port 8102\"));' > server.js && 
+             node server.js"
+    ports:
+      - "8102:8102"
+    networks:
+      - agentvault_network
+
+  secops-edr:
+    image: node:18-alpine
+    container_name: secops-edr
+    command: >
+      sh -c "echo '{\"jsonrpc\":\"2.0\",\"id\":\"test\",\"result\":{\"isError\":false,\"content\":{\"isolation_id\":\"ISO98765\",\"status\":\"isolated\"}}}' > /tmp/mock_response.json && 
+             echo 'const http = require(\"http\"); const fs = require(\"fs\"); http.createServer((req, res) => { res.writeHead(200, {\"Content-Type\": \"application/json\"}); if (req.method === \"POST\" && req.url === \"/rpc\") { let body = \"\"; req.on(\"data\", chunk => { body += chunk.toString(); }); req.on(\"end\", () => { try { const request = JSON.parse(body); console.log(\"Received RPC request:\", request); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":request.id,\"result\":{\"isError\":false,\"content\":{\"isolation_id\":\"ISO98765\",\"status\":\"isolated\"}}})); } catch(e) { console.error(\"Error parsing request:\", e); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":\"unknown\",\"error\":{\"code\":-32700,\"message\":\"Parse error\"}})); } }); } else { res.end(JSON.stringify({\"status\":\"ok\"})); } }).listen(8103, () => console.log(\"Mock EDR server running on port 8103\"));' > server.js && 
+             node server.js"
+    ports:
+      - "8103:8103"
+    networks:
+      - agentvault_network
+
+  secops-ticketing:
+    image: node:18-alpine
+    container_name: secops-ticketing
+    command: >
+      sh -c "echo '{\"jsonrpc\":\"2.0\",\"id\":\"test\",\"result\":{\"isError\":false,\"content\":{\"ticket_id\":\"SEC-2025-001\",\"status\":\"created\"}}}' > /tmp/mock_response.json && 
+             echo 'const http = require(\"http\"); const fs = require(\"fs\"); http.createServer((req, res) => { res.writeHead(200, {\"Content-Type\": \"application/json\"}); if (req.method === \"POST\" && req.url === \"/rpc\") { let body = \"\"; req.on(\"data\", chunk => { body += chunk.toString(); }); req.on(\"end\", () => { try { const request = JSON.parse(body); console.log(\"Received RPC request:\", request); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":request.id,\"result\":{\"isError\":false,\"content\":{\"ticket_id\":\"SEC-2025-001\",\"status\":\"created\"}}})); } catch(e) { console.error(\"Error parsing request:\", e); res.end(JSON.stringify({\"jsonrpc\":\"2.0\",\"id\":\"unknown\",\"error\":{\"code\":-32700,\"message\":\"Parse error\"}})); } }); } else { res.end(JSON.stringify({\"status\":\"ok\"})); } }).listen(8104, () => console.log(\"Mock ticketing server running on port 8104\"));' > server.js && 
+             node server.js"
+    ports:
+      - "8104:8104"
+    networks:
+      - agentvault_network
+
+  # --- SecOps Redis Message Broker ---
+  secops-redis:
+    image: redis:alpine
+    container_name: secops-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - agentvault_network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    
+  # --- SecOps Dashboard Backend ---
+  secops-dashboard-backend:
+    build:
+      context: ./secops_dashboard_backend
+      dockerfile: Dockerfile
+    container_name: secops-dashboard-backend
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_URL=redis://secops-redis:6379
+      - LOG_LEVEL=DEBUG
+      - CORS_ORIGINS=*
+      - HOST_DOCKER_INTERNAL=host-gateway
+    volumes:
+      - ./secops_dashboard_backend:/app  # Mount for hot reloading of changes
+    networks:
+      - agentvault_network
+    depends_on:
+      - secops-redis
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # --- SecOps Dashboard (Static Version) ---
+  secops-dashboard:
+    image: nginx:alpine
+    container_name: secops-dashboard
+    ports:
+      - "8080:80"
+    volumes:
+      - ./static_dashboard.html:/usr/share/nginx/html/index.html
+      - ./dynamic_dashboard.html:/usr/share/nginx/html/dynamic.html
+      - ./sse_dashboard.html:/usr/share/nginx/html/sse.html
+      - ./test_websocket.html:/usr/share/nginx/html/test_websocket.html
+      - ./connection_tester.html:/usr/share/nginx/html/tester.html
+      # Add proxy configuration for WebSocket connections
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - agentvault_network
+    depends_on:
+      - secops-dashboard-backend
+      - secops-redis
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+# --- Shared Network Definition ---
+networks:
+  agentvault_network:
+    # Create the network explicitly within this compose file
+    driver: bridge

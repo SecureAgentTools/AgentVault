@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0",
+  "humanReadableId": "local-poc/secops-enrichment-agent",
+  "agentVersion": "0.1.0",
+  "name": "SecOps Alert Enrichment Agent",
+  "description": "Enriches security alerts with context from Threat Intelligence Platforms (TIPs) and other sources.",
+  "url": "http://localhost:8071/a2a",
+  "provider": {
+    "name": "AgentVault POC Team"
+  },
+  "capabilities": {
+    "a2aVersion": "1.0",
+    "supportedMessageParts": ["data"]
+  },
+  "authSchemes": [
+    {
+      "scheme": "none",
+      "description": "No authentication required for this internal POC agent."
+    }
+  ],
+  "skills": [
+    {
+      "id": "enrich_iocs",
+      "name": "Enrich Indicators of Compromise",
+      "description": "Takes a list of IOCs (IPs, domains, hashes) and returns enrichment data from configured sources.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "iocs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of indicators (IPs, domains, hashes, etc.) to enrich."
+          }
+        },
+        "required": ["iocs"]
+      },
+      "output_schema": {
+        "type": "object",
+        "description": "Dictionary where keys are the input IOCs and values are enrichment results (structure depends on sources).",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "source": { "type": "string", "description": "Source of the enrichment (e.g., VirusTotal, AbuseIPDB)"},
+            "reputation": { "type": ["string", "null"], "description": "Overall reputation score/status"},
+            "details": { "type": ["object", "null"], "description": "Source-specific enrichment details"}
+          }
+        }
+      }
+    }
+  ],
+  "tags": ["security", "soc", "enrichment", "threat intelligence", "poc", "secops-pipeline"]
+}

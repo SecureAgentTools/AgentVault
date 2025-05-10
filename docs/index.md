@@ -53,6 +53,14 @@ AgentVault focuses specifically on providing the essential, secure foundation, c
 *   **[Server SDK (`agentvault-server-sdk`)](developer_guide/server_sdk.md):** Build A2A-compliant agents with FastAPI.
 *   **[Protocols & Profiles](protocols/):** Definitions for [A2A](architecture/a2a_protocol.md), [MCP (Concept)](architecture/mcp_support.md), and [TEE](tee_profile.md).
 
+## Highlighted Examples
+
+🔥 **[SecOps Pipeline with Qwen3-8B LLM Integration](examples/poc_secops.md)** 🔥
+
+Explore our advanced Security Operations pipeline showcasing LLM-powered security alert analysis and automated response with real-time dashboard visualization. See how Qwen3-8B enhances security operations through sophisticated reasoning and transparent decision-making.
+
+[![SecOps Pipeline Example](assets/images/SecOpsPipe.gif)](examples/poc_secops.md)
+
 ## Get Started
 
 *   **New Users:** Check the [Installation Guide](guides/installation.md) and learn the [CLI Commands](user_guide/cli.md).
